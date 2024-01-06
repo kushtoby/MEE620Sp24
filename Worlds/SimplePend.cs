@@ -1,3 +1,7 @@
+//============================================================================
+// SimplePend.cs
+// Code for runing the Godot scene of a simple pendulum
+//============================================================================
 using Godot;
 using System;
 
@@ -12,7 +16,20 @@ public partial class SimplePend : Node3D
 
 	StickBall pModel;    // 3D model of pendulum
 
-	// Called when the node enters the scene tree for the first time.
+	enum OpMode
+	{
+		Manual,
+		Sim
+	}
+
+	OpMode opMode;    // operation mode
+	Vector3 pendRotation;
+	float dthetaMan;
+
+	//------------------------------------------------------------------------
+	// _Ready: Called once when the node enters the scene tree for the first 
+	//         time.
+	//------------------------------------------------------------------------
 	public override void _Ready()
 	{
 		GD.Print("Hello MEE 620");
@@ -29,6 +46,12 @@ public partial class SimplePend : Node3D
 		cam.Distance = camDist;
 		cam.Target = camTg;
 
+		// Set up simulation
+		opMode = OpMode.Manual;
+		pendRotation = new Vector3();
+		dthetaMan = 0.03f;
+
+
 		// Set up model
 		float mountHeight = 1.4f;
 		Node3D mnt = GetNode<Node3D>("Axle");
@@ -40,8 +63,36 @@ public partial class SimplePend : Node3D
 		//pModel.BallDiameter = 0.6f;
 	}
 
-	// Called every frame. 'delta' is the elapsed time since the previous frame.
+	//------------------------------------------------------------------------
+	// _Process: Called every frame. 'delta' is the elapsed time since the 
+	//           previous frame.
+	//------------------------------------------------------------------------
 	public override void _Process(double delta)
 	{
+		if(opMode == OpMode.Manual){  // change angle manually
+			if(Input.IsActionPressed("ui_right")){
+				pendRotation.Z += dthetaMan;
+			}
+			if(Input.IsActionPressed("ui_left")){
+				pendRotation.Z -= dthetaMan;
+			}
+		}
+		else{   // angle determined by simulation
+
+		}
+
+		pModel.Rotation = pendRotation;
 	}
+
+    //------------------------------------------------------------------------
+    //
+    //------------------------------------------------------------------------
+    public override void _PhysicsProcess(double delta)
+    {
+        base._PhysicsProcess(delta);
+
+		if(opMode == OpMode.Manual)
+			return;
+
+    }
 }
