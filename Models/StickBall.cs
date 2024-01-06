@@ -1,14 +1,23 @@
+//============================================================================
+// StickBall.cs  Script for customizing the model 
+//============================================================================
 using Godot;
 using System;
 
 public partial class StickBall : Node3D
 {
-	// Called when the node enters the scene tree for the first time.
+	//------------------------------------------------------------------------
+	// _Ready: called once
+	//------------------------------------------------------------------------
 	public override void _Ready()
 	{
+		GD.Print("StickBall:_Ready");
 	}
 
-	// Called every frame. 'delta' is the elapsed time since the previous frame.
+	//------------------------------------------------------------------------
+	// _Process: Called every frame. 'delta' is the elapsed time since the 
+	//           previous frame.
+	//------------------------------------------------------------------------
 	public override void _Process(double delta)
 	{
 	}
