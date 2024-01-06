@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://ca1n0qs2gp624"]
+[gd_scene load_steps=11 format=3 uid="uid://ca1n0qs2gp624"]
 
 [ext_resource type="Script" path="res://Worlds/SimplePend.cs" id="1_sbm5v"]
 [ext_resource type="Texture2D" uid="uid://j5d15pfgqxyw" path="res://Textures/kennyDK4.png" id="2_jg7j5"]
@@ -26,11 +26,16 @@ uv1_triplanar = true
 material = SubResource("StandardMaterial3D_s6jh8")
 size = Vector2(4, 4)
 
+[sub_resource type="CylinderMesh" id="CylinderMesh_3nfnu"]
+top_radius = 0.05
+bottom_radius = 0.05
+height = 0.3
+
 [node name="SimplePend" type="Node3D"]
 script = ExtResource("1_sbm5v")
 
 [node name="StickBall" parent="." instance=ExtResource("2_kgwn6")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.42026, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, 0)
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 8, 0)
@@ -43,3 +48,7 @@ environment = SubResource("Environment_jswkg")
 mesh = SubResource("PlaneMesh_qw40v")
 
 [node name="CamRig" parent="." instance=ExtResource("3_ts7tw")]
+
+[node name="Axle" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 1.4, 0)
+mesh = SubResource("CylinderMesh_3nfnu")
