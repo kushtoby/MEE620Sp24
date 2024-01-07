@@ -15,6 +15,7 @@ public partial class SimplePend : Node3D
 	Vector3 camTg;       // coords of camera target
 
 	StickBall pModel;    // 3D model of pendulum
+	double pendLength;   // pendulum length
 
 	enum OpMode
 	{
@@ -22,9 +23,13 @@ public partial class SimplePend : Node3D
 		Sim
 	}
 
-	OpMode opMode;    // operation mode
-	Vector3 pendRotation;
-	float dthetaMan;
+	OpMode opMode;         // operation mode
+	Vector3 pendRotation;  // rotation value for pendulum
+	float dthetaMan;   // amount angle is changed each time updated manually
+	bool angleManChanged;  // Angle has been changed manually
+
+	SimplePendSim sim;     // object for the simulation
+	double time;           // simulation time
 
 	UIPanelDisplay datDisplay;
 	int uiRefreshCtr;     //counter for display refresh
@@ -52,9 +57,15 @@ public partial class SimplePend : Node3D
 
 		// Set up simulation
 		opMode = OpMode.Manual;
+		pendLength = 1.0;
 		pendRotation = new Vector3();
 		dthetaMan = 0.03f;
-
+		angleManChanged = true;
+		sim = new SimplePendSim();
+		sim.Length = pendLength;
+		sim.Angle = 0.0;
+		sim.AngleDot = 0.0;
+		time = 0.0;
 
 		// Set up model
 		float mountHeight = 1.4f;
@@ -62,7 +73,8 @@ public partial class SimplePend : Node3D
 		mnt.Position = new Vector3(0.0f, mountHeight, 0.0f);
 		pModel = GetNode<StickBall>("StickBall");
 		pModel.Position = new Vector3(0.0f, mountHeight, 0.0f);
-		//pModel.Length = 1.1f;
+		pModel.Rotation = pendRotation;
+		pModel.Length = (float)pendLength;
 		//pModel.StickDiameter = 0.15f;
 		//pModel.BallDiameter = 0.6f;
 
@@ -101,30 +113,49 @@ public partial class SimplePend : Node3D
 				pendRotation.Z += dthetaMan;
 				datDisplay.SetValue(1, Mathf.RadToDeg(pendRotation.Z));
 				pModel.Rotation = pendRotation;
+				angleManChanged = true;
 			}
 			if(Input.IsActionPressed("ui_left")){
 				pendRotation.Z -= dthetaMan;
 				datDisplay.SetValue(1, Mathf.RadToDeg(pendRotation.Z));
 				pModel.Rotation = pendRotation;
+				angleManChanged = true;
+			}
+
+			if(Input.IsActionJustPressed("ui_accept")){
+				if(angleManChanged){
+					sim.Angle = (double)pendRotation.Z;
+					sim.AngleDot = 0.0;
+				}
+
+				opMode = OpMode.Sim;
+				datDisplay.SetValue(0, opMode.ToString());
+				angleManChanged = false;
 			}
 
 			return;
 		}
 
 		// angle determined by simulation
-
-		
+		pendRotation.Z = (float)sim.Angle;
+		pModel.Rotation = pendRotation;
 
 		// data display
-		if(uiRefreshCtr > uiRefreshTHold){
-
+		if(uiRefreshCtr > uiRefreshTHold){           //########### FIX #######
+			datDisplay.SetValue(4, (float)time);
+			uiRefreshCtr = 0;
 		}
+		++uiRefreshCtr;
 
-		//pModel.Rotation = pendRotation;
+		// Change to manual mode
+		if(Input.IsActionJustPressed("ui_accept")){
+			opMode = OpMode.Manual;
+			datDisplay.SetValue(0, opMode.ToString());
+		}
 	}
 
     //------------------------------------------------------------------------
-    //
+    // _PhysicsProcess:
     //------------------------------------------------------------------------
     public override void _PhysicsProcess(double delta)
     {
@@ -133,5 +164,7 @@ public partial class SimplePend : Node3D
 		if(opMode == OpMode.Manual)
 			return;
 
+		sim.Step(time, delta);
+		time += delta;
     }
 }
