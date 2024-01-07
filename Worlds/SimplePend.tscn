@@ -1,9 +1,10 @@
-[gd_scene load_steps=11 format=3 uid="uid://ca1n0qs2gp624"]
+[gd_scene load_steps=13 format=3 uid="uid://ca1n0qs2gp624"]
 
 [ext_resource type="Script" path="res://Worlds/SimplePend.cs" id="1_sbm5v"]
 [ext_resource type="Texture2D" uid="uid://j5d15pfgqxyw" path="res://Textures/kennyDK4.png" id="2_jg7j5"]
 [ext_resource type="PackedScene" uid="uid://csgn5l0ig14x6" path="res://Models/StickBall.tscn" id="2_kgwn6"]
 [ext_resource type="PackedScene" uid="uid://blxgponho1qji" path="res://Utils/CamRig.tscn" id="3_ts7tw"]
+[ext_resource type="PackedScene" uid="uid://uuj16p5aw6lj" path="res://Utils/UIPanelDisplay.tscn" id="5_p6osa"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_myu5f"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -31,6 +32,8 @@ top_radius = 0.05
 bottom_radius = 0.05
 height = 0.3
 
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_mrkj0"]
+
 [node name="SimplePend" type="Node3D"]
 script = ExtResource("1_sbm5v")
 
@@ -52,3 +55,26 @@ mesh = SubResource("PlaneMesh_qw40v")
 [node name="Axle" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 1.4, 0)
 mesh = SubResource("CylinderMesh_3nfnu")
+
+[node name="UINode" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="UINode"]
+material = SubResource("CanvasItemMaterial_mrkj0")
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -82.0
+offset_right = 157.0
+grow_vertical = 0
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="DatDisplay" parent="UINode/MarginContainer" instance=ExtResource("5_p6osa")]
+layout_mode = 2

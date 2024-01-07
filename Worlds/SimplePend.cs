@@ -26,6 +26,10 @@ public partial class SimplePend : Node3D
 	Vector3 pendRotation;
 	float dthetaMan;
 
+	UIPanelDisplay datDisplay;
+	int uiRefreshCtr;     //counter for display refresh
+	int uiRefreshTHold;   // threshold for display refresh
+
 	//------------------------------------------------------------------------
 	// _Ready: Called once when the node enters the scene tree for the first 
 	//         time.
@@ -61,6 +65,29 @@ public partial class SimplePend : Node3D
 		//pModel.Length = 1.1f;
 		//pModel.StickDiameter = 0.15f;
 		//pModel.BallDiameter = 0.6f;
+
+		// set up data display
+		datDisplay = GetNode<UIPanelDisplay>(
+			"UINode/MarginContainer/DatDisplay");
+		datDisplay.SetNDisplay(5);
+		datDisplay.SetLabel(0,"Mode");
+		datDisplay.SetValue(0,opMode.ToString());
+		datDisplay.SetLabel(1,"Angle (deg)");
+		datDisplay.SetValue(1, 0.0f);
+		datDisplay.SetLabel(2,"Kinetic");
+		datDisplay.SetValue(2,"---");
+		datDisplay.SetLabel(3,"Potential");
+		datDisplay.SetValue(3,"---");
+		datDisplay.SetLabel(4,"Tot Energy");
+		datDisplay.SetValue(4,"---");
+
+		datDisplay.SetDigitsAfterDecimal(1,1);
+		datDisplay.SetDigitsAfterDecimal(2,4);
+		datDisplay.SetDigitsAfterDecimal(3,4);
+		datDisplay.SetDigitsAfterDecimal(4,4);
+
+		uiRefreshCtr = 0;
+		uiRefreshTHold = 3;
 	}
 
 	//------------------------------------------------------------------------
@@ -72,16 +99,28 @@ public partial class SimplePend : Node3D
 		if(opMode == OpMode.Manual){  // change angle manually
 			if(Input.IsActionPressed("ui_right")){
 				pendRotation.Z += dthetaMan;
+				datDisplay.SetValue(1, Mathf.RadToDeg(pendRotation.Z));
+				pModel.Rotation = pendRotation;
 			}
 			if(Input.IsActionPressed("ui_left")){
 				pendRotation.Z -= dthetaMan;
+				datDisplay.SetValue(1, Mathf.RadToDeg(pendRotation.Z));
+				pModel.Rotation = pendRotation;
 			}
+
+			return;
 		}
-		else{   // angle determined by simulation
+
+		// angle determined by simulation
+
+		
+
+		// data display
+		if(uiRefreshCtr > uiRefreshTHold){
 
 		}
 
-		pModel.Rotation = pendRotation;
+		//pModel.Rotation = pendRotation;
 	}
 
     //------------------------------------------------------------------------
