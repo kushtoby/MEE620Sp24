@@ -33,4 +33,68 @@ public class SimplePendSim : Simulator
         ff[0] = 0.0;   // time derivative of state theta
         ff[1] = 0.0;   // time derivative of state thetaDot
     }
+
+    //------------------------------------------------------------------------
+    // Getters and Setters
+    //------------------------------------------------------------------------
+
+    // Pendulum length ---------------------------
+    public double Length
+    {
+        set{
+            if(value > 0.05){
+                L = value;
+            }
+        }
+
+        get{
+            return L;
+        }
+    }
+
+    // Pendulum angle ----------------------------
+    public double Angle
+    {
+        set{
+            x[0] = value;
+        }
+
+        get{
+            return x[0];
+        }
+    }
+
+    // Time derivative of pendulum angle ---------
+    public double AngleDot
+    {
+        set{
+            x[1] = value;
+        }
+
+        get{
+            return x[1];
+        }
+    }
+
+    // Kinetic energy ----------
+    public double KineticEnergy
+    {
+        get{
+            double thetaDot = x[1];
+
+            //########## YOU NEED TO CALCULATE THIS ###########
+            return 0.0; 
+        }
+    }
+
+    // Potential energy
+    public double PotentialEnergy
+    {
+         get{
+            double theta = x[0];
+
+            //########## YOU NEED TO CALCULATE THIS ###########
+            return 0.0; 
+        }
+    }
 }
