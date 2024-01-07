@@ -141,9 +141,15 @@ public partial class SimplePend : Node3D
 		pModel.Rotation = pendRotation;
 
 		// data display
-		if(uiRefreshCtr > uiRefreshTHold){           //########### FIX #######
-			datDisplay.SetValue(4, (float)time);
-			uiRefreshCtr = 0;
+		if(uiRefreshCtr > uiRefreshTHold){
+			float ke = (float)sim.KineticEnergy;
+			float pe = (float)sim.PotentialEnergy;
+
+			datDisplay.SetValue(1, Mathf.RadToDeg(pendRotation.Z));
+			datDisplay.SetValue(2, ke);
+			datDisplay.SetValue(3, pe);
+			datDisplay.SetValue(4, ke+pe);
+			uiRefreshCtr = 0;   // reset the counter
 		}
 		++uiRefreshCtr;
 
@@ -151,6 +157,9 @@ public partial class SimplePend : Node3D
 		if(Input.IsActionJustPressed("ui_accept")){
 			opMode = OpMode.Manual;
 			datDisplay.SetValue(0, opMode.ToString());
+			datDisplay.SetValue(2, "---");
+			datDisplay.SetValue(3, "---");
+			datDisplay.SetValue(4, "---");
 		}
 	}
 
