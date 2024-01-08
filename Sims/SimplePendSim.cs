@@ -26,7 +26,8 @@ public class SimplePendSim : Simulator
     //------------------------------------------------------------------------
     private void RHSFuncSimplePend(double[] xx, double t, double[] ff)
     {
-        double theta = xx[0];
+        double theta = xx[0];       // generalized coordinate
+        double thetaDot = xx[1];    // generalized speed
 
         // Evaluate right sides of differential equations of motion
         // ##### You will need to provide these ###### //
