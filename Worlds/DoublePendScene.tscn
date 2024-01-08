@@ -1,0 +1,18 @@
+[gd_scene load_steps=5 format=3 uid="uid://cil00xtax2wvn"]
+
+[ext_resource type="Texture2D" uid="uid://j5d15pfgqxyw" path="res://Textures/kennyDK4.png" id="1_3y45f"]
+[ext_resource type="Script" path="res://Worlds/DoublePendScene.cs" id="1_v5r6y"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_n85ia"]
+albedo_texture = ExtResource("1_3y45f")
+uv1_triplanar = true
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_i6asj"]
+material = SubResource("StandardMaterial3D_n85ia")
+size = Vector2(4, 4)
+
+[node name="DoublePendScene" type="Node3D"]
+script = ExtResource("1_v5r6y")
+
+[node name="Floor" type="MeshInstance3D" parent="."]
+mesh = SubResource("PlaneMesh_i6asj")
