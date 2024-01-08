@@ -112,12 +112,18 @@ public partial class SimplePend : Node3D
 			if(Input.IsActionPressed("ui_right")){
 				pendRotation.Z += dthetaMan;
 				datDisplay.SetValue(1, Mathf.RadToDeg(pendRotation.Z));
+				datDisplay.SetValue(2, "---");
+				datDisplay.SetValue(3, "---");
+				datDisplay.SetValue(4, "---");
 				pModel.Rotation = pendRotation;
 				angleManChanged = true;
 			}
 			if(Input.IsActionPressed("ui_left")){
 				pendRotation.Z -= dthetaMan;
 				datDisplay.SetValue(1, Mathf.RadToDeg(pendRotation.Z));
+				datDisplay.SetValue(2, "---");
+				datDisplay.SetValue(3, "---");
+				datDisplay.SetValue(4, "---");
 				pModel.Rotation = pendRotation;
 				angleManChanged = true;
 			}
@@ -157,9 +163,9 @@ public partial class SimplePend : Node3D
 		if(Input.IsActionJustPressed("ui_accept")){
 			opMode = OpMode.Manual;
 			datDisplay.SetValue(0, opMode.ToString());
-			datDisplay.SetValue(2, "---");
-			datDisplay.SetValue(3, "---");
-			datDisplay.SetValue(4, "---");
+			// datDisplay.SetValue(2, "---");
+			// datDisplay.SetValue(3, "---");
+			// datDisplay.SetValue(4, "---");
 		}
 	}
 
