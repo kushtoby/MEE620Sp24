@@ -1,8 +1,9 @@
-[gd_scene load_steps=10 format=3 uid="uid://cil00xtax2wvn"]
+[gd_scene load_steps=11 format=3 uid="uid://cil00xtax2wvn"]
 
 [ext_resource type="Texture2D" uid="uid://j5d15pfgqxyw" path="res://Textures/kennyDK4.png" id="1_3y45f"]
 [ext_resource type="Script" path="res://Worlds/DoublePendScene.cs" id="1_v5r6y"]
 [ext_resource type="PackedScene" uid="uid://blxgponho1qji" path="res://Utils/CamRig.tscn" id="3_fihed"]
+[ext_resource type="PackedScene" uid="uid://uuj16p5aw6lj" path="res://Utils/UIPanelDisplay.tscn" id="4_iqnuw"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_w35lt"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -48,3 +49,21 @@ mesh = SubResource("PlaneMesh_i6asj")
 [node name="Axle" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 2, 0)
 mesh = SubResource("CylinderMesh_gi22p")
+
+[node name="UINode" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="UINode"]
+layout_mode = 0
+offset_right = 167.0
+offset_bottom = 48.0
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+
+[node name="DatDisplay" parent="UINode/MarginContainer" instance=ExtResource("4_iqnuw")]
+layout_mode = 2

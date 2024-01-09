@@ -21,6 +21,24 @@ public partial class DoublePendScene : Node3D
 	double pendLen1;
 	double pendLen2;
 
+	// Data display stuff
+	UIPanelDisplay datDisplay;
+	int uiRefreshCtr;     //counter for display refresh
+	int uiRefreshTHold;   // threshold for display refresh
+
+	// Mode of operation
+	enum OpMode
+	{
+		Manual,
+		Sim
+	}
+
+	OpMode opMode;         // operation mode
+	Vector3 pend1Rotation; // rotation value for pendulum 1
+	Vector3 pend2Rotation; // rotation value for pendulum 2
+	float dthetaMan;   // amount angle is changed each time updated manually
+	bool angleManChanged;  // Angle has been changed manually
+
 
 	//------------------------------------------------------------------------
 	// _Ready: Called once when the node enters the scene tree for the first 
@@ -33,6 +51,16 @@ public partial class DoublePendScene : Node3D
 		// build the simulation
 		pendLen1 = 0.9;
 		pendLen2 = 0.7;
+		opMode = OpMode.Manual;
+		pend1Rotation = new Vector3();
+		pend2Rotation = new Vector3();
+		dthetaMan = 0.03f;
+		angleManChanged = true;
+		// sim = new SimplePendSim();
+		// sim.Length = pendLength;
+		// sim.Angle = 0.0;
+		// sim.AngleDot = 0.0;
+		// time = 0.0;
 
 		// build the model
 		float mountHeight = 1.9f;
@@ -62,6 +90,32 @@ public partial class DoublePendScene : Node3D
 		cam.LatitudeDeg = latitudeDeg;
 		cam.Distance = camDist;
 		cam.Target = camTg;
+
+		// Set up data display
+		datDisplay = GetNode<UIPanelDisplay>(
+			"UINode/MarginContainer/DatDisplay");
+		datDisplay.SetNDisplay(6);
+		datDisplay.SetLabel(0,"Mode");
+		datDisplay.SetValue(0,opMode.ToString());
+		datDisplay.SetLabel(1,"Angle1 (deg)");
+		datDisplay.SetValue(1, 0.0f);
+		datDisplay.SetLabel(2,"Angle2 (deg)");
+		datDisplay.SetValue(2, 0.0f);
+		datDisplay.SetLabel(3,"Kinetic");
+		datDisplay.SetValue(3,"---");
+		datDisplay.SetLabel(4,"Potential");
+		datDisplay.SetValue(4,"---");
+		datDisplay.SetLabel(5,"Tot Energy");
+		datDisplay.SetValue(5,"---");
+
+		datDisplay.SetDigitsAfterDecimal(1,1);
+		datDisplay.SetDigitsAfterDecimal(2,1);
+		datDisplay.SetDigitsAfterDecimal(3,4);
+		datDisplay.SetDigitsAfterDecimal(4,4);
+		datDisplay.SetDigitsAfterDecimal(5,4);
+
+		uiRefreshCtr = 0;
+		uiRefreshTHold = 3;
 	}
 
 	//------------------------------------------------------------------------
