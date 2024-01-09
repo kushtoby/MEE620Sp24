@@ -22,8 +22,6 @@ public partial class StickBall : Node3D
 	//------------------------------------------------------------------------
 	public override void _Ready()
 	{
-		GD.Print("StickBall:_Ready");
-
 		stickLength = 1.0f;
 		stickDiam = 0.06f;
 		ballDiam = 0.3f;
