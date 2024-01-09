@@ -29,7 +29,8 @@ public partial class DoublePendScene : Node3D
 	// Mode of operation
 	enum OpMode
 	{
-		Manual,
+		Manual_1,
+		Manual_2,
 		Sim
 	}
 
@@ -51,7 +52,7 @@ public partial class DoublePendScene : Node3D
 		// build the simulation
 		pendLen1 = 0.9;
 		pendLen2 = 0.7;
-		opMode = OpMode.Manual;
+		opMode = OpMode.Manual_1;
 		pend1Rotation = new Vector3();
 		pend2Rotation = new Vector3();
 		dthetaMan = 0.03f;
@@ -124,6 +125,86 @@ public partial class DoublePendScene : Node3D
 	//------------------------------------------------------------------------
 	public override void _Process(double delta)
 	{
+		if(opMode == OpMode.Manual_1){  // change angle manually
+			if(Input.IsActionPressed("ui_right")){
+				pend1Rotation.Z += dthetaMan;
+				datDisplay.SetValue(1, Mathf.RadToDeg(pend1Rotation.Z));
+				datDisplay.SetValue(3, "---");
+				datDisplay.SetValue(4, "---");
+				datDisplay.SetValue(5, "---");
+				pModel1.Rotation = pend1Rotation;
+				angleManChanged = true;
+			}
+			if(Input.IsActionPressed("ui_left")){
+				pend1Rotation.Z -= dthetaMan;
+				datDisplay.SetValue(1, Mathf.RadToDeg(pend1Rotation.Z));
+				datDisplay.SetValue(3, "---");
+				datDisplay.SetValue(4, "---");
+				datDisplay.SetValue(5, "---");
+				pModel1.Rotation = pend1Rotation;
+				angleManChanged = true;
+			}
+
+			if(Input.IsActionJustPressed("ui_focus_next")){
+				opMode = OpMode.Manual_2;
+				datDisplay.SetValue(0, opMode.ToString());
+			}
+
+			if(Input.IsActionJustPressed("ui_accept")){
+				if(angleManChanged){
+					//sim.Angle1 = (double)pend1Rotation.Z;
+					//sim.Angle2 = (double)pend2Rotation.Z;
+					//sim.Angle1Dot = 0.0;
+					//sim.Angle2Dot = 0.0;
+				}
+
+				opMode = OpMode.Sim;
+				datDisplay.SetValue(0, opMode.ToString());
+				angleManChanged = false;
+			}
+
+			return;
+		}
+
+		if(opMode == OpMode.Manual_2){  // change angle 2 manually
+			if(Input.IsActionPressed("ui_right")){
+				pend2Rotation.Z += dthetaMan;
+				datDisplay.SetValue(2, Mathf.RadToDeg(pend2Rotation.Z));
+				datDisplay.SetValue(3, "---");
+				datDisplay.SetValue(4, "---");
+				datDisplay.SetValue(5, "---");
+				pModel2.Rotation = pend2Rotation;
+				angleManChanged = true;
+			}
+			if(Input.IsActionPressed("ui_left")){
+				pend2Rotation.Z -= dthetaMan;
+				datDisplay.SetValue(2, Mathf.RadToDeg(pend2Rotation.Z));
+				datDisplay.SetValue(3, "---");
+				datDisplay.SetValue(4, "---");
+				datDisplay.SetValue(5, "---");
+				pModel2.Rotation = pend2Rotation;
+				angleManChanged = true;
+			}
+
+			if(Input.IsActionJustPressed("ui_focus_next")){
+				opMode = OpMode.Manual_1;
+				datDisplay.SetValue(0, opMode.ToString());
+			}
+
+			if(Input.IsActionJustPressed("ui_accept")){
+				if(angleManChanged){
+					//sim.Angle1 = (double)pend1Rotation.Z;
+					//sim.Angle2 = (double)pend2Rotation.Z;
+					//sim.Angle1Dot = 0.0;
+				}
+
+				opMode = OpMode.Sim;
+				datDisplay.SetValue(0, opMode.ToString());
+				angleManChanged = false;
+			}
+
+			return;
+		}
 	}
 
 	//------------------------------------------------------------------------
