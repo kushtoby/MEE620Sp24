@@ -6,6 +6,7 @@
 albedo_color = Color(0.0588235, 0.733333, 1, 1)
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_77oxd"]
+resource_local_to_scene = true
 material = SubResource("StandardMaterial3D_s1o3j")
 top_radius = 0.03
 bottom_radius = 0.03
@@ -15,6 +16,7 @@ height = 1.0
 albedo_color = Color(0.996078, 0.227451, 0.419608, 1)
 
 [sub_resource type="SphereMesh" id="SphereMesh_hylcd"]
+resource_local_to_scene = true
 material = SubResource("StandardMaterial3D_473pq")
 radius = 0.15
 height = 0.3
