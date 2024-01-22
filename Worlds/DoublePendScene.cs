@@ -40,6 +40,9 @@ public partial class DoublePendScene : Node3D
 	float dthetaMan;   // amount angle is changed each time updated manually
 	bool angleManChanged;  // Angle has been changed manually
 
+	DoublePendSim sim;     // the simulation
+	double time;
+
 	Label instructLabel;   // label to display instructions
 	String instManual1;    // instructions when in manual_1 mode
 	String instManual2;    // instructions when in manual_2 mode
@@ -61,11 +64,14 @@ public partial class DoublePendScene : Node3D
 		pend2Rotation = new Vector3();
 		dthetaMan = 0.03f;
 		angleManChanged = true;
-		// sim = new SimplePendSim();
-		// sim.Length = pendLength;
-		// sim.Angle = 0.0;
-		// sim.AngleDot = 0.0;
-		// time = 0.0;
+		sim = new DoublePendSim();
+		sim.Length1 = pendLen1;
+		sim.Length2 = pendLen2;
+		sim.Angle1 = 0.0;
+		sim.Angle2 = 0.0;
+		sim.GenSpeed1 = 0.0;
+		sim.GenSpeed2 = 0.0;
+		time = 0.0;
 
 		// build the model
 		float mountHeight = 1.9f;
@@ -243,5 +249,10 @@ public partial class DoublePendScene : Node3D
     {
         base._PhysicsProcess(delta);
 
+		if(opMode != OpMode.Sim)
+			return;
+
+		sim.Step(time, delta);
+		time += delta;
 	}
 }
