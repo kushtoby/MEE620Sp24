@@ -173,10 +173,10 @@ public partial class DoublePendScene : Node3D
 
 			if(Input.IsActionJustPressed("ui_accept")){
 				if(angleManChanged){
-					//sim.Angle1 = (double)pend1Rotation.Z;
-					//sim.Angle2 = (double)pend2Rotation.Z;
-					//sim.Angle1Dot = 0.0;
-					//sim.Angle2Dot = 0.0;
+					sim.Angle1 = (double)pend1Rotation.Z;
+					sim.Angle2 = (double)pend2Rotation.Z;
+					sim.GenSpeed1 = 0.0;
+					sim.GenSpeed2 = 0.0;
 				}
 
 				opMode = OpMode.Sim;
@@ -216,9 +216,10 @@ public partial class DoublePendScene : Node3D
 
 			if(Input.IsActionJustPressed("ui_accept")){
 				if(angleManChanged){
-					//sim.Angle1 = (double)pend1Rotation.Z;
-					//sim.Angle2 = (double)pend2Rotation.Z;
-					//sim.Angle1Dot = 0.0;
+					sim.Angle1 = (double)pend1Rotation.Z;
+					sim.Angle2 = (double)pend2Rotation.Z;
+					sim.GenSpeed1 = 0.0;
+					sim.GenSpeed2 = 0.0;
 				}
 
 				opMode = OpMode.Sim;
@@ -230,8 +231,25 @@ public partial class DoublePendScene : Node3D
 			return;
 		} // if OpMode.Manual_2
 
+		// rotate the model links
+		pend1Rotation.Z = (float)sim.Angle1;
+		pend2Rotation.Z = (float)sim.Angle2;
+		pModel1.Rotation = pend1Rotation;
+		pModel2.Rotation = pend2Rotation;
 
-		//############# Gotta do some stuff in here
+		// data display
+		if(uiRefreshCtr > uiRefreshTHold){
+			float ke = (float)sim.KineticEnergy;
+			float pe = (float)sim.PotentialEnergy;
+
+			datDisplay.SetValue(1, Mathf.RadToDeg(pend1Rotation.Z));
+			datDisplay.SetValue(2, Mathf.RadToDeg(pend2Rotation.Z));
+			datDisplay.SetValue(3, ke);
+			datDisplay.SetValue(4, pe);
+			datDisplay.SetValue(5, ke+pe);
+			uiRefreshCtr = 0;   // reset the counter
+		}
+		++uiRefreshCtr;
 
 		if(opMode == OpMode.Sim){
 			if(Input.IsActionJustPressed("ui_accept")){
