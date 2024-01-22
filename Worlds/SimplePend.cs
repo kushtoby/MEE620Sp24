@@ -69,7 +69,7 @@ public partial class SimplePend : Node3D
 		sim = new SimplePendSim();
 		sim.Length = pendLength;
 		sim.Angle = 0.0;
-		sim.AngleDot = 0.0;
+		sim.GenSpeed = 0.0;
 		time = 0.0;
 
 		// Set up model
@@ -144,7 +144,7 @@ public partial class SimplePend : Node3D
 			if(Input.IsActionJustPressed("ui_accept")){
 				if(angleManChanged){
 					sim.Angle = (double)pendRotation.Z;
-					sim.AngleDot = 0.0;
+					sim.GenSpeed = 0.0;
 				}
 
 				opMode = OpMode.Sim;

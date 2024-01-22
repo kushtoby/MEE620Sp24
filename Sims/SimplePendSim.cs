@@ -1,21 +1,23 @@
 //============================================================================
+// SimplePendSim.cs   Class for creating a simulation of a simple pendulum.
+//============================================================================
 using System;
 
 public class SimplePendSim : Simulator
 {
     // physical parameters
-    double L;   // mass of vehicle
+    double L;   // Pendulum length
 
     //------------------------------------------------------------------------
-    // Constructor
+    // Constructor.    [STUDENTS: DO NOT CHANGE THIS FUNCTION]
     //------------------------------------------------------------------------
     public SimplePendSim() : base(2)
     {
         L = 1.0;
 
         // Default initial conditions
-        x[0] = 0.0f;    // initial angle (radians)
-        x[1] = 0.0f;    // initial rate of change of angle (radians/sec)
+        x[0] = 0.0f;    // generalized coord: pendulum angle (radians)
+        x[1] = 0.0f;    // generalized speed
 
         SetRHSFunc(RHSFuncSimplePend);
     }
@@ -27,12 +29,12 @@ public class SimplePendSim : Simulator
     private void RHSFuncSimplePend(double[] xx, double t, double[] ff)
     {
         double theta = xx[0];       // generalized coordinate
-        double thetaDot = xx[1];    // generalized speed
+        double u = xx[1];           // generalized speed
 
         // Evaluate right sides of differential equations of motion
         // ##### You will need to provide these ###### //
         ff[0] = 0.0;   // time derivative of state theta
-        ff[1] = 0.0;   // time derivative of state thetaDot
+        ff[1] = 0.0;   // time derivative of state u
     }
 
     //------------------------------------------------------------------------
@@ -65,8 +67,8 @@ public class SimplePendSim : Simulator
         }
     }
 
-    // Time derivative of pendulum angle ---------
-    public double AngleDot
+    // Generalized Speed ---------
+    public double GenSpeed
     {
         set{
             x[1] = value;
@@ -81,7 +83,7 @@ public class SimplePendSim : Simulator
     public double KineticEnergy
     {
         get{
-            double thetaDot = x[1];
+            double u = x[1];
 
             //########## YOU NEED TO CALCULATE THIS ###########
             return 0.0; 
