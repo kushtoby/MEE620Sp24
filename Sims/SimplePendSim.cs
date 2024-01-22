@@ -16,8 +16,8 @@ public class SimplePendSim : Simulator
         L = 1.0;
 
         // Default initial conditions
-        x[0] = 0.0f;    // generalized coord: pendulum angle (radians)
-        x[1] = 0.0f;    // generalized speed
+        x[0] = 0.0;    // generalized coord: pendulum angle (radians)
+        x[1] = 0.0;    // generalized speed
 
         SetRHSFunc(RHSFuncSimplePend);
     }
@@ -28,8 +28,8 @@ public class SimplePendSim : Simulator
     //------------------------------------------------------------------------
     private void RHSFuncSimplePend(double[] xx, double t, double[] ff)
     {
-        double theta = xx[0];       // generalized coordinate
-        double u = xx[1];           // generalized speed
+        double theta = xx[0];    // generalized coordinate, pend angle
+        double u = xx[1];        // generalized speed
 
         // Evaluate right sides of differential equations of motion
         // ##### You will need to provide these ###### //
