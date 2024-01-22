@@ -124,9 +124,9 @@ public partial class DoublePendScene : Node3D
 
 		instructLabel = GetNode<Label>(
 			"UINode/MarginContainerBL/InstructLabel");
-		instManual1 = "Press left & right arrows to change angle 1. " +
+		instManual1 = "Press left & right arrows to change angle 1; " +
 			"<Tab> to change angle 2; <Space> to simulate.";
-		instManual2 = "Press left & right arrows to change angle 2. " +
+		instManual2 = "Press left & right arrows to change angle 2; " +
 			"<Tab> to change angle 1; <Space> to simulate.";
 		instSim = "Press <Space> to stop simulation and change " +
 			"initial conditions.";
