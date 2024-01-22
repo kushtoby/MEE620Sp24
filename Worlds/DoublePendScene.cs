@@ -20,6 +20,8 @@ public partial class DoublePendScene : Node3D
 	StickBall pModel2;
 	double pendLen1;
 	double pendLen2;
+	double pendMass1;
+	double pendMass2;
 
 	// Data display stuff
 	UIPanelDisplay datDisplay;
@@ -59,6 +61,8 @@ public partial class DoublePendScene : Node3D
 		// build the simulation
 		pendLen1 = 0.9;
 		pendLen2 = 0.7;
+		pendMass1 = 1.4;
+		pendMass2 = 1.1;
 		opMode = OpMode.Manual_1;
 		pend1Rotation = new Vector3();
 		pend2Rotation = new Vector3();
@@ -67,6 +71,8 @@ public partial class DoublePendScene : Node3D
 		sim = new DoublePendSim();
 		sim.Length1 = pendLen1;
 		sim.Length2 = pendLen2;
+		sim.Mass1 = pendMass1;
+		sim.Mass2 = pendMass2;
 		sim.Angle1 = 0.0;
 		sim.Angle2 = 0.0;
 		sim.GenSpeed1 = 0.0;
