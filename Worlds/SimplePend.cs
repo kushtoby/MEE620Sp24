@@ -35,6 +35,11 @@ public partial class SimplePend : Node3D
 	int uiRefreshCtr;     //counter for display refresh
 	int uiRefreshTHold;   // threshold for display refresh
 
+	Label instructLabel;   // label to display instructions
+	String instManual;    // instructions when in manual mode
+	String instSim;        // instructions when in sim model
+
+
 	//------------------------------------------------------------------------
 	// _Ready: Called once when the node enters the scene tree for the first 
 	//         time.
@@ -100,6 +105,14 @@ public partial class SimplePend : Node3D
 
 		uiRefreshCtr = 0;
 		uiRefreshTHold = 3;
+
+		instructLabel = GetNode<Label>(
+			"UINode/MarginContainerBR/InstructLabel");
+		instManual = "Press left & right arrows to change angle. " +
+			"Press <Space> to simulate.";
+		instSim = "Press <Space> to stop simulation and change " +
+			"initial conditions.";
+		instructLabel.Text = instManual;
 	}
 
 	//------------------------------------------------------------------------
@@ -136,6 +149,7 @@ public partial class SimplePend : Node3D
 
 				opMode = OpMode.Sim;
 				datDisplay.SetValue(0, opMode.ToString());
+				instructLabel.Text = instSim;
 				angleManChanged = false;
 			}
 
@@ -163,6 +177,7 @@ public partial class SimplePend : Node3D
 		if(Input.IsActionJustPressed("ui_accept")){
 			opMode = OpMode.Manual;
 			datDisplay.SetValue(0, opMode.ToString());
+			instructLabel.Text = instManual;
 			// datDisplay.SetValue(2, "---");
 			// datDisplay.SetValue(3, "---");
 			// datDisplay.SetValue(4, "---");
