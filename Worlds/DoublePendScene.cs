@@ -40,6 +40,10 @@ public partial class DoublePendScene : Node3D
 	float dthetaMan;   // amount angle is changed each time updated manually
 	bool angleManChanged;  // Angle has been changed manually
 
+	Label instructLabel;   // label to display instructions
+	String instManual1;    // instructions when in manual_1 mode
+	String instManual2;    // instructions when in manual_2 mode
+	String instSim;        // instructions when in sim model
 
 	//------------------------------------------------------------------------
 	// _Ready: Called once when the node enters the scene tree for the first 
@@ -117,6 +121,16 @@ public partial class DoublePendScene : Node3D
 
 		uiRefreshCtr = 0;
 		uiRefreshTHold = 3;
+
+		instructLabel = GetNode<Label>(
+			"UINode/MarginContainerBL/InstructLabel");
+		instManual1 = "Press left & right arrows to change angle 1. " +
+			"<Tab> to change angle 2; <Space> to simulate.";
+		instManual2 = "Press left & right arrows to change angle 2. " +
+			"<Tab> to change angle 1; <Space> to simulate.";
+		instSim = "Press <Space> to stop simulation and change " +
+			"initial conditions.";
+		instructLabel.Text = instManual1;
 	}
 
 	//------------------------------------------------------------------------
@@ -148,6 +162,7 @@ public partial class DoublePendScene : Node3D
 			if(Input.IsActionJustPressed("ui_focus_next")){
 				opMode = OpMode.Manual_2;
 				datDisplay.SetValue(0, opMode.ToString());
+				instructLabel.Text = instManual2;
 			}
 
 			if(Input.IsActionJustPressed("ui_accept")){
@@ -160,6 +175,7 @@ public partial class DoublePendScene : Node3D
 
 				opMode = OpMode.Sim;
 				datDisplay.SetValue(0, opMode.ToString());
+				instructLabel.Text = instSim;
 				angleManChanged = false;
 			}
 
@@ -189,6 +205,7 @@ public partial class DoublePendScene : Node3D
 			if(Input.IsActionJustPressed("ui_focus_next")){
 				opMode = OpMode.Manual_1;
 				datDisplay.SetValue(0, opMode.ToString());
+				instructLabel.Text = instManual1;
 			}
 
 			if(Input.IsActionJustPressed("ui_accept")){
@@ -200,6 +217,7 @@ public partial class DoublePendScene : Node3D
 
 				opMode = OpMode.Sim;
 				datDisplay.SetValue(0, opMode.ToString());
+				instructLabel.Text = instSim;
 				angleManChanged = false;
 			}
 
@@ -213,6 +231,7 @@ public partial class DoublePendScene : Node3D
 			if(Input.IsActionJustPressed("ui_accept")){
 				opMode = OpMode.Manual_1;
 				datDisplay.SetValue(0, opMode.ToString());
+				instructLabel.Text = instManual1;
 			}
 		} // end if OpMode.Sim
 	}
