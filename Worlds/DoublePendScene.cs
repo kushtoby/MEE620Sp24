@@ -204,7 +204,17 @@ public partial class DoublePendScene : Node3D
 			}
 
 			return;
-		}
+		} // if OpMode.Manual_2
+
+
+		//############# Gotta do some stuff in here
+
+		if(opMode == OpMode.Sim){
+			if(Input.IsActionJustPressed("ui_accept")){
+				opMode = OpMode.Manual_1;
+				datDisplay.SetValue(0, opMode.ToString());
+			}
+		} // end if OpMode.Sim
 	}
 
 	//------------------------------------------------------------------------
