@@ -151,6 +151,15 @@ public partial class DoublePendScene : Node3D
 	//------------------------------------------------------------------------
 	public override void _Process(double delta)
 	{
+		if(sim.Angle1 > Math.PI)
+			sim.Angle1 = sim.Angle1 - 2.0*Math.PI;
+		if(sim.Angle1 < -Math.PI)
+			sim.Angle1 = sim.Angle1 + 2.0*Math.PI;
+		if(sim.Angle2 > Math.PI)
+			sim.Angle2 = sim.Angle2 - 2.0*Math.PI;
+		if(sim.Angle2 < -Math.PI)
+			sim.Angle2 = sim.Angle2 + 2.0*Math.PI;
+
 		if(opMode == OpMode.Manual_1){  // change angle manually
 			if(Input.IsActionPressed("ui_right")){
 				pend1Rotation.Z += dthetaMan;
