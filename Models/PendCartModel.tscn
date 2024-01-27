@@ -1,6 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://cg6o85vwtqjvo"]
+[gd_scene load_steps=7 format=3 uid="uid://cg6o85vwtqjvo"]
 
 [ext_resource type="Script" path="res://Models/PendCartModel.cs" id="1_hefvy"]
+[ext_resource type="Texture2D" uid="uid://cnct2f4gp8u8o" path="res://Textures/cylTex3WR.png" id="2_otmmx"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fdk4y"]
 albedo_color = Color(0.329412, 0.607843, 0.470588, 1)
@@ -9,6 +10,15 @@ albedo_color = Color(0.329412, 0.607843, 0.470588, 1)
 material = SubResource("StandardMaterial3D_fdk4y")
 size = Vector3(0.5, 0.35, 0.5)
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_liecy"]
+albedo_texture = ExtResource("2_otmmx")
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_6biyp"]
+material = SubResource("StandardMaterial3D_liecy")
+top_radius = 0.1
+bottom_radius = 0.1
+height = 0.05
+
 [node name="PendCartModel" type="Node3D"]
 script = ExtResource("1_hefvy")
 
@@ -16,4 +26,35 @@ script = ExtResource("1_hefvy")
 
 [node name="Box" type="MeshInstance3D" parent="RootNode"]
 mesh = SubResource("BoxMesh_hty2a")
+skeleton = NodePath("../..")
+
+[node name="WheelNode1" type="Node3D" parent="RootNode"]
+
+[node name="Wheel" type="MeshInstance3D" parent="RootNode/WheelNode1"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 1.78153, 0, 0)
+mesh = SubResource("CylinderMesh_6biyp")
+skeleton = NodePath("../..")
+
+[node name="WheelNode2" type="Node3D" parent="RootNode"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.27679, 0, 0)
+
+[node name="Wheel" type="MeshInstance3D" parent="RootNode/WheelNode2"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
+mesh = SubResource("CylinderMesh_6biyp")
+skeleton = NodePath("../..")
+
+[node name="WheelNode3" type="Node3D" parent="RootNode"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.26249, 0, 0)
+
+[node name="Wheel" type="MeshInstance3D" parent="RootNode/WheelNode3"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
+mesh = SubResource("CylinderMesh_6biyp")
+skeleton = NodePath("../..")
+
+[node name="WheelNode4" type="Node3D" parent="RootNode"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.683508, 0, 0)
+
+[node name="Wheel" type="MeshInstance3D" parent="RootNode/WheelNode4"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
+mesh = SubResource("CylinderMesh_6biyp")
 skeleton = NodePath("../..")
