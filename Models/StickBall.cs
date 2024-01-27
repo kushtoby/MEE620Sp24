@@ -3,7 +3,6 @@
 //============================================================================
 using Godot;
 using System;
-using System.ComponentModel.DataAnnotations;
 
 public partial class StickBall : Node3D
 {
