@@ -24,7 +24,7 @@ public partial class PendCartModel : Node3D
 		GD.Print("PendCartModel Ready");
 		boxSize = new Vector3(0.5f, 0.35f, 0.5f);
 		wheelRad = 0.1f;
-		wheelThick = 0.01f;
+		wheelThick = 0.05f;
 
 		RootNode = GetNode<Node3D>("RootNode");
 		Wheels = new Node3D[4];
@@ -38,9 +38,10 @@ public partial class PendCartModel : Node3D
 	}
 
 	
-	public override void _Process(double delta)
-	{
-	}
+	// public override void _Process(double delta)
+	// {
+		
+	// }
 
 	//------------------------------------------------------------------------
 	// SetParams: Sets size parameters of the model
@@ -49,6 +50,23 @@ public partial class PendCartModel : Node3D
 	{
 		GD.Print("PendCartModel:SetParams");
 
+		RootNode.Position = new Vector3(0.0f, 0.0f, -0.5f*boxSize.Z - 
+			3.5f*wheelThick);
+
+		MeshInstance3D box = GetNode<MeshInstance3D>("RootNode/Box");
+		BoxMesh boxMesh = (BoxMesh)box.Mesh;
+		boxMesh.Size = boxSize;
+		box.Position = new Vector3(0.0f, 0.5f*boxSize.Y + wheelRad, 0.0f);
+
+		Wheels[0].Position = new Vector3(-0.5f*boxSize.X + 0.5f*wheelRad,
+			wheelRad, 0.5f*boxSize.Z + wheelThick);
+		Wheels[1].Position = new Vector3(0.5f*boxSize.X - 0.5f*wheelRad,
+			wheelRad, 0.5f*boxSize.Z + wheelThick);
+		Wheels[2].Position = new Vector3(-0.5f*boxSize.X + 0.5f*wheelRad,
+			wheelRad, -0.5f*boxSize.Z - wheelThick);
+		Wheels[3].Position = new Vector3(0.5f*boxSize.X - 0.5f*wheelRad,
+			wheelRad, -0.5f*boxSize.Z - wheelThick);
+		
 	}
 
 	//------------------------------------------------------------------------

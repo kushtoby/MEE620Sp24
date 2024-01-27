@@ -31,12 +31,11 @@ skeleton = NodePath("../..")
 [node name="WheelNode1" type="Node3D" parent="RootNode"]
 
 [node name="Wheel" type="MeshInstance3D" parent="RootNode/WheelNode1"]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 1.78153, 0, 0)
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
 mesh = SubResource("CylinderMesh_6biyp")
 skeleton = NodePath("../..")
 
 [node name="WheelNode2" type="Node3D" parent="RootNode"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.27679, 0, 0)
 
 [node name="Wheel" type="MeshInstance3D" parent="RootNode/WheelNode2"]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
@@ -44,7 +43,6 @@ mesh = SubResource("CylinderMesh_6biyp")
 skeleton = NodePath("../..")
 
 [node name="WheelNode3" type="Node3D" parent="RootNode"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.26249, 0, 0)
 
 [node name="Wheel" type="MeshInstance3D" parent="RootNode/WheelNode3"]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
@@ -52,7 +50,6 @@ mesh = SubResource("CylinderMesh_6biyp")
 skeleton = NodePath("../..")
 
 [node name="WheelNode4" type="Node3D" parent="RootNode"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.683508, 0, 0)
 
 [node name="Wheel" type="MeshInstance3D" parent="RootNode/WheelNode4"]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
