@@ -1,0 +1,19 @@
+[gd_scene load_steps=4 format=3 uid="uid://cg6o85vwtqjvo"]
+
+[ext_resource type="Script" path="res://Models/PendCartModel.cs" id="1_hefvy"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fdk4y"]
+albedo_color = Color(0.329412, 0.607843, 0.470588, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_hty2a"]
+material = SubResource("StandardMaterial3D_fdk4y")
+size = Vector3(0.5, 0.35, 0.5)
+
+[node name="PendCartModel" type="Node3D"]
+script = ExtResource("1_hefvy")
+
+[node name="RootNode" type="Node3D" parent="."]
+
+[node name="Box" type="MeshInstance3D" parent="RootNode"]
+mesh = SubResource("BoxMesh_hty2a")
+skeleton = NodePath("../..")
