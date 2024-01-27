@@ -16,13 +16,25 @@ public partial class PendCartScene : Node3D
 	float camFOV;
 	Vector3 camTg;       // coords of camera target
 
+	// model stuff
+	PendCartModel model;
+
 	//------------------------------------------------------------------------
 	// _Ready: Called once when the node enters the scene tree for the first 
 	//         time.
 	//------------------------------------------------------------------------
 	public override void _Ready()
 	{
-		float mountHeight = 2.2f;
+		// build the simulation
+		float wallHeight = 2.0f;
+		double pendLength = 1.5;
+		//double pendMass = 1.9;
+		//double cartMass = 2.8;
+
+		// build the model
+		model = GetNode<PendCartModel>("PendCartModel");
+		model.Position = new Vector3(0.0f, wallHeight, 0.0f);
+		model.PendulumLength = (float)pendLength;
 
 		// Set up the camera rig
 		longitudeDeg = 30.0f;
@@ -30,7 +42,7 @@ public partial class PendCartScene : Node3D
 		camDist = 4.0f;
 		camFOV = 55.0f;
 
-		camTg = new Vector3(0.0f, mountHeight, 0.0f);
+		camTg = new Vector3(0.0f, wallHeight, 0.0f);
 		cam = GetNode<CamRig>("CamRig");
 		cam.LongitudeDeg = longitudeDeg;
 		cam.LatitudeDeg = latitudeDeg;

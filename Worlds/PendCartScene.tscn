@@ -3,7 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://blxgponho1qji" path="res://Utils/CamRig.tscn" id="1_2go6i"]
 [ext_resource type="Script" path="res://Worlds/PendCartScene.cs" id="1_nlfyv"]
 [ext_resource type="Texture2D" uid="uid://j5d15pfgqxyw" path="res://Textures/kennyDK4.png" id="1_wejb8"]
-[ext_resource type="Texture2D" uid="uid://dyf8n2j83udrw" path="res://Textures/kennyPU10.png" id="4_kk1b4"]
+[ext_resource type="Texture2D" uid="uid://b2a1m58606agb" path="res://Textures/kennyLT08.png" id="4_vyo1y"]
 [ext_resource type="PackedScene" uid="uid://cg6o85vwtqjvo" path="res://Models/PendCartModel.tscn" id="5_4ymwk"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ty0co"]
@@ -28,7 +28,7 @@ material = SubResource("StandardMaterial3D_1l4rq")
 size = Vector2(4, 1)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nnr6a"]
-albedo_texture = ExtResource("4_kk1b4")
+albedo_texture = ExtResource("4_vyo1y")
 uv1_triplanar = true
 
 [sub_resource type="BoxMesh" id="BoxMesh_e0qhv"]
