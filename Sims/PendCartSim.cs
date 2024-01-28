@@ -42,8 +42,8 @@ public class PendCartSim : Simulator
 
         // Evaluate right sides of differential equations of motion
         // ##### You will need to provide these ###### //
-        ff[0] = 0.0;   // time derivative of state theta1
-        ff[1] = 0.0;   // time derivative of state theta2
+        ff[0] = 0.0;   // time derivative of state xCart
+        ff[1] = 0.0;   // time derivative of state theta
         ff[2] = 0.0;   // time derivative of state u1
         ff[3] = 0.0;   // time derivative of state u2
     }
@@ -152,6 +152,7 @@ public class PendCartSim : Simulator
     public double KineticEnergy
     {
         get{
+            double theta = x[1];
             double u1 = x[2];
             double u2 = x[3];
 
