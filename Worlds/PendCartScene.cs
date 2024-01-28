@@ -40,6 +40,11 @@ public partial class PendCartScene : Node3D
 	float dthetaMan;   // amount angle is changed each time updated manually
 	bool manChanged;   // position or angle has been changed manually
 
+	Label instructLabel;   // label to display instructions
+	String instManPos;     // instructions when in SetPosition mode
+	String instManAngle;   // instructions when in SetAngle mode
+	String instSim;        // instructions when in Simulate model
+
 	//------------------------------------------------------------------------
 	// _Ready: Called once when the node enters the scene tree for the first 
 	//         time.
@@ -108,6 +113,16 @@ public partial class PendCartScene : Node3D
 
 		uiRefreshCtr = 0;
 		uiRefreshTHold = 3;
+
+		instructLabel = GetNode<Label>(
+			"UINode/MarginContainerBL/InstructLabel");
+		instManPos = "Press left & right arrows to change cart position; " +
+			"<Tab> to change pendulum angle; <Space> to simulate.";
+		instManAngle = "Press left & right arrows to change pendulum angle; "+
+			"<Tab> to change cart position; <Space> to simulate.";
+		instSim = "Press <Space> to stop simulation and change " +
+			"initial conditions.";
+		instructLabel.Text = instManPos;
 	}
 
 	//------------------------------------------------------------------------
@@ -133,7 +148,6 @@ public partial class PendCartScene : Node3D
 				model.SetPositionAngle(cartX, pendAngle);
 				manChanged = true;
 				datDisplay.SetValue(1, cartX);
-				//datDisplay.SetValue(2, Mathf.RadToDeg(pendAngle));
 				datDisplay.SetValue(3, "---");
 				datDisplay.SetValue(4, "---");
 				datDisplay.SetValue(5, "---");
@@ -142,7 +156,7 @@ public partial class PendCartScene : Node3D
 			if(Input.IsActionJustPressed("ui_focus_next")){
 				opMode = OpMode.SetAngle;
 				datDisplay.SetValue(0, opMode.ToString());
-				//instructLabel.Text = instManual2;
+				instructLabel.Text = instManAngle;
 			}
 
 			if(Input.IsActionJustPressed("ui_accept")){
@@ -155,7 +169,7 @@ public partial class PendCartScene : Node3D
 
 				opMode = OpMode.Simulate;
 				datDisplay.SetValue(0, opMode.ToString());
-				//instructLabel.Text = instSim;
+				instructLabel.Text = instSim;
 				manChanged = false;
 			}
 			return;
@@ -185,7 +199,7 @@ public partial class PendCartScene : Node3D
 			if(Input.IsActionJustPressed("ui_focus_next")){
 				opMode = OpMode.SetPosition;
 				datDisplay.SetValue(0, opMode.ToString());
-				//instructLabel.Text = instManual2;
+				instructLabel.Text = instManPos;
 			}
 
 			if(Input.IsActionJustPressed("ui_accept")){
@@ -198,7 +212,7 @@ public partial class PendCartScene : Node3D
 
 				opMode = OpMode.Simulate;
 				datDisplay.SetValue(0, opMode.ToString());
-				//instructLabel.Text = instSim;
+				instructLabel.Text = instSim;
 				manChanged = false;
 			}
 			return;

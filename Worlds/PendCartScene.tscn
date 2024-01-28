@@ -76,3 +76,18 @@ theme_override_constants/margin_top = 10
 
 [node name="DatDisplay" parent="UINode/MarginContainer" instance=ExtResource("6_cfjv3")]
 layout_mode = 2
+
+[node name="MarginContainerBL" type="MarginContainer" parent="UINode"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -34.0
+offset_right = 129.0
+grow_vertical = 0
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_bottom = 6
+
+[node name="InstructLabel" type="Label" parent="UINode/MarginContainerBL"]
+layout_mode = 2
+text = "Default text."
