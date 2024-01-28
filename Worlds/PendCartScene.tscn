@@ -1,10 +1,11 @@
-[gd_scene load_steps=13 format=3 uid="uid://dy2pw6ff3fiv1"]
+[gd_scene load_steps=14 format=3 uid="uid://dy2pw6ff3fiv1"]
 
 [ext_resource type="PackedScene" uid="uid://blxgponho1qji" path="res://Utils/CamRig.tscn" id="1_2go6i"]
 [ext_resource type="Script" path="res://Worlds/PendCartScene.cs" id="1_nlfyv"]
 [ext_resource type="Texture2D" uid="uid://j5d15pfgqxyw" path="res://Textures/kennyDK4.png" id="1_wejb8"]
 [ext_resource type="Texture2D" uid="uid://b2a1m58606agb" path="res://Textures/kennyLT08.png" id="4_vyo1y"]
 [ext_resource type="PackedScene" uid="uid://cg6o85vwtqjvo" path="res://Models/PendCartModel.tscn" id="5_4ymwk"]
+[ext_resource type="PackedScene" uid="uid://uuj16p5aw6lj" path="res://Utils/UIPanelDisplay.tscn" id="6_cfjv3"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ty0co"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -57,3 +58,21 @@ mesh = SubResource("BoxMesh_e0qhv")
 
 [node name="PendCartModel" parent="." instance=ExtResource("5_4ymwk")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+
+[node name="UINode" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="UINode"]
+layout_mode = 0
+offset_right = 181.0
+offset_bottom = 44.0
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+
+[node name="DatDisplay" parent="UINode/MarginContainer" instance=ExtResource("6_cfjv3")]
+layout_mode = 2
