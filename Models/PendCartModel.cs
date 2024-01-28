@@ -6,7 +6,7 @@ using System;
 
 public partial class PendCartModel : Node3D
 {
-	Node3D RootNode;
+	Node3D rootNode;
 	StickPuck pendModel;
 
 	Node3D[] Wheels;
@@ -15,8 +15,11 @@ public partial class PendCartModel : Node3D
 	float pendLength;
 	float wheelRad;
 	float wheelThick;
+	float pinOverhang;    // not used yet
 
-	float pinOverhang;
+	Vector3 cartLoc;    // generalized coordinate, cart location
+	Vector3 pendAngle;  // generalized coord: pendulum angle 
+	Vector3 wheelAngle; 
 
 	//------------------------------------------------------------------------
 	// _Ready: called once
@@ -29,7 +32,7 @@ public partial class PendCartModel : Node3D
 		wheelRad = 0.1f;
 		wheelThick = 0.05f;
 
-		RootNode = GetNode<Node3D>("RootNode");
+		rootNode = GetNode<Node3D>("RootNode");
 
 		pendModel = GetNode<StickPuck>("RootNode/Box/StickPuck");
 
@@ -39,15 +42,28 @@ public partial class PendCartModel : Node3D
 		Wheels[2] = GetNode<Node3D>("RootNode/WheelNode3");
 		Wheels[3] = GetNode<Node3D>("RootNode/WheelNode4");
 
+		cartLoc = new Vector3();   // initializes with zeros
+		pendAngle = new Vector3();
+		wheelAngle = new Vector3();
 
 		SetParams();
 	}
 
-	
-	// public override void _Process(double delta)
-	// {
-		
-	// }
+	//------------------------------------------------------------------------
+	// SetPositionAngle: sets the cart location and pendulum angle
+	//------------------------------------------------------------------------
+	public void SetPositionAngle(float x, float theta)
+	{
+		cartLoc.X = x;
+		pendAngle.Z = theta;
+		wheelAngle.Z = -x/wheelRad;
+
+		rootNode.Position = cartLoc;
+		pendModel.Rotation = cartLoc;
+		for(int i=0;i<4;++i){
+			Wheels[i].Rotation = wheelAngle;
+		}
+	}
 
 	//------------------------------------------------------------------------
 	// SetParams: Sets size parameters of the model
@@ -56,8 +72,8 @@ public partial class PendCartModel : Node3D
 	{
 		GD.Print("PendCartModel:SetParams");
 
-		RootNode.Position = new Vector3(0.0f, 0.0f, -0.5f*boxSize.Z - 
-			2.5f*wheelThick);
+		cartLoc.Z = -0.5f*boxSize.Z - 2.5f*wheelThick;
+		rootNode.Position = cartLoc;
 
 		MeshInstance3D box = GetNode<MeshInstance3D>("RootNode/Box");
 		BoxMesh boxMesh = (BoxMesh)box.Mesh;
