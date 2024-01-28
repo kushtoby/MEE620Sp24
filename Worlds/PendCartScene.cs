@@ -8,6 +8,12 @@ using System;
 
 public partial class PendCartScene : Node3D
 {
+	// exported system parameters
+	[Export]
+	double cartMass = 1.9;
+	[Export]
+	double pendMass = 2.8; 
+
 	// Camera Stuff
 	CamRig cam;
 	float longitudeDeg;
@@ -56,8 +62,6 @@ public partial class PendCartScene : Node3D
 		// build the simulation
 		float wallHeight = 2.0f;
 		double pendLength = 1.5;
-		//double pendMass = 1.9;
-		//double cartMass = 2.8;
 		opMode = OpMode.SetPosition;
 		dxMan = 0.02f;
 		dthetaMan = 0.03f;

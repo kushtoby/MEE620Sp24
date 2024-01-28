@@ -16,15 +16,15 @@ public class PendCartSim : Simulator
     //------------------------------------------------------------------------
     public PendCartSim() : base(4)
     {
-        L = 0.9;
-        mc = 1.4;
-        mp = 1.1;
+        L = 1.5;
+        mc = 1.9;
+        mp = 2.8;
 
         // Default initial conditions
-        x[0] = 0.0;    // shoulder angle
-        x[1] = 0.0;    // elbow angle
-        x[2] = 0.0;    // generalized speed 1
-        x[3] = 0.0;    // generalized speed 2
+        x[0] = 0.0;    // generalized coord: cart position
+        x[1] = 0.0;    // generalized coord: pendulum
+        x[2] = 0.0;    // generalized speed: cart
+        x[3] = 0.0;    // generalized speed: pendulum
 
         SetRHSFunc(RHSFuncPendCart);
     }
@@ -35,8 +35,8 @@ public class PendCartSim : Simulator
     //------------------------------------------------------------------------
     private void RHSFuncPendCart(double[] xx, double t, double[] ff)
     {
-        double theta1 = xx[0];
-        double theta2 = xx[1];
+        double xCart = xx[0];
+        double theta = xx[1];
         double u1 = xx[2];
         double u2 = xx[3];
 
@@ -48,4 +48,103 @@ public class PendCartSim : Simulator
         ff[3] = 0.0;   // time derivative of state u2
     }
 
+
+    //------------------------------------------------------------------------
+    // Getters/Setters
+    //------------------------------------------------------------------------
+
+    // Pendulum length -----------------------------
+    public double PendulumLength
+    {
+        set{
+            if(value >= 0.1){
+                L = value;
+            }
+        }
+
+        get{
+            return L;
+        }
+    }
+
+    // Pendulum mass -------------------------------
+    public double PendulumMass
+    {
+        set{
+            if(value >= 0.01){
+                mp = value;
+            }
+        }
+
+        get{
+            return mp;
+        }
+    }
+
+    // Cart mass -----------------------------------
+    public double CartMass
+    {
+        set{
+            if(value >= 0.01){
+                mc = value;
+            }
+        }
+
+        get{
+            return mc;
+        }
+    }
+
+    // Cart position ------------------------------
+    public double Position
+    {
+        set{
+            if(value > 4.0)
+                value = 4.0;
+            if(value < -4.0)
+                value = -4.0;
+
+            x[0] = value;
+        }
+
+        get{
+            return x[0];
+        }
+    }
+
+    // Pendulum angle ----------------------------
+    public double Angle
+    {
+        set{
+            x[1] = value;
+        }
+
+        get{
+            return x[1];
+        }
+    }
+
+    // Generalized Speed Cart ---------
+    public double GenSpeedCart
+    {
+        set{
+            x[2] = value;
+        }
+
+        get{
+            return x[2];
+        }
+    }
+
+    // Generalized Speed Pendulum ---------
+    public double GenSpeedPend
+    {
+        set{
+            x[3] = value;
+        }
+
+        get{
+            return x[3];
+        }
+    }
 }
