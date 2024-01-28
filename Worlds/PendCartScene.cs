@@ -277,7 +277,10 @@ public partial class PendCartScene : Node3D
 		if(opMode != OpMode.Simulate)
 			return;
 
-		sim.Step(time, delta);
-		time += delta;
+		double deltaByTwo = 0.5*delta;
+		sim.Step(time, deltaByTwo);
+		time += deltaByTwo;
+		sim.Step(time, deltaByTwo);
+		time += deltaByTwo;
 	}
 }
