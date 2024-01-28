@@ -26,7 +26,7 @@ uv1_triplanar = true
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_otcwt"]
 material = SubResource("StandardMaterial3D_1l4rq")
-size = Vector2(4, 1)
+size = Vector2(5, 2)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nnr6a"]
 albedo_texture = ExtResource("4_vyo1y")
@@ -34,7 +34,7 @@ uv1_triplanar = true
 
 [sub_resource type="BoxMesh" id="BoxMesh_e0qhv"]
 material = SubResource("StandardMaterial3D_nnr6a")
-size = Vector3(4, 2, 1)
+size = Vector3(5, 2, 1)
 
 [node name="PendCartScene" type="Node3D"]
 script = ExtResource("1_nlfyv")
@@ -49,7 +49,7 @@ shadow_enabled = true
 [node name="CamRig" parent="." instance=ExtResource("1_2go6i")]
 
 [node name="Floor" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1)
 mesh = SubResource("PlaneMesh_otcwt")
 
 [node name="Wall" type="MeshInstance3D" parent="."]
