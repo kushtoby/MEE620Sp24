@@ -157,6 +157,8 @@ public partial class PendCartScene : Node3D
 				datDisplay.SetValue(3, "---");
 				datDisplay.SetValue(4, "---");
 				datDisplay.SetValue(5, "---");
+				datDisplay.SetValue(6, "---");
+				datDisplay.SetValue(7, "---");
 			}
 
 			if(Input.IsActionPressed("ui_left")){
@@ -167,6 +169,8 @@ public partial class PendCartScene : Node3D
 				datDisplay.SetValue(3, "---");
 				datDisplay.SetValue(4, "---");
 				datDisplay.SetValue(5, "---");
+				datDisplay.SetValue(6, "---");
+				datDisplay.SetValue(7, "---");
 			}
 
 			if(Input.IsActionJustPressed("ui_focus_next")){
@@ -200,6 +204,8 @@ public partial class PendCartScene : Node3D
 				datDisplay.SetValue(3, "---");
 				datDisplay.SetValue(4, "---");
 				datDisplay.SetValue(5, "---");
+				datDisplay.SetValue(6, "---");
+				datDisplay.SetValue(7, "---");
 			}
 
 			if(Input.IsActionPressed("ui_left")){
@@ -210,6 +216,8 @@ public partial class PendCartScene : Node3D
 				datDisplay.SetValue(3, "---");
 				datDisplay.SetValue(4, "---");
 				datDisplay.SetValue(5, "---");
+				datDisplay.SetValue(6, "---");
+				datDisplay.SetValue(7, "---");
 			}
 
 			if(Input.IsActionJustPressed("ui_focus_next")){
