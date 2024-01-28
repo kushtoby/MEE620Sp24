@@ -124,7 +124,7 @@ public class PendCartSim : Simulator
         }
     }
 
-    // Generalized Speed Cart ---------
+    // Generalized Speed Cart ---------------------
     public double GenSpeedCart
     {
         set{
@@ -136,7 +136,7 @@ public class PendCartSim : Simulator
         }
     }
 
-    // Generalized Speed Pendulum ---------
+    // Generalized Speed Pendulum ---------=------
     public double GenSpeedPend
     {
         set{
@@ -145,6 +145,54 @@ public class PendCartSim : Simulator
 
         get{
             return x[3];
+        }
+    }
+
+    // Kinetic energy ----------------------------
+    public double KineticEnergy
+    {
+        get{
+            double u1 = x[2];
+            double u2 = x[3];
+
+            //########## YOU NEED TO CALCULATE THIS ###########
+            return 0.0; 
+        }
+    }
+
+    // Potential energy ------------------------------
+    public double PotentialEnergy
+    {
+         get{
+            double xCart = x[0];
+            double theta = x[1];
+
+            //########## YOU NEED TO CALCULATE THIS ###########
+            return 0.0; 
+        }
+    }
+
+    // Center of Mass, horizontal coordinate ---------------
+    public double MassCenterX
+    {
+        get{
+            double xCart = x[0];
+            double theta = x[1];
+
+            //########## YOU NEED TO CALCULATE THIS ###########
+            return 0.0; 
+        }
+    }
+
+    // Center of Mass, vertical coordinate ------------------
+    public double MassCenterY
+    {
+        get{
+            double xCart = x[0];
+            double theta = x[1];
+
+            //########## YOU NEED TO CALCULATE THIS ###########
+            return 0.0; 
         }
     }
 }
