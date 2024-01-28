@@ -46,6 +46,9 @@ public partial class PendCartScene : Node3D
 	float dthetaMan;   // amount angle is changed each time updated manually
 	bool manChanged;   // position or angle has been changed manually
 
+	PendCartSim sim;       // the simulaion
+	double time;           // self explanitory
+
 	Label instructLabel;   // label to display instructions
 	String instManPos;     // instructions when in SetPosition mode
 	String instManAngle;   // instructions when in SetAngle mode
@@ -66,6 +69,15 @@ public partial class PendCartScene : Node3D
 		dxMan = 0.02f;
 		dthetaMan = 0.03f;
 		manChanged = false;
+		sim = new PendCartSim();
+		sim.PendulumLength = pendLength;
+		sim.PendulumMass = pendMass;
+		sim.CartMass = cartMass;
+		sim.Position = 0.0;
+		sim.Angle = 0.0;
+		sim.GenSpeedCart = 0.0;
+		sim.GenSpeedPend = 0.0;
+		time = 0.0;
 
 		// build the model
 		model = GetNode<PendCartModel>("PendCartModel");
@@ -165,10 +177,10 @@ public partial class PendCartScene : Node3D
 
 			if(Input.IsActionJustPressed("ui_accept")){
 				if(manChanged){
-					// sim.Angle1 = (double)pend1Rotation.Z;
-					// sim.Angle2 = (double)pend2Rotation.Z;
-					// sim.GenSpeed1 = 0.0;
-					// sim.GenSpeed2 = 0.0;
+					sim.Position = (double)cartX;
+					sim.Angle = (double)pendAngle;
+					sim.GenSpeedCart = 0.0;
+					sim.GenSpeedPend = 0.0;
 				}
 
 				opMode = OpMode.Simulate;
@@ -208,10 +220,10 @@ public partial class PendCartScene : Node3D
 
 			if(Input.IsActionJustPressed("ui_accept")){
 				if(manChanged){
-					// sim.Angle1 = (double)pend1Rotation.Z;
-					// sim.Angle2 = (double)pend2Rotation.Z;
-					// sim.GenSpeed1 = 0.0;
-					// sim.GenSpeed2 = 0.0;
+					sim.Position = (double)cartX;
+					sim.Angle = (double)pendAngle;
+					sim.GenSpeedCart = 0.0;
+					sim.GenSpeedPend = 0.0;
 				}
 
 				opMode = OpMode.Simulate;
@@ -221,5 +233,51 @@ public partial class PendCartScene : Node3D
 			}
 			return;
 		} // if OpMode.SetAngle
+
+		// update model position and angle
+		cartX = (float)sim.Position;
+		pendAngle = (float)sim.Angle;
+		model.SetPositionAngle(cartX, pendAngle);
+		
+		// data display
+		if(uiRefreshCtr > uiRefreshTHold){
+			float ke = (float)sim.KineticEnergy;
+			float pe = (float)sim.PotentialEnergy;
+			float xG = (float)sim.MassCenterX;
+			float yG = (float)sim.MassCenterY;
+
+			datDisplay.SetValue(1, cartX);
+			datDisplay.SetValue(2, Mathf.RadToDeg(pendAngle));
+			datDisplay.SetValue(3, ke);
+			datDisplay.SetValue(4, pe);
+			datDisplay.SetValue(5, ke+pe);
+			datDisplay.SetValue(6, xG);
+			datDisplay.SetValue(7, yG);
+			uiRefreshCtr = 0;   // reset the counter
+		}
+		++uiRefreshCtr;
+
+		if(opMode == OpMode.Simulate){
+			if(Input.IsActionJustPressed("ui_accept")){
+				opMode = OpMode.SetPosition;
+				datDisplay.SetValue(0, opMode.ToString());
+				instructLabel.Text = instManPos;
+			}
+		} // end if OpMode.Simulate
+
+	} // end _Process
+
+	//------------------------------------------------------------------------
+    // _PhysicsProcess:
+    //------------------------------------------------------------------------
+    public override void _PhysicsProcess(double delta)
+    {
+        base._PhysicsProcess(delta);
+
+		if(opMode != OpMode.Simulate)
+			return;
+
+		sim.Step(time, delta);
+		time += delta;
 	}
 }
