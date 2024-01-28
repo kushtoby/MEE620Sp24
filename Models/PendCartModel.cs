@@ -26,7 +26,6 @@ public partial class PendCartModel : Node3D
 	//------------------------------------------------------------------------
 	public override void _Ready()
 	{
-		GD.Print("PendCartModel Ready");
 		boxSize = new Vector3(0.5f, 0.35f, 0.5f);
 		pendLength = 0.8f;
 		wheelRad = 0.1f;
@@ -59,7 +58,7 @@ public partial class PendCartModel : Node3D
 		wheelAngle.Z = -x/wheelRad;
 
 		rootNode.Position = cartLoc;
-		pendModel.Rotation = cartLoc;
+		pendModel.Rotation = pendAngle;
 		for(int i=0;i<4;++i){
 			Wheels[i].Rotation = wheelAngle;
 		}
@@ -70,8 +69,6 @@ public partial class PendCartModel : Node3D
 	//------------------------------------------------------------------------
 	private void SetParams()
 	{
-		GD.Print("PendCartModel:SetParams");
-
 		cartLoc.Z = -0.5f*boxSize.Z - 2.5f*wheelThick;
 		rootNode.Position = cartLoc;
 
