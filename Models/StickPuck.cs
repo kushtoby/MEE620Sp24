@@ -33,11 +33,6 @@ public partial class StickPuck : Node3D
 		puckMesh = (CylinderMesh)puck.Mesh;
 	}
 
-	// Called every frame. 'delta' is the elapsed time since the previous frame.
-	public override void _Process(double delta)
-	{
-	}
-
 	//------------------------------------------------------------------------
 	// setters
 	//------------------------------------------------------------------------
