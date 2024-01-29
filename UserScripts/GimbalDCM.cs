@@ -8,6 +8,9 @@ public class GimbalDCM
 {
     double [,] DCM;
 
+    //------------------------------------------------------------------------
+    // GimbalDCM  constructor
+    //------------------------------------------------------------------------
     public GimbalDCM()
     {
         DCM = new double[3,3];
@@ -30,16 +33,26 @@ public class GimbalDCM
         // students, write your expressions that go into the DCM below
         //        Array indices start at zero in C#.
 
-        DCM[0,0] = 0.0; // first row
+        DCM[0,0] = 1.0; // first row
         DCM[0,1] = 0.0;
         DCM[0,2] = 0.0;
 
         DCM[1,0] = 0.0; // second row
-        DCM[1,1] = 0.0;
+        DCM[1,1] = 1.0;
         DCM[1,2] = 0.0;
 
         DCM[2,0] = 0.0; // third row
         DCM[2,1] = 0.0;
-        DCM[2,2] = 0.0;
+        DCM[2,2] = 1.0;
+    }
+
+
+
+    //------------------------------------------------------------------------
+    // GetDCM:    STUDENTS DO NOT MODIFY THIS METHOD
+    //------------------------------------------------------------------------
+    public float GetDCM(int i, int j)
+    {
+        return (float)DCM[i,j];
     }
 }

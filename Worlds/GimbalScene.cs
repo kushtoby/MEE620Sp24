@@ -18,6 +18,7 @@ public partial class GimbalScene : Node3D
 	// ModelStuff
 	GimbalToy model;
 	AirplaneToy model2;
+	bool showGhost;
 
 	// Camera Stuff
 	CamRig cam;
@@ -26,7 +27,6 @@ public partial class GimbalScene : Node3D
 	float camDist;
 	float camFOV;
 	Vector3 camTg;       // coords of camera target
-
 
 	// Data display stuff
 	UIPanelDisplay datDisplay;
@@ -60,6 +60,8 @@ public partial class GimbalScene : Node3D
 		model2 = GetNode<AirplaneToy>("AirplaneToy");
 		model2.Position = new Vector3(0.0f, ctrHeight, 0.0f);
 		model2.SetTransparency(0.9f);
+		showGhost = false;
+		model2.Hide();
 
 		// Set up the camera rig
 		longitudeDeg = 30.0f;
@@ -156,6 +158,17 @@ public partial class GimbalScene : Node3D
 			if(actvIdx >2)
 				actvIdx = 0;
 			datDisplay.SetLabel(actvIdx+2, angNames[actvIdx]+">>");
+		}
+
+		if(Input.IsActionJustPressed("ui_ghost")){
+			if(showGhost){
+				showGhost = false;
+				model2.Hide();
+			}
+			else{
+				showGhost = true;
+				model2.Show();
+			}
 		}
 	}
 }
