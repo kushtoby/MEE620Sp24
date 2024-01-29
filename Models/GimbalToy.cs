@@ -56,10 +56,10 @@ public partial class GimbalToy : Node3D
 	//------------------------------------------------------------------------
 	// ApplyAngles:
 	//------------------------------------------------------------------------
-	public void ApplyAngles(float angle1, float angle2, float angle3)
+	public void SetAngles(float angle1, float angle2, float angle3)
 	{
 		if(eulerMode == EulerAngleMode.YPR)
-			ApplyYPR(angle1, angle2, angle3);
+			SetAnglesYPR(angle1, angle2, angle3);
 		else{
 			GD.PrintErr("ApplyAngles -- Something's wrong.");
 		}
@@ -84,9 +84,9 @@ public partial class GimbalToy : Node3D
 	}
 	
 	//------------------------------------------------------------------------
-	// ApplyYPR: Yaw Pitch Roll Euler angle application
+	// SetAnglesYPR: Yaw Pitch Roll Euler angle application
 	//------------------------------------------------------------------------
-	private void ApplyYPR(float angle1, float angle2, float angle3)
+	private void SetAnglesYPR(float angle1, float angle2, float angle3)
 	{
 		rot1.Y = angle1;
 		rot2.Z = angle2;

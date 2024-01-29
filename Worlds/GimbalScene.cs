@@ -46,7 +46,7 @@ public partial class GimbalScene : Node3D
 		angNames = new string[3];
 		angles = new float[3];
 		actvIdx = 0;
-		dTheta = 3.0f;
+		dTheta = 2.0f;
 
 		configStrValid = SetConfig(modeString);
 
@@ -141,7 +141,8 @@ public partial class GimbalScene : Node3D
 
 		if(angleChanged){
 			datDisplay.SetValue(actvIdx+2, angles[actvIdx]);
-			// also need to send change to model
+			model.SetAngles(Mathf.DegToRad(angles[0]), 
+				Mathf.DegToRad(angles[1]), Mathf.DegToRad(angles[2]));
 		}
 
 		if(Input.IsActionJustPressed("ui_focus_next")){
