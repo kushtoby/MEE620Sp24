@@ -27,7 +27,7 @@ public partial class GimbalScene : Node3D
 		float ctrHeight = 1.7f;
 		model = GetNode<GimbalToy>("GimbalToy");
 		model.Position = new Vector3(0.0f, ctrHeight, 0.0f);
-		model.SetUp("Ypr");
+		model.Setup("Ypr");
 
 		// Set up the camera rig
 		longitudeDeg = 30.0f;
