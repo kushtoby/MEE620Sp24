@@ -6,6 +6,14 @@ using System;
 
 public partial class GimbalScene : Node3D
 {
+	[Export]
+	String modeString = "YPR";
+	bool configStrValid;
+	String modeStr;
+	String[] angNames;
+	float[] angles;
+	int actvIdx;
+
 	// ModelStuff
 	GimbalToy model;
 
@@ -17,17 +25,34 @@ public partial class GimbalScene : Node3D
 	float camFOV;
 	Vector3 camTg;       // coords of camera target
 
+
+	// Data display stuff
+	UIPanelDisplay datDisplay;
+	int uiRefreshCtr;     //counter for display refresh
+	int uiRefreshTHold;   // threshold for display refresh
+
+	Label instructLabel;
+	String instStr;
+
 	//------------------------------------------------------------------------
 	// _Ready: Called once when the node enters the scene tree for the first 
 	//         time.
 	//------------------------------------------------------------------------
 	public override void _Ready()
 	{
+		GD.Print("Gimbal Scene");
+
+		angNames = new string[3];
+		angles = new float[3];
+		actvIdx = 0;
+
+		configStrValid = SetConfig(modeString);
 
 		float ctrHeight = 1.7f;
 		model = GetNode<GimbalToy>("GimbalToy");
 		model.Position = new Vector3(0.0f, ctrHeight, 0.0f);
-		model.Setup("Ypr");
+		if(configStrValid)
+			model.Setup(modeStr);
 
 		// Set up the camera rig
 		longitudeDeg = 30.0f;
@@ -43,6 +68,52 @@ public partial class GimbalScene : Node3D
 		cam.FOVDeg = camFOV;
 		cam.Target = camTg;
 
+		// Set up data display
+		datDisplay = GetNode<UIPanelDisplay>(
+			"UINode/MarginContainer/DatDisplay");
+		datDisplay.SetNDisplay(5);
+
+		datDisplay.SetDigitsAfterDecimal(2, 1);
+		datDisplay.SetDigitsAfterDecimal(3, 1);
+		datDisplay.SetDigitsAfterDecimal(4, 1);
+
+		datDisplay.SetLabel(0,"Euler Angles");
+		datDisplay.SetValue(0,"");
+		datDisplay.SetLabel(1,"Mode");
+		datDisplay.SetValue(1, "Manual");
+		datDisplay.SetLabel(2, angNames[0] + ">>");
+		datDisplay.SetValue(2, angles[0]);
+		datDisplay.SetLabel(3, angNames[1]);
+		datDisplay.SetValue(3, angles[1]);
+		datDisplay.SetLabel(4, angNames[2]);
+		datDisplay.SetValue(4, angles[2]);
+		datDisplay.SetDigitsAfterDecimal(2, 1);
+		datDisplay.SetDigitsAfterDecimal(3, 1);
+		datDisplay.SetDigitsAfterDecimal(4, 1);
+
+		// instruction label
+		instructLabel = GetNode<Label>(
+			"UINode/MarginContainerBL/InstructLabel");
+		instStr = "Press <TAB> to switch angles, " +
+			"arrow keys to increase/decrease angle.";
+		instructLabel.Text = instStr;
+	}
+
+	private bool SetConfig(String mm)
+	{
+		String mStr = mm.ToUpper();
+		if(mStr == "YPR"){
+			modeStr = "YPR";
+			angNames[0] = "Yaw (deg)";
+			angNames[1] = "Pitch (deg)";
+			angNames[2] = "Roll (deg)";
+			angles[0] = angles[1] = angles[2] = 0.0f;
+			return true;
+		}
+
+		mStr = "ERROR";
+		angNames[0] = angNames[1] = angNames[2] = "ERROR";
+		return false;
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
