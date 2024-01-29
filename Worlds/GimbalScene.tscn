@@ -1,9 +1,10 @@
-[gd_scene load_steps=11 format=3 uid="uid://8xnuhhkhrhfw"]
+[gd_scene load_steps=12 format=3 uid="uid://8xnuhhkhrhfw"]
 
 [ext_resource type="Script" path="res://Worlds/GimbalScene.cs" id="1_1hx0g"]
 [ext_resource type="Texture2D" uid="uid://j5d15pfgqxyw" path="res://Textures/kennyDK4.png" id="1_ajr5c"]
 [ext_resource type="PackedScene" uid="uid://cldl1guhfg1sn" path="res://Models/GimbalToy.tscn" id="2_ixhao"]
 [ext_resource type="PackedScene" uid="uid://blxgponho1qji" path="res://Utils/CamRig.tscn" id="2_wevxr"]
+[ext_resource type="PackedScene" uid="uid://be3ncv5dmnnc8" path="res://Models/AirplaneToy.tscn" id="3_33k1d"]
 [ext_resource type="PackedScene" uid="uid://uuj16p5aw6lj" path="res://Utils/UIPanelDisplay.tscn" id="5_asmif"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_j7y3n"]
@@ -32,6 +33,10 @@ script = ExtResource("1_1hx0g")
 
 [node name="GimbalToy" parent="." instance=ExtResource("2_ixhao")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7, 0)
+
+[node name="AirplaneToy" parent="." instance=ExtResource("3_33k1d")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 1, 0)
+visible = false
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_4absd")

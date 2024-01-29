@@ -17,6 +17,7 @@ public partial class GimbalScene : Node3D
 
 	// ModelStuff
 	GimbalToy model;
+	AirplaneToy model2;
 
 	// Camera Stuff
 	CamRig cam;
@@ -55,6 +56,10 @@ public partial class GimbalScene : Node3D
 		model.Position = new Vector3(0.0f, ctrHeight, 0.0f);
 		if(configStrValid)
 			model.Setup(modeStr);
+
+		model2 = GetNode<AirplaneToy>("AirplaneToy");
+		model2.Position = new Vector3(0.0f, ctrHeight, 0.0f);
+		model2.SetTransparency(0.9f);
 
 		// Set up the camera rig
 		longitudeDeg = 30.0f;
