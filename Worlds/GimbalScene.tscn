@@ -1,7 +1,8 @@
-[gd_scene load_steps=9 format=3 uid="uid://8xnuhhkhrhfw"]
+[gd_scene load_steps=10 format=3 uid="uid://8xnuhhkhrhfw"]
 
 [ext_resource type="Script" path="res://Worlds/GimbalScene.cs" id="1_1hx0g"]
 [ext_resource type="Texture2D" uid="uid://j5d15pfgqxyw" path="res://Textures/kennyDK4.png" id="1_ajr5c"]
+[ext_resource type="PackedScene" uid="uid://cldl1guhfg1sn" path="res://Models/GimbalToy.tscn" id="2_ixhao"]
 [ext_resource type="PackedScene" uid="uid://blxgponho1qji" path="res://Utils/CamRig.tscn" id="2_wevxr"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_j7y3n"]
@@ -27,6 +28,9 @@ size = Vector2(4, 4)
 
 [node name="GimbalScene" type="Node3D"]
 script = ExtResource("1_1hx0g")
+
+[node name="GimbalToy" parent="." instance=ExtResource("2_ixhao")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7, 0)
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_4absd")
