@@ -33,8 +33,8 @@ public class SimplePendSim : Simulator
 
         // Evaluate right sides of differential equations of motion
         // ##### You will need to provide these ###### //
-        ff[0] = 0.0;   // time derivative of state theta
-        ff[1] = 0.0;   // time derivative of state u
+        ff[0] = u/L;   // time derivative of state theta
+        ff[1] = -g*Math.Sin(theta);   // time derivative of state u
     }
 
     //------------------------------------------------------------------------
@@ -86,7 +86,7 @@ public class SimplePendSim : Simulator
             double u = x[1];
 
             //########## YOU NEED TO CALCULATE THIS ###########
-            return 0.0; 
+            return 0.5*u*u; 
         }
     }
 
@@ -97,7 +97,7 @@ public class SimplePendSim : Simulator
             double theta = x[0];
 
             //########## YOU NEED TO CALCULATE THIS ###########
-            return 0.0; 
+            return -g*L*Math.Cos(theta); 
         }
     }
 }
