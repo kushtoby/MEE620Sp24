@@ -13,6 +13,7 @@ public partial class GimbalScene : Node3D
 	String[] angNames;
 	float[] angles;
 	int actvIdx;
+	float dTheta;
 
 	// ModelStuff
 	GimbalToy model;
@@ -45,6 +46,7 @@ public partial class GimbalScene : Node3D
 		angNames = new string[3];
 		angles = new float[3];
 		actvIdx = 0;
+		dTheta = 3.0f;
 
 		configStrValid = SetConfig(modeString);
 
@@ -87,15 +89,13 @@ public partial class GimbalScene : Node3D
 		datDisplay.SetValue(3, angles[1]);
 		datDisplay.SetLabel(4, angNames[2]);
 		datDisplay.SetValue(4, angles[2]);
-		datDisplay.SetDigitsAfterDecimal(2, 1);
-		datDisplay.SetDigitsAfterDecimal(3, 1);
-		datDisplay.SetDigitsAfterDecimal(4, 1);
 
 		// instruction label
 		instructLabel = GetNode<Label>(
 			"UINode/MarginContainerBL/InstructLabel");
 		instStr = "Press <TAB> to switch angles, " +
-			"arrow keys to increase/decrease angle.";
+			"arrow keys to increase/decrease angle, or 0 to "+
+			"zero the angle.";
 		instructLabel.Text = instStr;
 	}
 
@@ -116,8 +116,40 @@ public partial class GimbalScene : Node3D
 		return false;
 	}
 
-	// Called every frame. 'delta' is the elapsed time since the previous frame.
+	//------------------------------------------------------------------------
+	// _Process: Called every frame. 'delta' is the elapsed time since the 
+	//           previous frame.
+	//------------------------------------------------------------------------
 	public override void _Process(double delta)
 	{
+		bool angleChanged = false;
+
+		if(Input.IsActionPressed("ui_right")){
+			angles[actvIdx] += dTheta;
+			angleChanged = true;
+		}
+
+		if(Input.IsActionPressed("ui_left")){
+			angles[actvIdx] -= dTheta;
+			angleChanged = true;
+		}
+
+		if(Input.IsActionJustPressed("ui_zero")){
+			angles[actvIdx]  = 0.0f;
+			angleChanged = true;
+		}
+
+		if(angleChanged){
+			datDisplay.SetValue(actvIdx+2, angles[actvIdx]);
+			// also need to send change to model
+		}
+
+		if(Input.IsActionJustPressed("ui_focus_next")){
+			datDisplay.SetLabel(actvIdx+2, angNames[actvIdx]);
+			++actvIdx;
+			if(actvIdx >2)
+				actvIdx = 0;
+			datDisplay.SetLabel(actvIdx+2, angNames[actvIdx]+">>");
+		}
 	}
 }
