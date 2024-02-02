@@ -42,12 +42,28 @@ public class DoublePendSim : Simulator
         double u1 = xx[2];
         double u2 = xx[3];
 
+        
         // Evaluate right sides of differential equations of motion
         // ##### You will need to provide these ###### //
-        ff[0] = 0.0;   // time derivative of state theta1
-        ff[1] = 0.0;   // time derivative of state theta2
-        ff[2] = 0.0;   // time derivative of state u1
-        ff[3] = 0.0;   // time derivative of state u2
+        double sinTh1 = Math.Sin(theta1);
+        double cosTh2 = Math.Cos(theta2);
+        double sinTh2 = Math.Sin(theta2);
+        double sinSum = Math.Sin(theta1 + theta2);
+
+        double A = (m1 + m2) * L1 * L1;
+        double B = m2 * L1 * L2 * cosTh2;
+        double C = B;
+        double D = m2 * L2 * L2;
+
+        double det = A*D - B*C;
+
+        double R1 = -m1*g*L1*sinTh1 - m2*g*L1*sinTh1 + m2*L1*L2*u2*u2*sinTh2;
+        double R2 = -m2*g*L2*sinSum - m2*L1*L2*u1*u1*sinTh2;
+
+        ff[0] = u1;   // time derivative of state theta1
+        ff[1] = u2-u1;   // time derivative of state theta2
+        ff[2] = (1/det) * ((D * R1)- (B*R2));   // time derivative of state u1
+        ff[3] = (1/det) * ((-C *R1)+ (A * R2));   // time derivative of state u2
     }
 
     //------------------------------------------------------------------------
@@ -162,11 +178,15 @@ public class DoublePendSim : Simulator
     public double KineticEnergy
     {
         get{
+            double theta2 = x[1];
             double u1 = x[2];
             double u2 = x[3];
 
             //########## YOU NEED TO CALCULATE THIS ###########
-            return 0.0; 
+            double v1Sq = L1*L1*u1*u1;
+            double v2Sq = v1Sq + L2*L2*u2*u2 + 2.0*L1*L2*u1*u2*Math.Cos(theta2);
+            
+            return 0.5 * (m1*v1Sq + m2*v2Sq); 
         }
     }
 
@@ -177,8 +197,9 @@ public class DoublePendSim : Simulator
             double theta1 = x[0];
             double theta2 = x[1];
 
-            //########## YOU NEED TO CALCULATE THIS ###########
-            return 0.0; 
+            //######1#### YOU NEED TO CALCULATE THIS ###########
+            double pe = -1* ((m1 * g * L1 * Math.Cos(theta1)) + (m2 *g *(L1*Math.Cos(theta1) + L2*Math.Cos(theta1+theta2))));
+            return pe; 
         }
     }
 }
