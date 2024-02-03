@@ -32,8 +32,8 @@ public class DoublePendSim : Simulator
     }
 
     //------------------------------------------------------------------------
-    // RHSFuncDoublePend:  Evaluates the right sides of the differential
-    //                     equations for the double pendulum
+    // RHSFuncSimplePend:  Evaluates the right sides of the differential
+    //                     equations for the simple pendulum
     //------------------------------------------------------------------------
     private void RHSFuncDoublePend(double[] xx, double t, double[] ff)
     {
