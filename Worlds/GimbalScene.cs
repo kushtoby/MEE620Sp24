@@ -62,6 +62,7 @@ public partial class GimbalScene : Node3D
 		model2.SetTransparency(0.9f);
 		showGhost = false;
 		model2.Hide();
+		model.SetRefModel(model2);
 
 		// Set up the camera rig
 		longitudeDeg = 30.0f;

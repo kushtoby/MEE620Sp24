@@ -1,5 +1,6 @@
 //============================================================================
 // GimbalToy.cs
+// STUDENTS SHOULD NOT MODIFY THIS FILE
 //============================================================================
 using Godot;
 using System;
@@ -9,6 +10,8 @@ public partial class GimbalToy : Node3D
 	Node3D outerRingNode;
 	Node3D middleRingNode;
 	Node3D innerRingNode;
+	Node3D refModel; // the reference model
+	bool hasRefModel; // whether the reference model has been provided
 
 	Vector3 rot1;    // first rotation vector
 	Vector3 rot2;    // second rotation vector
@@ -45,6 +48,8 @@ public partial class GimbalToy : Node3D
 		innerRingNode = GetNode<Node3D>
 			("OuterRingNode/MiddleRingNode/InnerRingNode");
 
+		hasRefModel = false;
+
 		rot1 = new Vector3();
 		rot2 = new Vector3();
 		rot3 = new Vector3();
@@ -55,6 +60,15 @@ public partial class GimbalToy : Node3D
 		basisZ = new Vector3();
 		basisCalc = new Basis();
 		ghostQuat = new Quaternion();
+	}
+
+	//------------------------------------------------------------------------
+	// SetRefModel:  Provides the reference model
+	//------------------------------------------------------------------------
+	public void SetRefModel(Node3D refm)
+	{
+		refModel = refm;
+		hasRefModel = true;
 	}
 
 	//------------------------------------------------------------------------
@@ -112,9 +126,10 @@ public partial class GimbalToy : Node3D
 			basisCalc.Z = basisZ;
 
 			ghostQuat = basisCalc.GetRotationQuaternion();
+			refModel.Quaternion = ghostQuat;
 		}
 		else{
-			
+			GD.PrintErr("Error in calculating DCM");
 		}
 	}
 
