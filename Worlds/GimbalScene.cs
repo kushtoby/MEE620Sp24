@@ -143,6 +143,16 @@ public partial class GimbalScene : Node3D
 			angleChanged = true;
 		}
 
+		if(Input.IsActionJustPressed("ui_up")){
+			angles[actvIdx] += dTheta;
+			angleChanged = true;
+		}
+
+		if(Input.IsActionJustPressed("ui_down")){
+			angles[actvIdx] -= dTheta;
+			angleChanged = true;
+		}
+
 		if(Input.IsActionJustPressed("ui_zero")){
 			angles[actvIdx]  = 0.0f;
 			angleChanged = true;
