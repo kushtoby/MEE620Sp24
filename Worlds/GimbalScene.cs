@@ -70,8 +70,8 @@ public partial class GimbalScene : Node3D
 		// Set up the camera rig
 		longitudeDeg = 30.0f;
 		latitudeDeg = 15.0f;
-		camDist = 4.0f;
-		camFOV = 55.0f;
+		camDist = 10.0f;
+		camFOV = 20.0f;
 
 		camTg = new Vector3(0.0f, ctrHeight, 0.0f);
 		cam = GetNode<CamRig>("CamRig");
