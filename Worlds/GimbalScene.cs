@@ -61,7 +61,7 @@ public partial class GimbalScene : Node3D
 
 		model2 = GetNode<AirplaneToy>("AirplaneToy");
 		model2.Position = new Vector3(0.0f, ctrHeight, 0.0f);
-		model2.SetTransparency(0.9f);
+		model2.SetTransparency(0.8f);
 		showGhost = false;
 		model2.ShowCones();
 		model2.Hide();
