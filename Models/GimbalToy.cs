@@ -86,18 +86,22 @@ public partial class GimbalToy : Node3D
 	//------------------------------------------------------------------------
 	// SetAngles:
 	//------------------------------------------------------------------------
-	public void SetAngles(float angle1, float angle2, float angle3)
+	public int SetAngles(float angle1, float angle2, float angle3)
 	{
+		int retCode = 0;
+
 		if(eulerMode == EulerAngleMode.YPR)
 			SetAnglesYPR(angle1, angle2, angle3);
 		else{
 			GD.PrintErr("ApplyAngles -- Something's wrong.");
+			return 1;
 		}
 
 		outerRingNode.Rotation = rot1;
 		middleRingNode.Rotation = rot2;
 		innerRingNode.Rotation = rot3;
 
+		//GD.Print("Process the DCM");
 		//process the DCM
 		bool dcmChecks = true;
 		float det = basisX.X * basisY.Y * basisZ.Z +
@@ -120,6 +124,11 @@ public partial class GimbalToy : Node3D
 		if(Mathf.Abs(basisZ.Dot(basisY)) > 0.002f )
 			dcmChecks = false;
 
+		// GD.Print("--- " + basisY.Dot(basisZ));
+		// GD.Print(basisX);
+		// GD.Print(basisY);
+		// GD.Print(basisZ);
+
 		if(dcmChecks){
 			basisCalc.X = basisX;
 			basisCalc.Y = basisY;
@@ -129,8 +138,11 @@ public partial class GimbalToy : Node3D
 			refModel.Quaternion = ghostQuat;
 		}
 		else{
-			GD.PrintErr("Error in calculating DCM");
+			//GD.PrintErr("Bad DCM");
+			retCode = 2;
 		}
+
+		return retCode;
 	}
 
 	//------------------------------------------------------------------------

@@ -14,6 +14,7 @@ public partial class GimbalScene : Node3D
 	float[] angles;
 	int actvIdx;
 	float dTheta;
+	bool dcmValid;
 
 	// ModelStuff
 	GimbalToy model;
@@ -48,6 +49,7 @@ public partial class GimbalScene : Node3D
 		angles = new float[3];
 		actvIdx = 0;
 		dTheta = 2.0f;
+		dcmValid = true;
 
 		configStrValid = SetConfig(modeString);
 
@@ -82,30 +84,36 @@ public partial class GimbalScene : Node3D
 		// Set up data display
 		datDisplay = GetNode<UIPanelDisplay>(
 			"UINode/MarginContainer/DatDisplay");
-		datDisplay.SetNDisplay(5);
+		datDisplay.SetNDisplay(6);
 
-		datDisplay.SetDigitsAfterDecimal(2, 1);
 		datDisplay.SetDigitsAfterDecimal(3, 1);
 		datDisplay.SetDigitsAfterDecimal(4, 1);
+		datDisplay.SetDigitsAfterDecimal(5, 1);
 
 		datDisplay.SetLabel(0,"Euler Angles");
 		datDisplay.SetValue(0,"");
 		datDisplay.SetLabel(1,"Mode");
 		datDisplay.SetValue(1, "Manual");
-		datDisplay.SetLabel(2, angNames[0] + ">>");
-		datDisplay.SetValue(2, angles[0]);
-		datDisplay.SetLabel(3, angNames[1]);
-		datDisplay.SetValue(3, angles[1]);
-		datDisplay.SetLabel(4, angNames[2]);
-		datDisplay.SetValue(4, angles[2]);
+		datDisplay.SetLabel(2,"Ghost Model");
+		datDisplay.SetValue(2,"OFF");
+		datDisplay.SetLabel(3, angNames[0] + ">>");
+		datDisplay.SetValue(3, angles[0]);
+		datDisplay.SetLabel(4, angNames[1]);
+		datDisplay.SetValue(4, angles[1]);
+		datDisplay.SetLabel(5, angNames[2]);
+		datDisplay.SetValue(5, angles[2]);
+
+		datDisplay.SetYellow(3);
 
 		// instruction label
 		instructLabel = GetNode<Label>(
 			"UINode/MarginContainerBL/InstructLabel");
-		instStr = "Press <TAB> to switch angles, " +
-			"arrow keys to increase/decrease angle, or 0 to "+
-			"zero the angle.";
+		instStr = "Press <TAB> to switch angles; " +
+			"arrow keys to increase/decrease angle " + 
+			"(up/down for incremental control); or 0 to "+
+			"zero the angle. Press G to toggle ghost plane";
 		instructLabel.Text = instStr;
+		//instructLabel.Set("theme_override_colors/font_color",new Color(1,1,0));
 	}
 
 	private bool SetConfig(String mm)
@@ -159,28 +167,56 @@ public partial class GimbalScene : Node3D
 		}
 
 		if(angleChanged){
-			datDisplay.SetValue(actvIdx+2, angles[actvIdx]);
-			model.SetAngles(Mathf.DegToRad(angles[0]), 
-				Mathf.DegToRad(angles[1]), Mathf.DegToRad(angles[2]));
+			datDisplay.SetValue(actvIdx+3, angles[actvIdx]);
+			ProcessAngleChange();
 		}
 
 		if(Input.IsActionJustPressed("ui_focus_next")){
-			datDisplay.SetLabel(actvIdx+2, angNames[actvIdx]);
+			datDisplay.SetLabel(actvIdx+3, angNames[actvIdx]);
+			datDisplay.SetWhite(actvIdx+3);
 			++actvIdx;
 			if(actvIdx >2)
 				actvIdx = 0;
-			datDisplay.SetLabel(actvIdx+2, angNames[actvIdx]+">>");
+			datDisplay.SetLabel(actvIdx+3, angNames[actvIdx]+">>");
+			datDisplay.SetYellow(actvIdx+3);
 		}
 
 		if(Input.IsActionJustPressed("ui_ghost")){
 			if(showGhost){
 				showGhost = false;
 				model2.Hide();
+				datDisplay.SetValue(2,"OFF");
+				datDisplay.SetWhite(2);
 			}
 			else{
 				showGhost = true;
 				model2.Show();
+				datDisplay.SetValue(2,"ON");
+				datDisplay.SetWhite(2);
+				ProcessAngleChange();
 			}
 		}
+	}
+	//------------------------------------------------------------------------
+	// ProcessAngleChange
+	//------------------------------------------------------------------------
+	private void ProcessAngleChange()
+	{
+		int rCode = model.SetAngles(Mathf.DegToRad(angles[0]), 
+				Mathf.DegToRad(angles[1]), Mathf.DegToRad(angles[2]));
+			if(rCode == 2){ // bad DCM
+				if(dcmValid && showGhost){
+					dcmValid = false;
+					datDisplay.SetCyan(2,false,true);
+					datDisplay.SetValue(2,"ERROR!");
+				}
+			}
+			else{
+				if(!dcmValid && showGhost){
+					dcmValid = true;
+					datDisplay.SetWhite(2);
+					datDisplay.SetValue(2,"ON");
+				}
+			}
 	}
 }
