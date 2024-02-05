@@ -127,6 +127,14 @@ public partial class GimbalScene : Node3D
 			angles[0] = angles[1] = angles[2] = 0.0f;
 			return true;
 		}
+		else if(mStr == "RYP"){
+			modeStr = "RYP";
+			angNames[0] = "Roll (deg)";
+			angNames[1] = "Yaw (deg)";
+			angNames[2] = "Pitch (deg)";
+			angles[0] = angles[1] = angles[2] = 0.0f;
+			return true;
+		}
 
 		mStr = "ERROR";
 		angNames[0] = angNames[1] = angNames[2] = "ERROR";
@@ -168,6 +176,10 @@ public partial class GimbalScene : Node3D
 
 		if(angleChanged){
 			datDisplay.SetValue(actvIdx+3, angles[actvIdx]);
+			if(angles[actvIdx] > 180.0f)
+				angles[actvIdx] -= 360.0f;
+			if(angles[actvIdx] < -180.0f)
+				angles[actvIdx] += 360.0f;
 			ProcessAngleChange();
 		}
 

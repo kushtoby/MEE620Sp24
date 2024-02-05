@@ -29,7 +29,7 @@ public partial class GimbalToy : Node3D
 		None,
 		YPR,
 		PYR,
-		YRP,
+		RYP,
 		RPY,
 	}
 
@@ -81,6 +81,8 @@ public partial class GimbalToy : Node3D
 
 		if(modeString == "YPR")
 			SetupYPR();
+		else if(modeString == "RYP")
+			SetupRYP();
 	}
 
 	//------------------------------------------------------------------------
@@ -92,6 +94,8 @@ public partial class GimbalToy : Node3D
 
 		if(eulerMode == EulerAngleMode.YPR)
 			SetAnglesYPR(angle1, angle2, angle3);
+		else if(eulerMode == EulerAngleMode.RYP)
+			SetAnglesRYP(angle1, angle2, angle3);
 		else{
 			GD.PrintErr("ApplyAngles -- Something's wrong.");
 			return 1;
@@ -169,6 +173,50 @@ public partial class GimbalToy : Node3D
 		rot3.X = angle3;
 
 		calcDCM.CalcDCM_YPR(angle1, angle2, angle3);
+		basisX.X = calcDCM.GetDCM(0,0);
+		basisX.Y = calcDCM.GetDCM(1,0);
+		basisX.Z = calcDCM.GetDCM(2,0);
+
+		basisY.X = calcDCM.GetDCM(0,1);
+		basisY.Y = calcDCM.GetDCM(1,1);
+		basisY.Z = calcDCM.GetDCM(2,1);
+
+		basisZ.X = calcDCM.GetDCM(0,2);
+		basisZ.Y = calcDCM.GetDCM(1,2);
+		basisZ.Z = calcDCM.GetDCM(2,2);
+	}
+
+	//------------------------------------------------------------------------
+	// SetupRYP: Roll Yaw Pitchgimbal configuration
+	//------------------------------------------------------------------------
+	private void SetupRYP()
+	{
+		eulerMode = EulerAngleMode.RYP;
+		
+		Node3D outerRing = GetNode<Node3D>("OuterRingNode/OuterRing");
+		outerRing.Rotation = new Vector3(0.0f , 0.5f*Mathf.Pi, 0.5f*Mathf.Pi);
+
+		Node3D middleRing = GetNode<Node3D>(
+			"OuterRingNode/MiddleRingNode/MiddleRing");
+		middleRing.Rotation = new Vector3(0.5f*Mathf.Pi, 0.5f*Mathf.Pi, 0.0f);
+
+		//Node3D outerRing = GetNode<Node3D>("OuterRingNode/OuterRing");
+		//outerRing.Rotation = new Vector3(0.5f*Mathf.Pi, 0.5f*Mathf.Pi, 0.0f);
+
+		//Node3D onn = GetNode<Node3D>("OuterRingNode/OuterNubNode");
+		//onn.Rotation = new Vector3(0.0f, 0.0f, 0.5f*Mathf.Pi);
+	}
+
+	//------------------------------------------------------------------------
+	// SetAnglesYPR: Yaw Pitch Roll Euler angle application
+	//------------------------------------------------------------------------
+	private void SetAnglesRYP(float angle1, float angle2, float angle3)
+	{
+		rot1.X = angle1;
+		rot2.Y = angle2;
+		rot3.Z = angle3;
+
+		calcDCM.CalcDCM_RYP(angle1, angle2, angle3);
 		basisX.X = calcDCM.GetDCM(0,0);
 		basisX.Y = calcDCM.GetDCM(1,0);
 		basisX.Z = calcDCM.GetDCM(2,0);
