@@ -40,12 +40,16 @@ public class PendCartSim : Simulator
         double u1 = xx[2];
         double u2 = xx[3];
 
+       // double freq = 2.0; //frequency of cart oscillation
+        //double xder= -freq * xCart * Math.Sin(freq*t);
+       // double uder = -((freq*freq)*xCart *Math.Cos(freq*t));
+        double cartXX = (mp*Math.Sin(theta)*(L*u2*u2 + g*Math.Cos(theta)))/(mc + mp - mp*Math.Cos(theta)*Math.Cos(theta));
         // Evaluate right sides of differential equations of motion
         // ##### You will need to provide these ###### //
-        ff[0] = 0.0;   // time derivative of state xCart
-        ff[1] = 0.0;   // time derivative of state theta
-        ff[2] = 0.0;   // time derivative of state u1
-        ff[3] = 0.0;   // time derivative of state u2
+        ff[0] = u1;   // time derivative of state xCart
+        ff[1] = u2;   // time derivative of state theta
+        ff[2] = cartXX;   // time derivative of state u1
+        ff[3] = ((-g*Math.Sin(theta))* (-cartXX*Math.Cos(theta)))/ (L);   // time derivative of state u2
     }
 
 
@@ -157,7 +161,7 @@ public class PendCartSim : Simulator
             double u2 = x[3];
 
             //########## YOU NEED TO CALCULATE THIS ###########
-            return 0.0; 
+            return 0.5*mp*u2*u2 + 0.5*mc*u1*u1; 
         }
     }
 
@@ -169,7 +173,7 @@ public class PendCartSim : Simulator
             double theta = x[1];
 
             //########## YOU NEED TO CALCULATE THIS ###########
-            return 0.0; 
+            return -mp*g*(L)*Math.Cos(theta) - mc*g*L*Math.Cos(theta); 
         }
     }
 
@@ -180,11 +184,15 @@ public class PendCartSim : Simulator
             double xCart = x[0];
             double theta = x[1];
 
+            double Lhorizontal = L*Math.Sin(theta);
+            double totalMass = mc + mp;
+
+
             //########## YOU NEED TO CALCULATE THIS ###########
-            return 0.0; 
+            return ((mp*(xCart+Lhorizontal))+(mc*xCart))/totalMass; 
         }
     }
-
+ 
     // Center of Mass, vertical coordinate ------------------
     public double MassCenterY
     {
@@ -193,7 +201,8 @@ public class PendCartSim : Simulator
             double theta = x[1];
 
             //########## YOU NEED TO CALCULATE THIS ###########
-            return 0.0; 
+            
+            return ((mp*(xCart+L)*Math.Cos(theta)))/(mc+mp); 
         }
     }
 }
