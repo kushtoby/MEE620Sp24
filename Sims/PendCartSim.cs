@@ -40,16 +40,27 @@ public class PendCartSim : Simulator
         double u1 = xx[2];
         double u2 = xx[3];
 
-       // double freq = 2.0; //frequency of cart oscillation
-        //double xder= -freq * xCart * Math.Sin(freq*t);
-       // double uder = -((freq*freq)*xCart *Math.Cos(freq*t));
-        double cartXX = (mp*Math.Sin(theta)*(L*u2*u2 + g*Math.Cos(theta)))/(mc + mp - mp*Math.Cos(theta)*Math.Cos(theta));
         // Evaluate right sides of differential equations of motion
         // ##### You will need to provide these ###### //
+        double sinTh = Math.Sin(theta);
+        double cosTh = Math.Cos(theta);
+
+        double A = (mc + mp);
+        double B = mp * L * cosTh;
+        double C = cosTh;
+        double D = L;
+
+        double det = A*D - B*C;
+
+        double R1 = mp*L*u2*u2*sinTh;
+        double R2 = -g*sinTh;
+
+
+
         ff[0] = u1;   // time derivative of state xCart
         ff[1] = u2;   // time derivative of state theta
-        ff[2] = cartXX;   // time derivative of state u1
-        ff[3] = ((-g*Math.Sin(theta))* (-cartXX*Math.Cos(theta)))/ (L);   // time derivative of state u2
+        ff[2] = (1/det) * ((D * R1)- (B*R2));   // time derivative of state u1
+        ff[3] = (1/det) * ((-C *R1)+ (A * R2));    // time derivative of state u2
     }
 
 
@@ -159,13 +170,14 @@ public class PendCartSim : Simulator
             double theta = x[1];
             double u1 = x[2];
             double u2 = x[3];
+            double cosTh = Math.Cos(theta);
 
             //########## YOU NEED TO CALCULATE THIS ###########
-            return 0.5*mp*u2*u2 + 0.5*mc*u1*u1; 
+            return 0.5*mp*(L*L*u2*u2 + 2*L*u2*u1*cosTh + u1*u1) + 0.5*mc*u1*u1; 
         }
     }
 
-    // Potential energy ------------------------------
+    // Potential energy ------------------------------k
     public double PotentialEnergy
     {
          get{
@@ -173,7 +185,7 @@ public class PendCartSim : Simulator
             double theta = x[1];
 
             //########## YOU NEED TO CALCULATE THIS ###########
-            return -mp*g*(L)*Math.Cos(theta) - mc*g*L*Math.Cos(theta); 
+            return -mp*g*(L*Math.Cos(theta)); 
         }
     }
 
