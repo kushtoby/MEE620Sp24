@@ -25,7 +25,6 @@ public partial class PendCartScene : Node3D
 	// model stuff
 	PendCartModel model;
 
-	// data display stuff
 	// Data display stuff
 	UIPanelDisplay datDisplay;
 	int uiRefreshCtr;     //counter for display refresh
