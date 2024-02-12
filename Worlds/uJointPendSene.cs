@@ -7,6 +7,9 @@ using System;
 public partial class uJointPendSene : Node3D
 {
 
+	[Export] float thetaDot = 0.0f;
+	[Export] float phiDot = 0.0f;
+
 	Node3D ax1Node;     // node that handles axis1
 	Node3D ax2Node;     // node that handles axis2
 	Vector3 ax1Angle;
@@ -134,11 +137,20 @@ public partial class uJointPendSene : Node3D
 	{
 		if(opMode == OpMode.Simulate){
 
+			ax1Angle.X = (float)sim.AngleX;
+			ax2Angle.Z = (float)sim.AngleZ;
+			ax1Node.Rotation = ax1Angle;
+			ax2Node.Rotation = ax2Angle;
+
+			datDisplay.SetValue(1, Mathf.RadToDeg(ax1Angle.X));
+			datDisplay.SetValue(2, Mathf.RadToDeg(ax2Angle.Z));
+
 			if(Input.IsActionJustPressed("ui_accept")){
 				opMode = OpMode.Configure;
 				datDisplay.SetValue(0, opMode.ToString());
+				actvIdx = 0;
+				datDisplay.SetYellow(1);
 			}
-
 			return;
 		}
 
@@ -181,9 +193,6 @@ public partial class uJointPendSene : Node3D
 			ax1Node.Rotation = ax1Angle;
 			ax2Node.Rotation = ax2Angle;
 			manChanged = true;
-
-			sim.AngleX = (double)Mathf.DegToRad(angles[0]);
-			sim.AngleZ = (double)Mathf.DegToRad(angles[1]);
 		}
 
 		if(Input.IsActionJustPressed("ui_focus_next")){
@@ -200,10 +209,11 @@ public partial class uJointPendSene : Node3D
 			if(manChanged){
 				sim.AngleX = (double)Mathf.DegToRad(angles[0]);
 				sim.AngleZ = (double)Mathf.DegToRad(angles[1]);
-				sim.AngleXDot = 0.0;
-				sim.AngleZDot = 0.0;
+				sim.AngleXDot = (double)thetaDot;
+				sim.AngleZDot = (double)phiDot;
 			}
-
+			datDisplay.SetWhite(1);
+			datDisplay.SetWhite(2);
 			opMode = OpMode.Simulate;
 			datDisplay.SetValue(0, opMode.ToString());
 			manChanged = false;
