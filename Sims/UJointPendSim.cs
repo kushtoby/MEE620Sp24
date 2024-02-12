@@ -50,4 +50,96 @@ public class UJointPendSim : Simulator
         ff[2] = 0.0;   // time derivative of state thetad
         ff[3] = 0.0;   // time derivative of state phid
     }
+
+    //------------------------------------------------------------------------
+    // Getters/Setters
+    //------------------------------------------------------------------------
+
+    // Pendulum angleX ----------------------------
+    public double AngleX
+    {
+        set{
+            x[0] = value;
+        }
+
+        get{
+            return x[0];
+        }
+    }
+
+    // Pendulum angleZ ----------------------------
+    public double AngleZ
+    {
+        set{
+            x[1] = value;
+        }
+
+        get{
+            return x[1];
+        }
+    }
+
+    // Pendulum angleXDot ----------------------------
+    public double AngleXDot
+    {
+        set{
+            x[2] = value;
+        }
+
+        get{
+            return x[2];
+        }
+    }
+
+    // Pendulum angleZDot ----------------------------
+    public double AngleZDot
+    {
+        set{
+            x[3] = value;
+        }
+
+        get{
+            return x[3];
+        }
+    }
+
+    // Kinetic energy ----------------------------
+    public double KineticEnergy
+    {
+        get{
+            double theta  = x[0];
+            double phi    = x[1];
+            double thetad = x[2];
+            double phid   = x[3];
+
+            //########## YOU NEED TO CALCULATE THIS ###########
+            return 0.0; 
+        }
+    }
+
+    // Potential energy ------------------------------
+    public double PotentialEnergy
+    {
+         get{
+            double theta  = x[0];
+            double phi    = x[1];
+
+            //########## YOU NEED TO CALCULATE THIS ###########
+            return 0.0; 
+        }
+    }
+
+    // Angular momentum about pivot, vert coordinate ---------------
+    public double AngMoY
+    {
+        get{
+            double theta  = x[0];
+            double phi    = x[1];
+            double thetad = x[2];
+            double phid   = x[3];
+
+            //########## YOU NEED TO CALCULATE THIS ###########
+            return 0.0; 
+        }
+    }
 }

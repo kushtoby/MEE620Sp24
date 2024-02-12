@@ -9,11 +9,15 @@ public partial class uJointPendSene : Node3D
 
 	Node3D ax1Node;     // node that handles axis1
 	Node3D ax2Node;     // node that handles axis2
+	Vector3 ax1Angle;
+	Vector3 ax2Angle;
 
 	string[] angNames;
 	float[] angles;
+	float[] maxAngles;
 	int actvIdx;
 	float dTheta;
+	bool manChanged;
 
 	enum OpMode
 	{
@@ -21,6 +25,9 @@ public partial class uJointPendSene : Node3D
 		Simulate,
 	}
 	OpMode opMode;         // operation mode
+
+	UJointPendSim sim;
+	double time;
 
 	// Camera Stuff
 	CamRig cam;
@@ -35,6 +42,10 @@ public partial class uJointPendSene : Node3D
 	int uiRefreshCtr;     //counter for display refresh
 	int uiRefreshTHold;   // threshold for display refresh
 
+	// Instructions label	
+	Label instructLabel;
+	String instStr;
+
 	//------------------------------------------------------------------------
 	// _Ready: Called once when the node enters the scene tree for the first 
 	//         time.
@@ -44,15 +55,22 @@ public partial class uJointPendSene : Node3D
 
 		ax1Node = GetNode<Node3D>("ModelNode/ConnectorNode");
 		ax2Node = GetNode<Node3D>("ModelNode/ConnectorNode/PendNode");
+		ax1Angle = new Vector3();
+		ax2Angle = new Vector3();
 
 		opMode = OpMode.Configure;
 		angNames = new string[2];
 		angNames[0] = "theta";  angNames[1] = "phi";
 		angles = new float[2];
-		angles[0] = 0.0f;
-		angles[1] = 0.0f;
+		angles[0] = 0.0f;  angles[1] = 0.0f;
+		maxAngles = new float[2];
+		maxAngles[0] = 70.0f;   maxAngles[1] = 70.0f;
 		actvIdx = 0;
-		dTheta = 2.0f;
+		dTheta = 1.0f;
+		manChanged = true;
+
+		sim = new UJointPendSim();
+		time = 0.0;
 
 		// Set up the camera rig
 		longitudeDeg = 20.0f;
@@ -83,7 +101,7 @@ public partial class uJointPendSene : Node3D
 
 		datDisplay.SetLabel(0,"Mode");
 		datDisplay.SetValue(0, "Configure");
-		datDisplay.SetLabel(1, angNames[0] + ">>");
+		datDisplay.SetLabel(1, angNames[0] + " >>");
 		datDisplay.SetValue(1, angles[0]);
 		datDisplay.SetLabel(2, angNames[1]);
 		datDisplay.SetValue(2, angles[1]);
@@ -95,6 +113,17 @@ public partial class uJointPendSene : Node3D
 		datDisplay.SetValue(5, 0.0f);
 		datDisplay.SetLabel(6, "Ang. Mo. Y");
 		datDisplay.SetValue(6, 0.0f);
+
+		datDisplay.SetYellow(1);
+
+		// instruction label
+		instructLabel = GetNode<Label>(
+			"UINode/MarginContainerBL/InstructLabel");
+		instStr = "Press <TAB> to switch angles; " +
+			"arrow keys to increase/decrease angle " + 
+			"(up/down for incremental control); or 0 to "+
+			"zero the angle. Press <Enter> to toggle simulation.";
+		instructLabel.Text = instStr;
 	}
 
 	//------------------------------------------------------------------------
@@ -103,5 +132,96 @@ public partial class uJointPendSene : Node3D
 	//------------------------------------------------------------------------
 	public override void _Process(double delta)
 	{
-	}
+		if(opMode == OpMode.Simulate){
+
+			if(Input.IsActionJustPressed("ui_accept")){
+				opMode = OpMode.Configure;
+				datDisplay.SetValue(0, opMode.ToString());
+			}
+
+			return;
+		}
+
+		bool angleChanged = false;
+
+		if(Input.IsActionPressed("ui_right")){
+			angles[actvIdx] += dTheta;
+			angleChanged = true;
+		}
+
+		if(Input.IsActionPressed("ui_left")){
+			angles[actvIdx] -= dTheta;
+			angleChanged = true;
+		}
+
+		if(Input.IsActionJustPressed("ui_up")){
+			angles[actvIdx] += dTheta;
+			angleChanged = true;
+		}
+
+		if(Input.IsActionJustPressed("ui_down")){
+			angles[actvIdx] -= dTheta;
+			angleChanged = true;
+		}
+
+		if(Input.IsActionJustPressed("ui_zero")){
+			angles[actvIdx]  = 0.0f;
+			angleChanged = true;
+		}
+
+		if(angleChanged){
+			if(angles[actvIdx] > maxAngles[actvIdx])
+				angles[actvIdx] = maxAngles[actvIdx];
+			if(angles[actvIdx] < -maxAngles[actvIdx])
+				angles[actvIdx] = -maxAngles[actvIdx];
+			
+			datDisplay.SetValue(actvIdx+1, angles[actvIdx]);
+			ax1Angle.X = Mathf.DegToRad(angles[0]);
+			ax2Angle.Z = Mathf.DegToRad(angles[1]);
+			ax1Node.Rotation = ax1Angle;
+			ax2Node.Rotation = ax2Angle;
+			manChanged = true;
+
+			sim.AngleX = (double)Mathf.DegToRad(angles[0]);
+			sim.AngleZ = (double)Mathf.DegToRad(angles[1]);
+		}
+
+		if(Input.IsActionJustPressed("ui_focus_next")){
+			datDisplay.SetLabel(actvIdx+1, angNames[actvIdx]);
+			datDisplay.SetWhite(actvIdx+1);
+			++actvIdx;
+			if(actvIdx >1)
+				actvIdx = 0;
+			datDisplay.SetLabel(actvIdx+1, angNames[actvIdx]+" >>");
+			datDisplay.SetYellow(actvIdx+1);
+		}
+
+		if(Input.IsActionJustPressed("ui_accept")){
+			if(manChanged){
+				sim.AngleX = (double)Mathf.DegToRad(angles[0]);
+				sim.AngleZ = (double)Mathf.DegToRad(angles[1]);
+				sim.AngleXDot = 0.0;
+				sim.AngleZDot = 0.0;
+			}
+
+			opMode = OpMode.Simulate;
+			datDisplay.SetValue(0, opMode.ToString());
+			manChanged = false;
+		}
+
+	} // end _Process
+
+    public override void _PhysicsProcess(double delta)
+    {
+        base._PhysicsProcess(delta);
+
+		if(opMode != OpMode.Simulate)
+			return;
+
+		double deltaByTwo = 0.5*delta;
+		sim.Step(time, deltaByTwo);
+		time += deltaByTwo;
+		sim.Step(time, deltaByTwo);
+		time += deltaByTwo;
+    }
 }
