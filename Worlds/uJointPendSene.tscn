@@ -1,0 +1,39 @@
+[gd_scene load_steps=8 format=3 uid="uid://dq17130eq2855"]
+
+[ext_resource type="Texture2D" uid="uid://j5d15pfgqxyw" path="res://Textures/kennyDK4.png" id="1_2uv0t"]
+[ext_resource type="PackedScene" uid="uid://blxgponho1qji" path="res://Utils/CamRig.tscn" id="2_j4ob7"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_koni7"]
+sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+
+[sub_resource type="Sky" id="Sky_4cldd"]
+sky_material = SubResource("ProceduralSkyMaterial_koni7")
+
+[sub_resource type="Environment" id="Environment_xmgo7"]
+background_mode = 2
+sky = SubResource("Sky_4cldd")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_jqbpi"]
+albedo_texture = ExtResource("1_2uv0t")
+uv1_triplanar = true
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_adcak"]
+material = SubResource("StandardMaterial3D_jqbpi")
+size = Vector2(4, 4)
+
+[node name="UJointPendSene" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_xmgo7")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.965927, -0.224141, 0.129407, -1.49013e-08, 0.499998, 0.866027, -0.258815, -0.836518, 0.482961, 0, 6, 0)
+shadow_enabled = true
+
+[node name="Floor" type="MeshInstance3D" parent="."]
+mesh = SubResource("PlaneMesh_adcak")
+
+[node name="CamRig" parent="." instance=ExtResource("2_j4ob7")]
