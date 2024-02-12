@@ -142,8 +142,16 @@ public partial class uJointPendSene : Node3D
 			ax1Node.Rotation = ax1Angle;
 			ax2Node.Rotation = ax2Angle;
 
+			float ke = (float)sim.KineticEnergy;
+			float pe = (float)sim.PotentialEnergy;
+			float hy = (float)sim.AngMoY;
+
 			datDisplay.SetValue(1, Mathf.RadToDeg(ax1Angle.X));
 			datDisplay.SetValue(2, Mathf.RadToDeg(ax2Angle.Z));
+			datDisplay.SetValue(3, ke);
+			datDisplay.SetValue(4, pe);
+			datDisplay.SetValue(5, ke+pe);
+			datDisplay.SetValue(6, hy);
 
 			if(Input.IsActionJustPressed("ui_accept")){
 				opMode = OpMode.Configure;

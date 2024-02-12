@@ -42,6 +42,8 @@ public class UJointPendSim : Simulator
         double sinTheta = Math.Sin(theta);
         double cosPhi   = Math.Cos(phi);
         double sinPhi   = Math.Sin(phi);
+        double cos2Phi  = Math.Cos(2.0*phi);
+        double sin2Phi  = Math.Sin(2.0*phi);
 
         // Evaluate right sides of differential equations of motion
         // ##### You will need to provide these ###### //
