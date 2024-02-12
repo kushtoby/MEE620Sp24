@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://dq17130eq2855"]
+[gd_scene load_steps=22 format=3 uid="uid://dq17130eq2855"]
 
 [ext_resource type="Texture2D" uid="uid://j5d15pfgqxyw" path="res://Textures/kennyDK4.png" id="1_2uv0t"]
 [ext_resource type="Script" path="res://Worlds/uJointPendSene.cs" id="1_88hdh"]
@@ -26,29 +26,54 @@ uv1_triplanar = true
 material = SubResource("StandardMaterial3D_jqbpi")
 size = Vector2(4, 4)
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_h2gys"]
+albedo_color = Color(0.329412, 0.607843, 0.470588, 1)
+
 [sub_resource type="BoxMesh" id="BoxMesh_l2dnk"]
+material = SubResource("StandardMaterial3D_h2gys")
 size = Vector3(0.015, 0.15, 0.1)
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_o7vry"]
+albedo_color = Color(0.329412, 0.607843, 0.470588, 1)
+
 [sub_resource type="CylinderMesh" id="CylinderMesh_s8rbw"]
+material = SubResource("StandardMaterial3D_o7vry")
 top_radius = 0.05
 bottom_radius = 0.05
 height = 0.015
+radial_segments = 32
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bbos0"]
+albedo_color = Color(0.996078, 0.666667, 0.227451, 1)
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_j1ey2"]
+material = SubResource("StandardMaterial3D_bbos0")
 top_radius = 0.018
 bottom_radius = 0.018
 height = 0.36
 radial_segments = 32
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sey2c"]
+albedo_color = Color(0.329412, 0.607843, 0.470588, 1)
+
 [sub_resource type="BoxMesh" id="BoxMesh_ltvjt"]
+material = SubResource("StandardMaterial3D_sey2c")
 size = Vector3(0.08, 0.16, 0.015)
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_02npr"]
+albedo_color = Color(0.329412, 0.607843, 0.470588, 1)
+
 [sub_resource type="CylinderMesh" id="CylinderMesh_gtfqh"]
+material = SubResource("StandardMaterial3D_02npr")
 top_radius = 0.04
 bottom_radius = 0.04
 height = 0.015
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0hi0a"]
+albedo_color = Color(0.329412, 0.607843, 0.470588, 1)
+
 [sub_resource type="BoxMesh" id="BoxMesh_edo88"]
+material = SubResource("StandardMaterial3D_0hi0a")
 size = Vector3(0.08, 0.015, 0.29)
 
 [node name="UJointPendSene" type="Node3D"]
