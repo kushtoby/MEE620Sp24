@@ -21,6 +21,21 @@ public partial class uJointPendSene : Node3D
 	//------------------------------------------------------------------------
 	public override void _Ready()
 	{
+
+
+		// Set up the camera rig
+		longitudeDeg = 30.0f;
+		latitudeDeg = 15.0f;
+		camDist = 4.0f;
+		camFOV = 55.0f;
+
+		camTg = new Vector3(0.0f, 0.6f, 0.0f);
+		cam = GetNode<CamRig>("CamRig");
+		cam.LongitudeDeg = longitudeDeg;
+		cam.LatitudeDeg = latitudeDeg;
+		cam.Distance = camDist;
+		cam.FOVDeg = camFOV;
+		cam.Target = camTg;
 	}
 
 	//------------------------------------------------------------------------
