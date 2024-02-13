@@ -1,0 +1,181 @@
+[gd_scene load_steps=23 format=3 uid="uid://dq17130eq2855"]
+
+[ext_resource type="Texture2D" uid="uid://j5d15pfgqxyw" path="res://Textures/kennyDK4.png" id="1_2uv0t"]
+[ext_resource type="Script" path="res://Worlds/uJointPendSene.cs" id="1_88hdh"]
+[ext_resource type="PackedScene" uid="uid://blxgponho1qji" path="res://Utils/CamRig.tscn" id="2_j4ob7"]
+[ext_resource type="PackedScene" uid="uid://csgn5l0ig14x6" path="res://Models/StickBall.tscn" id="4_0ylct"]
+[ext_resource type="PackedScene" uid="uid://uuj16p5aw6lj" path="res://Utils/UIPanelDisplay.tscn" id="5_4vsyg"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_koni7"]
+sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+
+[sub_resource type="Sky" id="Sky_4cldd"]
+sky_material = SubResource("ProceduralSkyMaterial_koni7")
+
+[sub_resource type="Environment" id="Environment_xmgo7"]
+background_mode = 2
+sky = SubResource("Sky_4cldd")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_jqbpi"]
+albedo_texture = ExtResource("1_2uv0t")
+uv1_triplanar = true
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_adcak"]
+material = SubResource("StandardMaterial3D_jqbpi")
+size = Vector2(4, 4)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_h2gys"]
+albedo_color = Color(0.329412, 0.607843, 0.470588, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_l2dnk"]
+material = SubResource("StandardMaterial3D_h2gys")
+size = Vector3(0.015, 0.15, 0.1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_o7vry"]
+albedo_color = Color(0.329412, 0.607843, 0.470588, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_s8rbw"]
+material = SubResource("StandardMaterial3D_o7vry")
+top_radius = 0.05
+bottom_radius = 0.05
+height = 0.015
+radial_segments = 32
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bbos0"]
+albedo_color = Color(0.996078, 0.666667, 0.227451, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_j1ey2"]
+material = SubResource("StandardMaterial3D_bbos0")
+top_radius = 0.018
+bottom_radius = 0.018
+height = 0.36
+radial_segments = 32
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sey2c"]
+albedo_color = Color(0.329412, 0.607843, 0.470588, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ltvjt"]
+material = SubResource("StandardMaterial3D_sey2c")
+size = Vector3(0.08, 0.16, 0.015)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_02npr"]
+albedo_color = Color(0.329412, 0.607843, 0.470588, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_gtfqh"]
+material = SubResource("StandardMaterial3D_02npr")
+top_radius = 0.04
+bottom_radius = 0.04
+height = 0.015
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0hi0a"]
+albedo_color = Color(0.329412, 0.607843, 0.470588, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_edo88"]
+material = SubResource("StandardMaterial3D_0hi0a")
+size = Vector3(0.08, 0.015, 0.29)
+
+[node name="UJointPendSene" type="Node3D"]
+script = ExtResource("1_88hdh")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_xmgo7")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.965927, -0.224141, 0.129407, -1.49013e-08, 0.499998, 0.866027, -0.258815, -0.836518, 0.482961, 0, 6, 0)
+shadow_enabled = true
+
+[node name="Floor" type="MeshInstance3D" parent="."]
+mesh = SubResource("PlaneMesh_adcak")
+
+[node name="CamRig" parent="." instance=ExtResource("2_j4ob7")]
+
+[node name="ModelNode" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.83943, 0)
+
+[node name="BracketA" type="MeshInstance3D" parent="ModelNode"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.14, 0.075, 0)
+mesh = SubResource("BoxMesh_l2dnk")
+
+[node name="BracketRound" type="MeshInstance3D" parent="ModelNode/BracketA"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, -0.075, 0)
+mesh = SubResource("CylinderMesh_s8rbw")
+
+[node name="BracketB" type="MeshInstance3D" parent="ModelNode"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.14, 0.075, 0)
+mesh = SubResource("BoxMesh_l2dnk")
+
+[node name="BracketRound" type="MeshInstance3D" parent="ModelNode/BracketB"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, -0.075, 0)
+mesh = SubResource("CylinderMesh_s8rbw")
+
+[node name="ConnectorNode" type="Node3D" parent="ModelNode"]
+
+[node name="Connector" type="MeshInstance3D" parent="ModelNode/ConnectorNode"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("CylinderMesh_j1ey2")
+
+[node name="Connector2" type="MeshInstance3D" parent="ModelNode/ConnectorNode"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
+mesh = SubResource("CylinderMesh_j1ey2")
+
+[node name="PendNode" type="Node3D" parent="ModelNode/ConnectorNode"]
+transform = Transform3D(0.999988, 0.00483454, 0, -0.00483454, 0.999988, 0, 0, 0, 1, 0, 0, 0)
+
+[node name="Bracket1" type="MeshInstance3D" parent="ModelNode/ConnectorNode/PendNode"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.08, 0.14)
+mesh = SubResource("BoxMesh_ltvjt")
+
+[node name="Round" type="MeshInstance3D" parent="ModelNode/ConnectorNode/PendNode/Bracket1"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.08, 0)
+mesh = SubResource("CylinderMesh_gtfqh")
+
+[node name="Bracket2" type="MeshInstance3D" parent="ModelNode/ConnectorNode/PendNode"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.08, -0.14)
+mesh = SubResource("BoxMesh_ltvjt")
+
+[node name="Round" type="MeshInstance3D" parent="ModelNode/ConnectorNode/PendNode/Bracket2"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.08, 0)
+mesh = SubResource("CylinderMesh_gtfqh")
+
+[node name="Bracket3" type="MeshInstance3D" parent="ModelNode/ConnectorNode/PendNode"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.16, 0)
+mesh = SubResource("BoxMesh_edo88")
+
+[node name="StickBall" parent="ModelNode/ConnectorNode/PendNode" instance=ExtResource("4_0ylct")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.16, 0)
+
+[node name="UINode" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="UINode"]
+layout_mode = 0
+offset_right = 176.0
+offset_bottom = 39.0
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+
+[node name="DatDisplay" parent="UINode/MarginContainer" instance=ExtResource("5_4vsyg")]
+layout_mode = 2
+
+[node name="MarginContainerBL" type="MarginContainer" parent="UINode"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -37.0
+offset_right = 71.0
+grow_vertical = 0
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="InstructLabel" type="Label" parent="UINode/MarginContainerBL"]
+layout_mode = 2
+text = "Default Text"
