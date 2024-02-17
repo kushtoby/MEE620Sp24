@@ -34,6 +34,10 @@ public partial class GimbalScene : Node3D
 	int uiRefreshCtr;     //counter for display refresh
 	int uiRefreshTHold;   // threshold for display refresh
 
+	// Euler Option Button
+	OptionButton eulerOptionButton;
+	Timer dumTimer;
+
 	Label instructLabel;
 	String instStr;
 
@@ -43,7 +47,7 @@ public partial class GimbalScene : Node3D
 	//------------------------------------------------------------------------
 	public override void _Ready()
 	{
-		GD.Print("Gimbal Scene");
+		GD.Print("MEE 620 - Gimbal Scene");
 
 		angNames = new string[3];
 		angles = new float[3];
@@ -51,7 +55,7 @@ public partial class GimbalScene : Node3D
 		dTheta = 2.0f;
 		dcmValid = true;
 
-		configStrValid = SetConfig(modeString);
+		configStrValid = SetConfig("YPR");
 
 		float ctrHeight = 1.7f;
 		model = GetNode<GimbalToy>("GimbalToy");
@@ -105,6 +109,13 @@ public partial class GimbalScene : Node3D
 
 		datDisplay.SetYellow(3);
 
+		// Euler option button
+		eulerOptionButton = GetNode<OptionButton>(
+			"UINode/MarginContainerTR/EulerOption");
+		eulerOptionButton.AddItem("Yaw-Pitch-Roll",0);
+		eulerOptionButton.AddItem("Roll-Yaw-Pitch",1);
+		eulerOptionButton.ItemSelected += OnEulerSelection;
+
 		// instruction label
 		instructLabel = GetNode<Label>(
 			"UINode/MarginContainerBL/InstructLabel");
@@ -116,6 +127,19 @@ public partial class GimbalScene : Node3D
 		//instructLabel.Set("theme_override_colors/font_color",new Color(1,1,0));
 	}
 
+	//------------------------------------------------------------------------
+	// OnEulerSelection:   gets called when user selects a different Euler
+	//                     angle type.
+	//------------------------------------------------------------------------
+    private void OnEulerSelection(long idx)
+    {
+		GD.Print("Euler Mode Selected " + idx);
+    }
+
+
+	//------------------------------------------------------------------------
+	// SetConfig
+	//------------------------------------------------------------------------
 	private bool SetConfig(String mm)
 	{
 		String mStr = mm.ToUpper();
