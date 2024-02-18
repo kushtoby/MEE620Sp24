@@ -1,5 +1,6 @@
 //============================================================================
-// PendCartSim.cs   Class for creating a simulation of a the cart/pendulum.
+// UJointPendSim.cs   Class for creating a simulation of a the universal joint
+//       pendulum.
 //============================================================================
 using System;
 
