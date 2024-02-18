@@ -62,4 +62,68 @@ public class EulerKinemSim : Simulator
     {
 
     }
+
+    //------------------------------------------------------------------------
+    // Getters/Setters
+    //------------------------------------------------------------------------
+
+    // OmegaX ------------------------
+    double RollRate
+    {
+        set{
+            omegaXB = value;
+        }
+    }
+
+    // OmegaY ------------------------
+    double YawRate
+    {
+        set{
+            omegaYB = value;
+        }
+    }
+
+    // OmegaZ ------------------------
+    double PitchRate
+    {
+        set{
+            omegaZB = value;
+        }
+    }
+
+    // Theta1 ------------------------
+    double Theta1
+    {
+        set{
+            x[0] = value;
+        }
+
+        get{
+            return(x[0]);
+        }
+    }
+
+    // Theta2 ------------------------
+    double Theta2
+    {
+        set{
+            x[1] = value;
+        }
+
+        get{
+            return(x[1]);
+        }
+    }
+
+    // Theta2 ------------------------
+    double Theta3
+    {
+        set{
+            x[2] = value;
+        }
+
+        get{
+            return(x[2]);
+        }
+    }
 }
