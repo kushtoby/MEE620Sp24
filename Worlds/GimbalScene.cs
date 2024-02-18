@@ -152,6 +152,12 @@ public partial class GimbalScene : Node3D
 		rollRateEdit = GetNode<LineEdit>(
 			"UINode/MarginContainerTR/VBox/HBRoll/LineEdit");
 		rollRateEdit.TextSubmitted += OnRollRateTextSubmit;
+		yawRateEdit = GetNode<LineEdit>(
+			"UINode/MarginContainerTR/VBox/HBYaw/LineEdit");
+		yawRateEdit.TextSubmitted += OnYawRateTextSubmit;
+		pitchRateEdit = GetNode<LineEdit>(
+			"UINode/MarginContainerTR/VBox/HBPitch/LineEdit");
+		pitchRateEdit.TextSubmitted += OnPitchRateTextSubmit;
 
 		// Sim Button
 		simButton = GetNode<Button>(
@@ -221,11 +227,55 @@ public partial class GimbalScene : Node3D
 			if(rollRate < -maxRate)
 				rollRate = -maxRate;
 		}
-		catch(Exception e){
-			GD.PrintErr(str + " isn't a number. ");
+		catch{
+			GD.PrintErr(str + " isn't a number.");
 		}
 
 		rollRateEdit.Text = rollRate.ToString("0.0");
+		//GD.Print("Number = " + rollRate);
+	}
+
+	//------------------------------------------------------------------------
+	// OnYawRateTextSubmit:
+	//------------------------------------------------------------------------
+	private void OnYawRateTextSubmit(string str)
+	{
+		double num = yawRate;
+		try{
+			num = double.Parse(str);
+			yawRate = num;
+			if(yawRate > maxRate)
+				yawRate = maxRate;
+			if(yawRate < -maxRate)
+				yawRate = -maxRate;
+		}
+		catch{
+			GD.PrintErr(str + " isn't a number.");
+		}
+
+		yawRateEdit.Text = yawRate.ToString("0.0");
+		//GD.Print("Number = " + rollRate);
+	}
+
+	//------------------------------------------------------------------------
+	// OnPitchRateTextSubmit:
+	//------------------------------------------------------------------------
+	private void OnPitchRateTextSubmit(string str)
+	{
+		double num = pitchRate;
+		try{
+			num = double.Parse(str);
+			pitchRate = num;
+			if(pitchRate > maxRate)
+				pitchRate = maxRate;
+			if(pitchRate < -maxRate)
+				pitchRate = -maxRate;
+		}
+		catch{
+			GD.PrintErr(str + " isn't a number.");
+		}
+
+		pitchRateEdit.Text = pitchRate.ToString("0.0");
 		//GD.Print("Number = " + rollRate);
 	}
 
@@ -234,23 +284,38 @@ public partial class GimbalScene : Node3D
 	//------------------------------------------------------------------------
 	private void OnSimButtonPress()
 	{
-		GD.Print("SimButton Pressed");
+		//GD.Print("SimButton Pressed");
 		if(opMode == OpMode.Manual){
 			OnRollRateTextSubmit(rollRateEdit.Text);
-
+			OnYawRateTextSubmit(yawRateEdit.Text);
+			OnPitchRateTextSubmit(pitchRateEdit.Text);
 
 			rollRateEdit.Editable = false;
+			yawRateEdit.Editable = false;
+			pitchRateEdit.Editable = false;
+
+			sim.RollRate  = rollRate;
+			sim.YawRate   = yawRate;
+			sim.PitchRate = pitchRate;
 
 			opMode = OpMode.Simulate;
 			datDisplay.SetValue(1, "Simulate");
+			datDisplay.SetWhite(3);
+			datDisplay.SetWhite(4);
+			datDisplay.SetWhite(5);
 			simButton.Text = "STOP Sim";
 		}
 		else{
 
 			rollRateEdit.Editable = true;
+			yawRateEdit.Editable = true;
+			pitchRateEdit.Editable = true;
 
 			opMode = OpMode.Manual;
+			actvIdx = 0;
 			datDisplay.SetValue(1, "Manual");
+			datDisplay.SetLabel(3, angNames[0] + " >>");
+			datDisplay.SetYellow(3);
 			simButton.Text = "Simulate";
 		}
 	}
@@ -289,6 +354,13 @@ public partial class GimbalScene : Node3D
 	//------------------------------------------------------------------------
 	public override void _Process(double delta)
 	{
+		if(opMode == OpMode.Simulate){
+
+
+			return;
+		}
+
+
 		bool angleChanged = false;
 
 		if(Input.IsActionPressed("ui_right")){
