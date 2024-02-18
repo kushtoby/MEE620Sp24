@@ -20,6 +20,10 @@ public partial class GimbalScene : Node3D
 	AirplaneToy model2;
 	bool showGhost;
 
+	// Sim stuff
+	EulerKinemSim sim;
+	double time;
+
 	// Camera Stuff
 	CamRig cam;
 	float longitudeDeg;
@@ -70,6 +74,11 @@ public partial class GimbalScene : Node3D
 		model2.Hide();
 		model.SetRefModel(model2);
 
+		// set up the sim
+		sim = new EulerKinemSim();
+		sim.SetEulerType(modeStr);
+		time = 0.0;
+
 		// Set up the camera rig
 		longitudeDeg = 30.0f;
 		latitudeDeg = 15.0f;
@@ -110,7 +119,7 @@ public partial class GimbalScene : Node3D
 
 		// Euler option button
 		eulerOptionButton = GetNode<OptionButton>(
-			"UINode/MarginContainerTR/EulerOption");
+			"UINode/MarginContainerTR/VBox/EulerOption");
 		eulerOptionButton.AddItem("Yaw-Pitch-Roll",0);
 		eulerOptionButton.AddItem("Roll-Yaw-Pitch",1);
 		eulerOptionButton.ItemSelected += OnEulerSelection;
