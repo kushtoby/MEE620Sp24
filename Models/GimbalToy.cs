@@ -156,6 +156,8 @@ public partial class GimbalToy : Node3D
 	{
 		eulerMode = EulerAngleMode.YPR;
 		
+		ResetRings();
+
 		Node3D outerRing = GetNode<Node3D>("OuterRingNode/OuterRing");
 		outerRing.Rotation = new Vector3(0.5f*Mathf.Pi, 0.5f*Mathf.Pi, 0.0f);
 
@@ -193,6 +195,8 @@ public partial class GimbalToy : Node3D
 	{
 		eulerMode = EulerAngleMode.RYP;
 		
+		ResetRings();
+
 		Node3D outerRing = GetNode<Node3D>("OuterRingNode/OuterRing");
 		outerRing.Rotation = new Vector3(0.0f , 0.5f*Mathf.Pi, 0.5f*Mathf.Pi);
 
@@ -230,7 +234,20 @@ public partial class GimbalToy : Node3D
 		basisZ.Z = calcDCM.GetDCM(2,2);
 	}
 
-	// public override void _Process(double delta)
-	// {
-	// }
+	
+	//------------------------------------------------------------------------
+	// ResetRings
+	//------------------------------------------------------------------------
+	private void ResetRings()
+	{
+		Node3D onn = GetNode<Node3D>("OuterRingNode/OuterNubNode");
+		onn.Rotation = new Vector3(0.0f, 0.0f, 0.0f);
+
+		Node3D outerRing = GetNode<Node3D>("OuterRingNode/OuterRing");
+		outerRing.Rotation = new Vector3(0.0f, 0.0f, 0.0f);
+
+		Node3D middleRing = GetNode<Node3D>(
+			"OuterRingNode/MiddleRingNode/MiddleRing");
+		middleRing.Rotation = new Vector3(0.0f, 0.0f, 0.0f);
+	}
 }

@@ -6,7 +6,6 @@ using System;
 
 public partial class GimbalScene : Node3D
 {
-	[Export]
 	String modeString = "YPR";
 	bool configStrValid;
 	String modeStr;
@@ -133,7 +132,36 @@ public partial class GimbalScene : Node3D
 	//------------------------------------------------------------------------
     private void OnEulerSelection(long idx)
     {
-		GD.Print("Euler Mode Selected " + idx);
+		string modelStr = "YPR";
+		switch(idx){
+			case 0:
+				modelStr = "YPR";
+				break;
+			case 1:
+				modelStr = "RYP";
+				break;
+			default:
+				modelStr = "YPR";
+				break;
+		}
+
+		model.SetAngles(0.0f, 0.0f, 0.0f);
+		SetConfig(modelStr);
+		model.Setup(modelStr);
+		//model.SetAngles(0.0f, 0.0f, 0.0f);
+
+		actvIdx = 0;
+		datDisplay.SetLabel(3, angNames[0] + ">>");
+		datDisplay.SetLabel(4, angNames[1]);
+		datDisplay.SetLabel(5, angNames[2]);
+		datDisplay.SetValue(3, 0.0f);
+		datDisplay.SetValue(4, 0.0f);
+		datDisplay.SetValue(5, 0.0f);
+		datDisplay.SetYellow(3);
+		datDisplay.SetWhite(4);
+		datDisplay.SetWhite(5);
+
+		GD.Print("Euler Mode Selected: " + modelStr);
     }
 
 
