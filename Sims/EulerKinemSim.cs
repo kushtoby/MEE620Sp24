@@ -68,7 +68,7 @@ public class EulerKinemSim : Simulator
     //------------------------------------------------------------------------
 
     // OmegaX ------------------------
-    double RollRate
+    public double RollRate
     {
         set{
             omegaXB = value;
@@ -76,7 +76,7 @@ public class EulerKinemSim : Simulator
     }
 
     // OmegaY ------------------------
-    double YawRate
+    public double YawRate
     {
         set{
             omegaYB = value;
@@ -84,7 +84,7 @@ public class EulerKinemSim : Simulator
     }
 
     // OmegaZ ------------------------
-    double PitchRate
+    public double PitchRate
     {
         set{
             omegaZB = value;
@@ -92,7 +92,7 @@ public class EulerKinemSim : Simulator
     }
 
     // Theta1 ------------------------
-    double Theta1
+    public double Theta1
     {
         set{
             x[0] = value;
@@ -104,7 +104,7 @@ public class EulerKinemSim : Simulator
     }
 
     // Theta2 ------------------------
-    double Theta2
+    public double Theta2
     {
         set{
             x[1] = value;
@@ -116,7 +116,7 @@ public class EulerKinemSim : Simulator
     }
 
     // Theta2 ------------------------
-    double Theta3
+    public double Theta3
     {
         set{
             x[2] = value;
