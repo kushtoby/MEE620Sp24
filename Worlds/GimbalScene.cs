@@ -28,6 +28,13 @@ public partial class GimbalScene : Node3D
 	double pitchRate;
 	double maxRate;
 
+	enum OpMode
+	{
+		Manual,
+		Simulate,
+	}
+	OpMode opMode;         // operation mode
+
 	// Camera Stuff
 	CamRig cam;
 	float longitudeDeg;
@@ -80,6 +87,8 @@ public partial class GimbalScene : Node3D
 		model2.ShowCones();
 		model2.Hide();
 		model.SetRefModel(model2);
+
+		opMode = OpMode.Manual;
 
 		// set up the sim
 		sim = new EulerKinemSim();
@@ -143,6 +152,11 @@ public partial class GimbalScene : Node3D
 		rollRateEdit = GetNode<LineEdit>(
 			"UINode/MarginContainerTR/VBox/HBRoll/LineEdit");
 		rollRateEdit.TextSubmitted += OnRollRateTextSubmit;
+
+		// Sim Button
+		simButton = GetNode<Button>(
+			"UINode/MarginContainerTR/VBox/SimButton");
+		simButton.Pressed += OnSimButtonPress;
 
 		// instruction label
 		instructLabel = GetNode<Label>(
@@ -208,7 +222,7 @@ public partial class GimbalScene : Node3D
 				rollRate = -maxRate;
 		}
 		catch(Exception e){
-			GD.PrintErr(str + " isn't a number. " + e.ToString());
+			GD.PrintErr(str + " isn't a number. ");
 		}
 
 		rollRateEdit.Text = rollRate.ToString("0.0");
@@ -220,7 +234,25 @@ public partial class GimbalScene : Node3D
 	//------------------------------------------------------------------------
 	private void OnSimButtonPress()
 	{
+		GD.Print("SimButton Pressed");
+		if(opMode == OpMode.Manual){
+			OnRollRateTextSubmit(rollRateEdit.Text);
 
+
+			rollRateEdit.Editable = false;
+
+			opMode = OpMode.Simulate;
+			datDisplay.SetValue(1, "Simulate");
+			simButton.Text = "STOP Sim";
+		}
+		else{
+
+			rollRateEdit.Editable = true;
+
+			opMode = OpMode.Manual;
+			datDisplay.SetValue(1, "Manual");
+			simButton.Text = "Simulate";
+		}
 	}
 
 	//------------------------------------------------------------------------
