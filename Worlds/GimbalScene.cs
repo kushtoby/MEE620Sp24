@@ -23,6 +23,10 @@ public partial class GimbalScene : Node3D
 	// Sim stuff
 	EulerKinemSim sim;
 	double time;
+	double rollRate;
+	double yawRate;
+	double pitchRate;
+	double maxRate;
 
 	// Camera Stuff
 	CamRig cam;
@@ -37,9 +41,12 @@ public partial class GimbalScene : Node3D
 	int uiRefreshCtr;     //counter for display refresh
 	int uiRefreshTHold;   // threshold for display refresh
 
-	// Euler Option Button
+	// UI input
 	OptionButton eulerOptionButton;
-	Timer dumTimer;
+	LineEdit rollRateEdit;
+	LineEdit yawRateEdit;
+	LineEdit pitchRateEdit;
+	Button simButton;
 
 	Label instructLabel;
 	String instStr;
@@ -78,6 +85,14 @@ public partial class GimbalScene : Node3D
 		sim = new EulerKinemSim();
 		sim.SetEulerType(modeStr);
 		time = 0.0;
+		rollRate = 1.0;  yawRate = 0.0;  pitchRate = 0.0;
+		maxRate = 5.0;
+		sim.RollRate = rollRate;
+		sim.YawRate = yawRate;
+		sim.PitchRate = pitchRate;
+		sim.Theta1 = 0.0;
+		sim.Theta2 = 0.0;
+		sim.Theta3 = 0.0;
 
 		// Set up the camera rig
 		longitudeDeg = 30.0f;
@@ -123,6 +138,11 @@ public partial class GimbalScene : Node3D
 		eulerOptionButton.AddItem("Yaw-Pitch-Roll",0);
 		eulerOptionButton.AddItem("Roll-Yaw-Pitch",1);
 		eulerOptionButton.ItemSelected += OnEulerSelection;
+
+		// LineEdits
+		rollRateEdit = GetNode<LineEdit>(
+			"UINode/MarginContainerTR/VBox/HBRoll/LineEdit");
+		rollRateEdit.TextSubmitted += OnRollRateTextSubmit;
 
 		// instruction label
 		instructLabel = GetNode<Label>(
@@ -173,6 +193,35 @@ public partial class GimbalScene : Node3D
 		GD.Print("Euler Mode Selected: " + modelStr);
     }
 
+	//------------------------------------------------------------------------
+	// OnRollRateTextSubmit:
+	//------------------------------------------------------------------------
+	private void OnRollRateTextSubmit(string str)
+	{
+		double num = rollRate;
+		try{
+			num = double.Parse(str);
+			rollRate = num;
+			if(rollRate > maxRate)
+				rollRate = maxRate;
+			if(rollRate < -maxRate)
+				rollRate = -maxRate;
+		}
+		catch(Exception e){
+			GD.PrintErr(str + " isn't a number. " + e.ToString());
+		}
+
+		rollRateEdit.Text = rollRate.ToString("0.0");
+		//GD.Print("Number = " + rollRate);
+	}
+
+	//------------------------------------------------------------------------
+	// OnSimButtonPress
+	//------------------------------------------------------------------------
+	private void OnSimButtonPress()
+	{
+
+	}
 
 	//------------------------------------------------------------------------
 	// SetConfig
