@@ -199,7 +199,8 @@ public partial class GimbalScene : Node3D
 		model.SetAngles(0.0f, 0.0f, 0.0f);
 		SetConfig(modelStr);
 		model.Setup(modelStr);
-		//model.SetAngles(0.0f, 0.0f, 0.0f);
+
+		sim.SetEulerType(modelStr);
 
 		actvIdx = 0;
 		datDisplay.SetLabel(3, angNames[0] + ">>");
