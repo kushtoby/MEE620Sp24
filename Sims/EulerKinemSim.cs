@@ -48,9 +48,9 @@ public class EulerKinemSim : Simulator
 
         // Evaluate right sides of differential equations of motion
         // ##### You will need to provide these ###### //
-        ff[0] = 0.0;   // time derivative of theta1
-        ff[1] = 0.0;   // time derivative of theta2
-        ff[2] = 0.0;   // time derivative of theta3
+        ff[0] = 0.5;   // time derivative of theta1
+        ff[1] = 0.7;   // time derivative of theta2
+        ff[2] = 0.9;   // time derivative of theta3
     }
 
 

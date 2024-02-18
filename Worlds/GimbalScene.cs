@@ -1,5 +1,5 @@
 //============================================================================
-// GimbalToy.cs
+// GimbalScene.cs
 //============================================================================
 using Godot;
 using System;
@@ -140,6 +140,8 @@ public partial class GimbalScene : Node3D
 		datDisplay.SetValue(5, angles[2]);
 
 		datDisplay.SetYellow(3);
+		uiRefreshCtr = 0;
+		uiRefreshTHold = 3;
 
 		// Euler option button
 		eulerOptionButton = GetNode<OptionButton>(
@@ -293,10 +295,14 @@ public partial class GimbalScene : Node3D
 			rollRateEdit.Editable = false;
 			yawRateEdit.Editable = false;
 			pitchRateEdit.Editable = false;
+			eulerOptionButton.Disabled = true;
 
 			sim.RollRate  = rollRate;
 			sim.YawRate   = yawRate;
 			sim.PitchRate = pitchRate;
+			sim.Theta1 = (double)Mathf.DegToRad(angles[0]);
+			sim.Theta2 = (double)Mathf.DegToRad(angles[1]);
+			sim.Theta3 = (double)Mathf.DegToRad(angles[2]);
 
 			opMode = OpMode.Simulate;
 			datDisplay.SetValue(1, "Simulate");
@@ -310,6 +316,7 @@ public partial class GimbalScene : Node3D
 			rollRateEdit.Editable = true;
 			yawRateEdit.Editable = true;
 			pitchRateEdit.Editable = true;
+			eulerOptionButton.Disabled = false;
 
 			opMode = OpMode.Manual;
 			actvIdx = 0;
@@ -355,7 +362,51 @@ public partial class GimbalScene : Node3D
 	public override void _Process(double delta)
 	{
 		if(opMode == OpMode.Simulate){
+			double th1 = sim.Theta1;
+			double th2 = sim.Theta2;
+			double th3 = sim.Theta3;
 
+			if(th1 > Math.PI){
+				th1 -= 2.0*Math.PI;
+				sim.Theta1 = th1;
+			}
+			if(th1 < -Math.PI){
+				th1 += 2.0*Math.PI;
+				sim.Theta1 = th1;
+			}
+			if(th2 > Math.PI){
+				th2 -= 2.0*Math.PI;
+				sim.Theta2 = th2;
+			}
+			if(th2 < -Math.PI){
+				th2 += 2.0*Math.PI;
+				sim.Theta2 = th2;
+			}
+			if(th3 > Math.PI){
+				th3 -= 2.0*Math.PI;
+				sim.Theta3 = th3;
+			}
+			if(th3 < -Math.PI){
+				th3 += 2.0*Math.PI;
+				sim.Theta3 = th3;
+			}
+
+
+			model.SetAngles((float)sim.Theta1, (float)sim.Theta2, 
+				(float)sim.Theta3);
+
+			if(uiRefreshCtr > uiRefreshTHold){
+				angles[0] = Mathf.RadToDeg((float)sim.Theta1);
+				angles[1] = Mathf.RadToDeg((float)sim.Theta2);
+				angles[2] = Mathf.RadToDeg((float)sim.Theta3);
+
+				datDisplay.SetValue(3,angles[0]);
+				datDisplay.SetValue(4,angles[1]);
+				datDisplay.SetValue(5,angles[2]);
+				
+				uiRefreshCtr = 0;
+			}
+			++uiRefreshCtr;
 
 			return;
 		}
@@ -423,6 +474,7 @@ public partial class GimbalScene : Node3D
 			}
 		}
 	}
+
 	//------------------------------------------------------------------------
 	// ProcessAngleChange
 	//------------------------------------------------------------------------
@@ -445,4 +497,22 @@ public partial class GimbalScene : Node3D
 				}
 			}
 	}
+
+    //------------------------------------------------------------------------
+    // _PhysicsProcess
+    //------------------------------------------------------------------------
+    public override void _PhysicsProcess(double delta)
+    {
+        base._PhysicsProcess(delta);
+
+		if(opMode != OpMode.Simulate){
+			return;
+		}
+
+		double deltaByTwo = 0.5*delta;
+		sim.Step(time, deltaByTwo);
+		time += deltaByTwo;
+		sim.Step(time, deltaByTwo);
+		time += deltaByTwo;
+    }
 }
