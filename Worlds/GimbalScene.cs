@@ -53,6 +53,10 @@ public partial class GimbalScene : Node3D
 	//LineEdit rollRateEdit;
 	//LineEdit yawRateEdit;
 	//LineEdit pitchRateEdit;
+	ButtonGroup buttonGroup;
+	CheckBox rollSpinButton;
+	CheckBox yawSpinButton;
+	CheckBox pitchSpinButton;
 	Button simButton;
 
 	Label instructLabel;
@@ -162,6 +166,17 @@ public partial class GimbalScene : Node3D
 		eulerOptionButton.AddItem("Roll-Yaw-Pitch",1);
 		eulerOptionButton.ItemSelected += OnEulerSelection;
 
+		// Button group
+		rollSpinButton = GetNode<CheckBox>(
+			"UINode/MarginContainerTR/VBox/CheckBoxRoll");
+		yawSpinButton = GetNode<CheckBox>(
+			"UINode/MarginContainerTR/VBox/CheckBoxYaw");
+		pitchSpinButton = GetNode<CheckBox>(
+			"UINode/MarginContainerTR/VBox/CheckBoxPitch");
+		buttonGroup = rollSpinButton.ButtonGroup;
+		GD.Print(buttonGroup.GetButtons());
+		buttonGroup.Pressed += OnButtonGroupPressed;
+
 		// LineEdits
 		// rollRateEdit = GetNode<LineEdit>(
 		// 	"UINode/MarginContainerTR/VBox/HBRoll/LineEdit");
@@ -189,10 +204,11 @@ public partial class GimbalScene : Node3D
 		//instructLabel.Set("theme_override_colors/font_color",new Color(1,1,0));
 	}
 
-	//------------------------------------------------------------------------
-	// OnEulerSelection:   gets called when user selects a different Euler
-	//                     angle type.
-	//------------------------------------------------------------------------
+    //------------------------------------------------------------------------
+    // OnEulerSelection:   gets called when user selects a different Euler
+    //                     angle type.
+    //------------------------------------------------------------------------
+
     private void OnEulerSelection(long idx)
     {
 		string modelStr = "YPR";
@@ -227,6 +243,24 @@ public partial class GimbalScene : Node3D
 
 		GD.Print("Euler Mode Selected: " + modelStr);
     }
+
+	//------------------------------------------------------------------------
+	// OnButtonGroupPressed:
+	//------------------------------------------------------------------------
+	private void OnButtonGroupPressed(BaseButton button)
+	{
+		GD.Print("Button Group Pressed");
+		if(rollSpinButton.ButtonPressed){
+			GD.Print("rollSpinButton is pressed");
+		}
+		else if(yawSpinButton.ButtonPressed){
+			GD.Print("yawSpinButton is pressed");
+		}
+		else if(pitchSpinButton.ButtonPressed){
+			GD.Print("pitchSpinButton is pressed");
+		}
+
+	}
 
 	//------------------------------------------------------------------------
 	// OnRollRateTextSubmit:
