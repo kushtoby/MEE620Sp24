@@ -249,84 +249,25 @@ public partial class GimbalScene : Node3D
 	//------------------------------------------------------------------------
 	private void OnButtonGroupPressed(BaseButton button)
 	{
-		GD.Print("Button Group Pressed");
+		//GD.Print("Button Group Pressed");
 		if(rollSpinButton.ButtonPressed){
-			GD.Print("rollSpinButton is pressed");
+			//GD.Print("rollSpinButton is pressed");
+			rollRate = 1.0;  yawRate = pitchRate = 0.0;
 		}
 		else if(yawSpinButton.ButtonPressed){
-			GD.Print("yawSpinButton is pressed");
+			//GD.Print("yawSpinButton is pressed");
+			yawRate = 1.0;  rollRate = pitchRate = 0.0;
 		}
 		else if(pitchSpinButton.ButtonPressed){
-			GD.Print("pitchSpinButton is pressed");
+			//GD.Print("pitchSpinButton is pressed");
+			pitchRate = 1.0; rollRate = yawRate = 0.0;
 		}
 
+		datDisplay.SetValue(6, (float)rollRate);
+		datDisplay.SetValue(7, (float)yawRate);
+		datDisplay.SetValue(8, (float)pitchRate);
 	}
 
-	//------------------------------------------------------------------------
-	// OnRollRateTextSubmit:
-	//------------------------------------------------------------------------
-	// private void OnRollRateTextSubmit(string str)
-	// {
-	// 	double num = rollRate;
-	// 	try{
-	// 		num = double.Parse(str);
-	// 		rollRate = num;
-	// 		if(rollRate > maxRate)
-	// 			rollRate = maxRate;
-	// 		if(rollRate < -maxRate)
-	// 			rollRate = -maxRate;
-	// 	}
-	// 	catch{
-	// 		GD.PrintErr(str + " isn't a number.");
-	// 	}
-
-	// 	rollRateEdit.Text = rollRate.ToString("0.0");
-	// 	//GD.Print("Number = " + rollRate);
-	// }
-
-	//------------------------------------------------------------------------
-	// OnYawRateTextSubmit:
-	//------------------------------------------------------------------------
-	// private void OnYawRateTextSubmit(string str)
-	// {
-	// 	double num = yawRate;
-	// 	try{
-	// 		num = double.Parse(str);
-	// 		yawRate = num;
-	// 		if(yawRate > maxRate)
-	// 			yawRate = maxRate;
-	// 		if(yawRate < -maxRate)
-	// 			yawRate = -maxRate;
-	// 	}
-	// 	catch{
-	// 		GD.PrintErr(str + " isn't a number.");
-	// 	}
-
-	// 	yawRateEdit.Text = yawRate.ToString("0.0");
-	// 	//GD.Print("Number = " + rollRate);
-	// }
-
-	//------------------------------------------------------------------------
-	// OnPitchRateTextSubmit:
-	//------------------------------------------------------------------------
-	// private void OnPitchRateTextSubmit(string str)
-	// {
-	// 	double num = pitchRate;
-	// 	try{
-	// 		num = double.Parse(str);
-	// 		pitchRate = num;
-	// 		if(pitchRate > maxRate)
-	// 			pitchRate = maxRate;
-	// 		if(pitchRate < -maxRate)
-	// 			pitchRate = -maxRate;
-	// 	}
-	// 	catch{
-	// 		GD.PrintErr(str + " isn't a number.");
-	// 	}
-
-	// 	pitchRateEdit.Text = pitchRate.ToString("0.0");
-	// 	//GD.Print("Number = " + rollRate);
-	// }
 
 	//------------------------------------------------------------------------
 	// OnSimButtonPress
@@ -335,13 +276,9 @@ public partial class GimbalScene : Node3D
 	{
 		//GD.Print("SimButton Pressed");
 		if(opMode == OpMode.Manual){
-			// OnRollRateTextSubmit(rollRateEdit.Text);
-			// OnYawRateTextSubmit(yawRateEdit.Text);
-			// OnPitchRateTextSubmit(pitchRateEdit.Text);
-
-			// rollRateEdit.Editable = false;
-			// yawRateEdit.Editable = false;
-			// pitchRateEdit.Editable = false;
+			rollSpinButton.Disabled = true;
+			yawSpinButton.Disabled = true;
+			pitchSpinButton.Disabled = true;
 			eulerOptionButton.Disabled = true;
 
 			sim.RollRate  = rollRate;
@@ -360,9 +297,9 @@ public partial class GimbalScene : Node3D
 		}
 		else{
 
-			// rollRateEdit.Editable = true;
-			// yawRateEdit.Editable = true;
-			// pitchRateEdit.Editable = true;
+			rollSpinButton.Disabled = false;
+			yawSpinButton.Disabled = false;
+			pitchSpinButton.Disabled = false;
 			eulerOptionButton.Disabled = false;
 
 			opMode = OpMode.Manual;
