@@ -50,9 +50,6 @@ public partial class GimbalScene : Node3D
 
 	// UI input
 	OptionButton eulerOptionButton;
-	//LineEdit rollRateEdit;
-	//LineEdit yawRateEdit;
-	//LineEdit pitchRateEdit;
 	ButtonGroup buttonGroup;
 	CheckBox rollSpinButton;
 	CheckBox yawSpinButton;
@@ -176,17 +173,6 @@ public partial class GimbalScene : Node3D
 		buttonGroup = rollSpinButton.ButtonGroup;
 		GD.Print(buttonGroup.GetButtons());
 		buttonGroup.Pressed += OnButtonGroupPressed;
-
-		// LineEdits
-		// rollRateEdit = GetNode<LineEdit>(
-		// 	"UINode/MarginContainerTR/VBox/HBRoll/LineEdit");
-		// rollRateEdit.TextSubmitted += OnRollRateTextSubmit;
-		// yawRateEdit = GetNode<LineEdit>(
-		// 	"UINode/MarginContainerTR/VBox/HBYaw/LineEdit");
-		// yawRateEdit.TextSubmitted += OnYawRateTextSubmit;
-		// pitchRateEdit = GetNode<LineEdit>(
-		// 	"UINode/MarginContainerTR/VBox/HBPitch/LineEdit");
-		// pitchRateEdit.TextSubmitted += OnPitchRateTextSubmit;
 
 		// Sim Button
 		simButton = GetNode<Button>(
