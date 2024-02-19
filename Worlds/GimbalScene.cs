@@ -149,6 +149,9 @@ public partial class GimbalScene : Node3D
 		datDisplay.SetValue(8, 0.0f);
 
 		datDisplay.SetYellow(3);
+		datDisplay.SetCyan(6);
+		datDisplay.SetCyan(7);
+		datDisplay.SetCyan(8);
 		uiRefreshCtr = 0;
 		uiRefreshTHold = 3;
 
