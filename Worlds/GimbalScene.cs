@@ -120,11 +120,14 @@ public partial class GimbalScene : Node3D
 		// Set up data display
 		datDisplay = GetNode<UIPanelDisplay>(
 			"UINode/MarginContainer/DatDisplay");
-		datDisplay.SetNDisplay(6);
+		datDisplay.SetNDisplay(9);
 
 		datDisplay.SetDigitsAfterDecimal(3, 1);
 		datDisplay.SetDigitsAfterDecimal(4, 1);
 		datDisplay.SetDigitsAfterDecimal(5, 1);
+		datDisplay.SetDigitsAfterDecimal(6, 1);
+		datDisplay.SetDigitsAfterDecimal(7, 1);
+		datDisplay.SetDigitsAfterDecimal(8, 1);
 
 		datDisplay.SetLabel(0,"Euler Angles");
 		datDisplay.SetValue(0,"");
@@ -138,6 +141,12 @@ public partial class GimbalScene : Node3D
 		datDisplay.SetValue(4, angles[1]);
 		datDisplay.SetLabel(5, angNames[2]);
 		datDisplay.SetValue(5, angles[2]);
+		datDisplay.SetLabel(6, "omegaXB");
+		datDisplay.SetValue(6, 1.0f);
+		datDisplay.SetLabel(7, "omegaYB");
+		datDisplay.SetValue(7, 0.0f);
+		datDisplay.SetLabel(8, "omegaZB");
+		datDisplay.SetValue(8, 0.0f);
 
 		datDisplay.SetYellow(3);
 		uiRefreshCtr = 0;
