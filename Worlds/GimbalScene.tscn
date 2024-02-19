@@ -100,38 +100,19 @@ layout_mode = 2
 [node name="EulerOption" type="OptionButton" parent="UINode/MarginContainerTR/VBox"]
 layout_mode = 2
 
-[node name="HBRoll" type="HBoxContainer" parent="UINode/MarginContainerTR/VBox"]
+[node name="CheckBoxRoll" type="CheckBox" parent="UINode/MarginContainerTR/VBox"]
 layout_mode = 2
+theme_override_colors/font_color = Color(0, 1, 1, 1)
+button_pressed = true
+text = "Roll Spin (x)"
 
-[node name="Label" type="Label" parent="UINode/MarginContainerTR/VBox/HBRoll"]
+[node name="CheckBoxYaw" type="CheckBox" parent="UINode/MarginContainerTR/VBox"]
 layout_mode = 2
-text = "Roll Rate"
+text = "Yaw Spin (y)"
 
-[node name="LineEdit" type="LineEdit" parent="UINode/MarginContainerTR/VBox/HBRoll"]
+[node name="CheckBoxPitch" type="CheckBox" parent="UINode/MarginContainerTR/VBox"]
 layout_mode = 2
-text = "1.0"
-
-[node name="HBYaw" type="HBoxContainer" parent="UINode/MarginContainerTR/VBox"]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="UINode/MarginContainerTR/VBox/HBYaw"]
-layout_mode = 2
-text = "Yaw Rate"
-
-[node name="LineEdit" type="LineEdit" parent="UINode/MarginContainerTR/VBox/HBYaw"]
-layout_mode = 2
-text = "0.0"
-
-[node name="HBPitch" type="HBoxContainer" parent="UINode/MarginContainerTR/VBox"]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="UINode/MarginContainerTR/VBox/HBPitch"]
-layout_mode = 2
-text = "Pitch Rate"
-
-[node name="LineEdit" type="LineEdit" parent="UINode/MarginContainerTR/VBox/HBPitch"]
-layout_mode = 2
-text = "0.0"
+text = "Pitch Spin (z)"
 
 [node name="SimButton" type="Button" parent="UINode/MarginContainerTR/VBox"]
 layout_mode = 2
