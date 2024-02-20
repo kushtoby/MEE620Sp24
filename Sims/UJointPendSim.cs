@@ -127,8 +127,9 @@ public class UJointPendSim : Simulator
             double vx = L*cosTheta*phid;
             double vy = L*(sinPhi*cosTheta*phid + sinTheta*cosPhi*thetad);
             double vz = L*(sinPhi*sinTheta*phid - cosTheta*cosPhi*thetad);
+            double totalVel = vx + vy + vz;
 
-            return 0.5* m * Math.Sqrt(vx*vx + vy*vy + vz*vz); 
+            return 0.5* m * totalVel * totalVel; 
         }
     }
 
