@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://dq17130eq2855"]
+[gd_scene load_steps=23 format=3 uid="uid://f2hcm6dbhjee"]
 
 [ext_resource type="Texture2D" uid="uid://j5d15pfgqxyw" path="res://Textures/kennyDK4.png" id="1_2uv0t"]
 [ext_resource type="Script" path="res://Worlds/uJointPendSene.cs" id="1_88hdh"]
