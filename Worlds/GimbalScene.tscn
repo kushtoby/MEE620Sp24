@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://8xnuhhkhrhfw"]
+[gd_scene load_steps=13 format=3 uid="uid://8xnuhhkhrhfw"]
 
 [ext_resource type="Script" path="res://Worlds/GimbalScene.cs" id="1_1hx0g"]
 [ext_resource type="Texture2D" uid="uid://j5d15pfgqxyw" path="res://Textures/kennyDK4.png" id="1_ajr5c"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://blxgponho1qji" path="res://Utils/CamRig.tscn" id="2_wevxr"]
 [ext_resource type="PackedScene" uid="uid://be3ncv5dmnnc8" path="res://Models/AirplaneToy.tscn" id="3_33k1d"]
 [ext_resource type="PackedScene" uid="uid://uuj16p5aw6lj" path="res://Utils/UIPanelDisplay.tscn" id="5_asmif"]
+[ext_resource type="ButtonGroup" uid="uid://dgujxscnrb7e4" path="res://Resources/ButtonGroupEuler.tres" id="7_whokt"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_j7y3n"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -82,3 +83,46 @@ theme_override_constants/margin_bottom = 5
 [node name="InstructLabel" type="Label" parent="UINode/MarginContainerBL"]
 layout_mode = 2
 text = "Instructions Here"
+
+[node name="MarginContainerTR" type="MarginContainer" parent="UINode"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -40.0
+offset_bottom = 40.0
+grow_horizontal = 0
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+
+[node name="VBox" type="VBoxContainer" parent="UINode/MarginContainerTR"]
+layout_mode = 2
+
+[node name="EulerOption" type="OptionButton" parent="UINode/MarginContainerTR/VBox"]
+layout_mode = 2
+
+[node name="CheckBoxRoll" type="CheckBox" parent="UINode/MarginContainerTR/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 1, 1, 1)
+theme_override_colors/font_pressed_color = Color(0, 1, 1, 1)
+button_pressed = true
+button_group = ExtResource("7_whokt")
+text = "Roll Spin (x)"
+
+[node name="CheckBoxYaw" type="CheckBox" parent="UINode/MarginContainerTR/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 1, 1, 1)
+theme_override_colors/font_pressed_color = Color(0, 1, 1, 1)
+button_group = ExtResource("7_whokt")
+text = "Yaw Spin (y)"
+
+[node name="CheckBoxPitch" type="CheckBox" parent="UINode/MarginContainerTR/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 1, 1, 1)
+theme_override_colors/font_pressed_color = Color(0, 1, 1, 1)
+button_group = ExtResource("7_whokt")
+text = "Pitch Spin (z)"
+
+[node name="SimButton" type="Button" parent="UINode/MarginContainerTR/VBox"]
+layout_mode = 2
+text = "Simulate"

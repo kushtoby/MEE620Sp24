@@ -1,12 +1,11 @@
 //============================================================================
-// GimbalToy.cs
+// GimbalScene.cs
 //============================================================================
 using Godot;
 using System;
 
 public partial class GimbalScene : Node3D
 {
-	[Export]
 	String modeString = "YPR";
 	bool configStrValid;
 	String modeStr;
@@ -21,6 +20,21 @@ public partial class GimbalScene : Node3D
 	AirplaneToy model2;
 	bool showGhost;
 
+	// Sim stuff
+	EulerKinemSim sim;
+	double time;
+	double rollRate;
+	double yawRate;
+	double pitchRate;
+	double maxRate;
+
+	enum OpMode
+	{
+		Manual,
+		Simulate,
+	}
+	OpMode opMode;         // operation mode
+
 	// Camera Stuff
 	CamRig cam;
 	float longitudeDeg;
@@ -34,6 +48,14 @@ public partial class GimbalScene : Node3D
 	int uiRefreshCtr;     //counter for display refresh
 	int uiRefreshTHold;   // threshold for display refresh
 
+	// UI input
+	OptionButton eulerOptionButton;
+	ButtonGroup buttonGroup;
+	CheckBox rollSpinButton;
+	CheckBox yawSpinButton;
+	CheckBox pitchSpinButton;
+	Button simButton;
+
 	Label instructLabel;
 	String instStr;
 
@@ -43,7 +65,7 @@ public partial class GimbalScene : Node3D
 	//------------------------------------------------------------------------
 	public override void _Ready()
 	{
-		GD.Print("Gimbal Scene");
+		GD.Print("MEE 620 - Gimbal Scene");
 
 		angNames = new string[3];
 		angles = new float[3];
@@ -51,7 +73,7 @@ public partial class GimbalScene : Node3D
 		dTheta = 2.0f;
 		dcmValid = true;
 
-		configStrValid = SetConfig(modeString);
+		configStrValid = SetConfig("YPR");
 
 		float ctrHeight = 1.7f;
 		model = GetNode<GimbalToy>("GimbalToy");
@@ -66,6 +88,21 @@ public partial class GimbalScene : Node3D
 		model2.ShowCones();
 		model2.Hide();
 		model.SetRefModel(model2);
+
+		opMode = OpMode.Manual;
+
+		// set up the sim
+		sim = new EulerKinemSim();
+		sim.SetEulerType(modeStr);
+		time = 0.0;
+		rollRate = 1.0;  yawRate = 0.0;  pitchRate = 0.0;
+		maxRate = 5.0;
+		sim.RollRate = rollRate;
+		sim.YawRate = yawRate;
+		sim.PitchRate = pitchRate;
+		sim.Theta1 = 0.0;
+		sim.Theta2 = 0.0;
+		sim.Theta3 = 0.0;
 
 		// Set up the camera rig
 		longitudeDeg = 30.0f;
@@ -84,11 +121,14 @@ public partial class GimbalScene : Node3D
 		// Set up data display
 		datDisplay = GetNode<UIPanelDisplay>(
 			"UINode/MarginContainer/DatDisplay");
-		datDisplay.SetNDisplay(6);
+		datDisplay.SetNDisplay(9);
 
 		datDisplay.SetDigitsAfterDecimal(3, 1);
 		datDisplay.SetDigitsAfterDecimal(4, 1);
 		datDisplay.SetDigitsAfterDecimal(5, 1);
+		datDisplay.SetDigitsAfterDecimal(6, 1);
+		datDisplay.SetDigitsAfterDecimal(7, 1);
+		datDisplay.SetDigitsAfterDecimal(8, 1);
 
 		datDisplay.SetLabel(0,"Euler Angles");
 		datDisplay.SetValue(0,"");
@@ -102,8 +142,42 @@ public partial class GimbalScene : Node3D
 		datDisplay.SetValue(4, angles[1]);
 		datDisplay.SetLabel(5, angNames[2]);
 		datDisplay.SetValue(5, angles[2]);
+		datDisplay.SetLabel(6, "omegaXB");
+		datDisplay.SetValue(6, 1.0f);
+		datDisplay.SetLabel(7, "omegaYB");
+		datDisplay.SetValue(7, 0.0f);
+		datDisplay.SetLabel(8, "omegaZB");
+		datDisplay.SetValue(8, 0.0f);
 
 		datDisplay.SetYellow(3);
+		datDisplay.SetCyan(6);
+		datDisplay.SetCyan(7);
+		datDisplay.SetCyan(8);
+		uiRefreshCtr = 0;
+		uiRefreshTHold = 3;
+
+		// Euler option button
+		eulerOptionButton = GetNode<OptionButton>(
+			"UINode/MarginContainerTR/VBox/EulerOption");
+		eulerOptionButton.AddItem("Yaw-Pitch-Roll",0);
+		eulerOptionButton.AddItem("Roll-Yaw-Pitch",1);
+		eulerOptionButton.ItemSelected += OnEulerSelection;
+
+		// Button group
+		rollSpinButton = GetNode<CheckBox>(
+			"UINode/MarginContainerTR/VBox/CheckBoxRoll");
+		yawSpinButton = GetNode<CheckBox>(
+			"UINode/MarginContainerTR/VBox/CheckBoxYaw");
+		pitchSpinButton = GetNode<CheckBox>(
+			"UINode/MarginContainerTR/VBox/CheckBoxPitch");
+		buttonGroup = rollSpinButton.ButtonGroup;
+		GD.Print(buttonGroup.GetButtons());
+		buttonGroup.Pressed += OnButtonGroupPressed;
+
+		// Sim Button
+		simButton = GetNode<Button>(
+			"UINode/MarginContainerTR/VBox/SimButton");
+		simButton.Pressed += OnSimButtonPress;
 
 		// instruction label
 		instructLabel = GetNode<Label>(
@@ -116,6 +190,116 @@ public partial class GimbalScene : Node3D
 		//instructLabel.Set("theme_override_colors/font_color",new Color(1,1,0));
 	}
 
+    //------------------------------------------------------------------------
+    // OnEulerSelection:   gets called when user selects a different Euler
+    //                     angle type.
+    //------------------------------------------------------------------------
+
+    private void OnEulerSelection(long idx)
+    {
+		string modelStr = "YPR";
+		switch(idx){
+			case 0:
+				modelStr = "YPR";
+				break;
+			case 1:
+				modelStr = "RYP";
+				break;
+			default:
+				modelStr = "YPR";
+				break;
+		}
+
+		model.SetAngles(0.0f, 0.0f, 0.0f);
+		SetConfig(modelStr);
+		model.Setup(modelStr);
+
+		sim.SetEulerType(modelStr);
+
+		actvIdx = 0;
+		datDisplay.SetLabel(3, angNames[0] + ">>");
+		datDisplay.SetLabel(4, angNames[1]);
+		datDisplay.SetLabel(5, angNames[2]);
+		datDisplay.SetValue(3, 0.0f);
+		datDisplay.SetValue(4, 0.0f);
+		datDisplay.SetValue(5, 0.0f);
+		datDisplay.SetYellow(3);
+		datDisplay.SetWhite(4);
+		datDisplay.SetWhite(5);
+
+		GD.Print("Euler Mode Selected: " + modelStr);
+    }
+
+	//------------------------------------------------------------------------
+	// OnButtonGroupPressed:
+	//------------------------------------------------------------------------
+	private void OnButtonGroupPressed(BaseButton button)
+	{
+		//GD.Print("Button Group Pressed");
+		if(rollSpinButton.ButtonPressed){
+			//GD.Print("rollSpinButton is pressed");
+			rollRate = 1.0;  yawRate = pitchRate = 0.0;
+		}
+		else if(yawSpinButton.ButtonPressed){
+			//GD.Print("yawSpinButton is pressed");
+			yawRate = 1.0;  rollRate = pitchRate = 0.0;
+		}
+		else if(pitchSpinButton.ButtonPressed){
+			//GD.Print("pitchSpinButton is pressed");
+			pitchRate = 1.0; rollRate = yawRate = 0.0;
+		}
+
+		datDisplay.SetValue(6, (float)rollRate);
+		datDisplay.SetValue(7, (float)yawRate);
+		datDisplay.SetValue(8, (float)pitchRate);
+	}
+
+
+	//------------------------------------------------------------------------
+	// OnSimButtonPress
+	//------------------------------------------------------------------------
+	private void OnSimButtonPress()
+	{
+		//GD.Print("SimButton Pressed");
+		if(opMode == OpMode.Manual){
+			rollSpinButton.Disabled = true;
+			yawSpinButton.Disabled = true;
+			pitchSpinButton.Disabled = true;
+			eulerOptionButton.Disabled = true;
+
+			sim.RollRate  = rollRate;
+			sim.YawRate   = yawRate;
+			sim.PitchRate = pitchRate;
+			sim.Theta1 = (double)Mathf.DegToRad(angles[0]);
+			sim.Theta2 = (double)Mathf.DegToRad(angles[1]);
+			sim.Theta3 = (double)Mathf.DegToRad(angles[2]);
+
+			opMode = OpMode.Simulate;
+			datDisplay.SetValue(1, "Simulate");
+			datDisplay.SetWhite(3);
+			datDisplay.SetWhite(4);
+			datDisplay.SetWhite(5);
+			simButton.Text = "STOP Sim";
+		}
+		else{
+
+			rollSpinButton.Disabled = false;
+			yawSpinButton.Disabled = false;
+			pitchSpinButton.Disabled = false;
+			eulerOptionButton.Disabled = false;
+
+			opMode = OpMode.Manual;
+			actvIdx = 0;
+			datDisplay.SetValue(1, "Manual");
+			datDisplay.SetLabel(3, angNames[0] + " >>");
+			datDisplay.SetYellow(3);
+			simButton.Text = "Simulate";
+		}
+	}
+
+	//------------------------------------------------------------------------
+	// SetConfig
+	//------------------------------------------------------------------------
 	private bool SetConfig(String mm)
 	{
 		String mStr = mm.ToUpper();
@@ -147,6 +331,57 @@ public partial class GimbalScene : Node3D
 	//------------------------------------------------------------------------
 	public override void _Process(double delta)
 	{
+		if(opMode == OpMode.Simulate){
+			double th1 = sim.Theta1;
+			double th2 = sim.Theta2;
+			double th3 = sim.Theta3;
+
+			if(th1 > Math.PI){
+				th1 -= 2.0*Math.PI;
+				sim.Theta1 = th1;
+			}
+			if(th1 < -Math.PI){
+				th1 += 2.0*Math.PI;
+				sim.Theta1 = th1;
+			}
+			if(th2 > Math.PI){
+				th2 -= 2.0*Math.PI;
+				sim.Theta2 = th2;
+			}
+			if(th2 < -Math.PI){
+				th2 += 2.0*Math.PI;
+				sim.Theta2 = th2;
+			}
+			if(th3 > Math.PI){
+				th3 -= 2.0*Math.PI;
+				sim.Theta3 = th3;
+			}
+			if(th3 < -Math.PI){
+				th3 += 2.0*Math.PI;
+				sim.Theta3 = th3;
+			}
+
+
+			model.SetAngles((float)sim.Theta1, (float)sim.Theta2, 
+				(float)sim.Theta3);
+
+			if(uiRefreshCtr > uiRefreshTHold){
+				angles[0] = Mathf.RadToDeg((float)sim.Theta1);
+				angles[1] = Mathf.RadToDeg((float)sim.Theta2);
+				angles[2] = Mathf.RadToDeg((float)sim.Theta3);
+
+				datDisplay.SetValue(3,angles[0]);
+				datDisplay.SetValue(4,angles[1]);
+				datDisplay.SetValue(5,angles[2]);
+				
+				uiRefreshCtr = 0;
+			}
+			++uiRefreshCtr;
+
+			return;
+		}
+
+
 		bool angleChanged = false;
 
 		if(Input.IsActionPressed("ui_right")){
@@ -209,6 +444,7 @@ public partial class GimbalScene : Node3D
 			}
 		}
 	}
+
 	//------------------------------------------------------------------------
 	// ProcessAngleChange
 	//------------------------------------------------------------------------
@@ -231,4 +467,22 @@ public partial class GimbalScene : Node3D
 				}
 			}
 	}
+
+    //------------------------------------------------------------------------
+    // _PhysicsProcess
+    //------------------------------------------------------------------------
+    public override void _PhysicsProcess(double delta)
+    {
+        base._PhysicsProcess(delta);
+
+		if(opMode != OpMode.Simulate){
+			return;
+		}
+
+		double deltaByTwo = 0.5*delta;
+		sim.Step(time, deltaByTwo);
+		time += deltaByTwo;
+		sim.Step(time, deltaByTwo);
+		time += deltaByTwo;
+    }
 }

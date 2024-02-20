@@ -1,5 +1,10 @@
 //============================================================================
+<<<<<<< HEAD
 // UJointPendSim.cs   Class for creating a simulation of the universal pendulum.
+=======
+// UJointPendSim.cs   Class for creating a simulation of a the universal joint
+//       pendulum.
+>>>>>>> 8e28f866461eb631f97afba8a79ed042456fd1fe
 //============================================================================
 using System;
 

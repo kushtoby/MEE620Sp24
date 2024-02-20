@@ -229,6 +229,9 @@ public partial class uJointPendSene : Node3D
 
 	} // end _Process
 
+	//------------------------------------------------------------------------
+	// _PhysicsProcess:
+	//------------------------------------------------------------------------
     public override void _PhysicsProcess(double delta)
     {
         base._PhysicsProcess(delta);
