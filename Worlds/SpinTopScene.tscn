@@ -1,0 +1,41 @@
+[gd_scene load_steps=9 format=3 uid="uid://xju6sw1bpsvv"]
+
+[ext_resource type="Script" path="res://Worlds/SpinTopScene.cs" id="1_0lipg"]
+[ext_resource type="Texture2D" uid="uid://j5d15pfgqxyw" path="res://Textures/kennyDK4.png" id="1_3lmro"]
+[ext_resource type="PackedScene" uid="uid://blxgponho1qji" path="res://Utils/CamRig.tscn" id="2_tb20h"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_5tq51"]
+sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+
+[sub_resource type="Sky" id="Sky_5lf7j"]
+sky_material = SubResource("ProceduralSkyMaterial_5tq51")
+
+[sub_resource type="Environment" id="Environment_u8uyl"]
+background_mode = 2
+sky = SubResource("Sky_5lf7j")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_i3kg7"]
+albedo_texture = ExtResource("1_3lmro")
+uv1_triplanar = true
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_ktc2i"]
+material = SubResource("StandardMaterial3D_i3kg7")
+size = Vector2(4, 4)
+
+[node name="SpinTopScene" type="Node3D"]
+script = ExtResource("1_0lipg")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_u8uyl")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 6, 0)
+shadow_enabled = true
+
+[node name="Floor" type="MeshInstance3D" parent="."]
+mesh = SubResource("PlaneMesh_ktc2i")
+
+[node name="CamRig" parent="." instance=ExtResource("2_tb20h")]
