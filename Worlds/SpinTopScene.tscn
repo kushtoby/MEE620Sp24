@@ -1,9 +1,10 @@
-[gd_scene load_steps=12 format=3 uid="uid://xju6sw1bpsvv"]
+[gd_scene load_steps=13 format=3 uid="uid://xju6sw1bpsvv"]
 
 [ext_resource type="Script" path="res://Worlds/SpinTopScene.cs" id="1_0lipg"]
 [ext_resource type="Texture2D" uid="uid://j5d15pfgqxyw" path="res://Textures/kennyDK4.png" id="1_3lmro"]
 [ext_resource type="PackedScene" uid="uid://blxgponho1qji" path="res://Utils/CamRig.tscn" id="2_tb20h"]
 [ext_resource type="PackedScene" uid="uid://dbaqsdihpn7a4" path="res://Models/TopDiskModel.tscn" id="4_6e05n"]
+[ext_resource type="PackedScene" uid="uid://uuj16p5aw6lj" path="res://Utils/UIPanelDisplay.tscn" id="5_8xdfn"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_5tq51"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -56,3 +57,24 @@ mesh = SubResource("CylinderMesh_62ry8")
 
 [node name="TopDiskModel" parent="." instance=ExtResource("4_6e05n")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+
+[node name="UINode" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MgContainTL" type="MarginContainer" parent="UINode"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+
+[node name="VBox" type="VBoxContainer" parent="UINode/MgContainTL"]
+layout_mode = 2
+
+[node name="DatDisplay" parent="UINode/MgContainTL/VBox" instance=ExtResource("5_8xdfn")]
+layout_mode = 2

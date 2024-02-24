@@ -24,7 +24,15 @@ public partial class SpinTopScene : Node3D
 	float camFOV;
 	Vector3 camTg;       // coords of camera target
 
-	// Called when the node enters the scene tree for the first time.
+	// Data display stuff
+	UIPanelDisplay datDisplay;
+	int uiRefreshCtr;     //counter for display refresh
+	int uiRefreshTHold;   // threshold for display refresh
+
+	//------------------------------------------------------------------------
+	// _Ready: Called once when the node enters the scene tree for the first 
+	//         time.
+	//------------------------------------------------------------------------
 	public override void _Ready()
 	{
 		
@@ -47,6 +55,29 @@ public partial class SpinTopScene : Node3D
 		cam.Distance = camDist;
 		cam.FOVDeg = camFOV;
 		cam.Target = camTg;
+
+		// Set up data display
+		datDisplay = GetNode<UIPanelDisplay>(
+			"UINode/MgContainTL/VBox/DatDisplay");
+		datDisplay.SetNDisplay(5);
+
+		datDisplay.SetDigitsAfterDecimal(0,1);
+		datDisplay.SetDigitsAfterDecimal(1,4);
+		datDisplay.SetDigitsAfterDecimal(2,4);
+		datDisplay.SetDigitsAfterDecimal(3,4);
+		datDisplay.SetDigitsAfterDecimal(4,4);
+
+		datDisplay.SetLabel(0,"Lean IC");
+		datDisplay.SetLabel(1,"Kinetic");
+		datDisplay.SetLabel(2,"Potential");
+		datDisplay.SetLabel(3,"Total");
+		datDisplay.SetLabel(4,"Ang.Mo.Vert");
+
+		datDisplay.SetValue(0,30.0f);
+		datDisplay.SetValue(1,0.0f);
+		datDisplay.SetValue(2,0.0f);
+		datDisplay.SetValue(3,0.0f);
+		datDisplay.SetValue(4,0.0f);
 	}
 
 	//------------------------------------------------------------------------
