@@ -1,8 +1,9 @@
-[gd_scene load_steps=9 format=3 uid="uid://xju6sw1bpsvv"]
+[gd_scene load_steps=12 format=3 uid="uid://xju6sw1bpsvv"]
 
 [ext_resource type="Script" path="res://Worlds/SpinTopScene.cs" id="1_0lipg"]
 [ext_resource type="Texture2D" uid="uid://j5d15pfgqxyw" path="res://Textures/kennyDK4.png" id="1_3lmro"]
 [ext_resource type="PackedScene" uid="uid://blxgponho1qji" path="res://Utils/CamRig.tscn" id="2_tb20h"]
+[ext_resource type="PackedScene" uid="uid://dbaqsdihpn7a4" path="res://Models/TopDiskModel.tscn" id="4_6e05n"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_5tq51"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -25,6 +26,15 @@ uv1_triplanar = true
 material = SubResource("StandardMaterial3D_i3kg7")
 size = Vector2(4, 4)
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lopoe"]
+albedo_color = Color(0.0588235, 0.733333, 1, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_62ry8"]
+material = SubResource("StandardMaterial3D_lopoe")
+top_radius = 0.02
+bottom_radius = 0.02
+height = 1.0
+
 [node name="SpinTopScene" type="Node3D"]
 script = ExtResource("1_0lipg")
 
@@ -32,10 +42,17 @@ script = ExtResource("1_0lipg")
 environment = SubResource("Environment_u8uyl")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 6, 0)
+transform = Transform3D(0.999978, -0.00567995, 0.00327929, 1.47562e-08, 0.499998, 0.866026, -0.00655863, -0.866008, 0.499988, 0, 6, 0)
 shadow_enabled = true
 
 [node name="Floor" type="MeshInstance3D" parent="."]
 mesh = SubResource("PlaneMesh_ktc2i")
 
 [node name="CamRig" parent="." instance=ExtResource("2_tb20h")]
+
+[node name="Pedistal" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+mesh = SubResource("CylinderMesh_62ry8")
+
+[node name="TopDiskModel" parent="." instance=ExtResource("4_6e05n")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)

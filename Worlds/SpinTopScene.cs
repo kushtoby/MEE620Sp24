@@ -20,8 +20,8 @@ public partial class SpinTopScene : Node3D
 
 		// Set up the camera rig
 		longitudeDeg = 20.0f;
-		latitudeDeg = 45.0f;
-		camDist = 4.0f;
+		latitudeDeg = 25.0f;
+		camDist = 5.0f;
 		camFOV = 35.0f;
 
 		camTg = new Vector3(0.0f, 1.0f, 0.0f);

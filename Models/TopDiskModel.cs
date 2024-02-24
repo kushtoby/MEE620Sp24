@@ -15,6 +15,12 @@ public partial class TopDiskModel : Node3D
 	//------------------------------------------------------------------------
 	public override void _Ready()
 	{
+		
+		PrecessNode = GetNode<Node3D>("PrecessNode");
+		LeanNode = GetNode<Node3D>("PrecessNode/LeanNode");
+		SpinNode = GetNode<Node3D>("PrecessNode/LeanNode/SpinNode");
+
+		
 	}
 
 	
