@@ -4,6 +4,18 @@ using System;
 public partial class SpinTopScene : Node3D
 {
 
+	enum OpMode
+	{
+		Configure,
+		Simulate,
+	}
+	OpMode opMode;         // operation mode
+
+	// Simulation
+	SpinTopSim sim;
+	double time;
+	int nSimSteps;         // number of sim steps per _PhysicsProcess
+
 	// Camera Stuff
 	CamRig cam;
 	float longitudeDeg;
@@ -16,7 +28,11 @@ public partial class SpinTopScene : Node3D
 	public override void _Ready()
 	{
 		
+		opMode = OpMode.Configure;
 
+		sim = new SpinTopSim();
+		nSimSteps = 1;
+		time = 0.0;
 
 		// Set up the camera rig
 		longitudeDeg = 20.0f;
@@ -33,8 +49,31 @@ public partial class SpinTopScene : Node3D
 		cam.Target = camTg;
 	}
 
-	// Called every frame. 'delta' is the elapsed time since the previous frame.
+	//------------------------------------------------------------------------
+	// _Process: Called every frame. 'delta' is the elapsed time since the 
+	//           previous frame.
+	//------------------------------------------------------------------------
 	public override void _Process(double delta)
 	{
+		if(opMode == OpMode.Simulate){
+			
+		}
 	}
+
+	//------------------------------------------------------------------------
+	// _PhysicsProcess:
+	//------------------------------------------------------------------------
+    public override void _PhysicsProcess(double delta)
+    {
+        base._PhysicsProcess(delta);
+
+		if(opMode != OpMode.Simulate)
+			return;
+
+		double subdelta = delta/((double)nSimSteps);
+		for(int i=0;i<nSimSteps;++i){
+			sim.Step(time, subdelta);
+			time += subdelta;
+		}
+    }
 }

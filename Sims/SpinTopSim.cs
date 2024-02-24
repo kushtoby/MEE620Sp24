@@ -2,6 +2,7 @@
 // SpinTopSim.cs   Class for creating a simulation of a spinning top.
 //============================================================================
 using System;
+using Godot;
 
 public class SpinTopSim : Simulator
 {
@@ -25,10 +26,10 @@ public class SpinTopSim : Simulator
 
         // Default initial conditions
         x[0] = 0.0;    // generalized coord: precession angle psi
-        x[1] = 0.0;    // generalized coord: lean angle phi
+        x[1] = Math.PI/6.0;    // generalized coord: lean angle phi
         x[2] = 0.0;    // generalized coord: spin angle theta
         x[3] = 0.0;    // generalized speed: omegaX
-        x[4] = 0.0;    // generalized speed: omegaY (spin rate)
+        x[4] = 5.0;    // generalized speed: omegaY (spin rate)
         x[5] = 0.0;    // generalized speed: omegaZ
 
         SetRHSFunc(RHSFuncSpinTopBody);
@@ -46,5 +47,49 @@ public class SpinTopSim : Simulator
         double omegaX = xx[3];
         double omegaY = xx[4];
         double omegaZ = xx[5];
+
+        double sinPhi = Math.Sin(phi);
+        double cosTheta = Math.Cos(theta);
+        double sinTheta = Math.Sin(theta);
+
+        // Evaluate right sides of differential equations of motion
+        // ##### You will need to provide these ###### //
+        ff[0] = 0.0;   // time deriv of state psi
+        ff[1] = 0.0;   // time deriv os state phi
+        ff[2] = 0.0;   // time deriv os state theta
+        ff[3] = 0.0;   // time deriv os state omegaX
+        ff[4] = 0.0;   // time deriv os state omegaY
+        ff[5] = 0.0;   // time deriv os state omegaZ
     }
+
+
+    //------------------------------------------------------------------------
+    // getters & setters
+    //------------------------------------------------------------------------
+
+    // PrecessionAngle, psi
+    public double PrecessionAngle
+    {
+        get{
+            return(x[0]);
+        }
+
+        set{
+            x[0] = value;
+        }
+    }
+
+    // LeanAngle, phi
+    public double LeanAngle
+    {
+        get{
+            return(x[1]);
+        }
+
+        set{
+            x[1] = value;
+        }
+    }
+
+    
 }
