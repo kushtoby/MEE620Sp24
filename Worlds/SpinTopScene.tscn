@@ -76,6 +76,29 @@ theme_override_constants/margin_top = 10
 [node name="VBox" type="VBoxContainer" parent="UINode/MgContainTL"]
 layout_mode = 2
 
+[node name="HBoxAdjust" type="HBoxContainer" parent="UINode/MgContainTL/VBox"]
+layout_mode = 2
+
+[node name="LLeftButton" type="Button" parent="UINode/MgContainTL/VBox/HBoxAdjust"]
+layout_mode = 2
+text = "<<"
+
+[node name="LeftButton" type="Button" parent="UINode/MgContainTL/VBox/HBoxAdjust"]
+layout_mode = 2
+text = "<"
+
+[node name="Label" type="Label" parent="UINode/MgContainTL/VBox/HBoxAdjust"]
+layout_mode = 2
+text = "Adjust"
+
+[node name="RightButton" type="Button" parent="UINode/MgContainTL/VBox/HBoxAdjust"]
+layout_mode = 2
+text = ">"
+
+[node name="RRightButton" type="Button" parent="UINode/MgContainTL/VBox/HBoxAdjust"]
+layout_mode = 2
+text = ">>"
+
 [node name="DatDisplay" parent="UINode/MgContainTL/VBox" instance=ExtResource("5_8xdfn")]
 layout_mode = 2
 

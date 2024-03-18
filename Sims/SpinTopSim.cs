@@ -64,6 +64,19 @@ public class SpinTopSim : Simulator
 
 
     //------------------------------------------------------------------------
+    // ResetIC
+    //------------------------------------------------------------------------
+    public void ResetIC(double ln, double sr)
+    {
+        x[0] = 0.0;    // generalized coord: precession angle psi
+        x[1] = ln;     // generalized coord: lean angle phi
+        x[2] = 0.0;    // generalized coord: spin angle theta
+        x[3] = 0.0;    // generalized speed: omegaX
+        x[4] = sr;     // generalized speed: omegaY (spin rate)
+        x[5] = 0.0;    // generalized speed: omegaZ
+    }
+
+    //------------------------------------------------------------------------
     // getters & setters
     //------------------------------------------------------------------------
 
@@ -91,5 +104,27 @@ public class SpinTopSim : Simulator
         }
     }
 
-    
+    // SpinAngle, theta
+    public double SpinAngle
+    {
+        get{
+            return(x[2]);
+        }
+
+        set{
+            x[2] = value;
+        }
+    }
+
+    // SpinRate, omegaY
+    public double SpinRate
+    {
+        get{
+            return(x[4]);
+        }
+
+        set{
+            x[4] = value;
+        }
+    }
 }

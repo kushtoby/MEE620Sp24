@@ -16,7 +16,14 @@ public partial class SpinTopScene : Node3D
 	double time;
 	int nSimSteps;         // number of sim steps per _PhysicsProcess
 
+	// UI
+	Button[] adjButtons;
 	float leanICDeg;       // initial lean angle in degrees
+	float leanICMin;
+	float leanICMax;
+	float dAngle;
+
+	double spinRate;       // initial spinRate;
 	float dumAngle;
 
 	// Model
@@ -47,14 +54,25 @@ public partial class SpinTopScene : Node3D
 		
 		opMode = OpMode.Configure;
 
+		// ui
+		leanICDeg = 30.0f;
+		leanICMin = 5.0f;
+		leanICMax = 170.0f;
+		dAngle = 1.0f;
+
+		
+
 		// set up the model
 		model = GetNode<TopDiskModel>("TopDiskModel");
-		leanICDeg = 30.0f;
 		dumAngle = 0.0f;
 		model.SetEulerAnglesYZY(0.0f, Mathf.DegToRad(leanICDeg), 0.0f);
 
 		// Set up the simulation
 		sim = new SpinTopSim();
+		spinRate = 15.0;
+		sim.LeanAngle = Mathf.DegToRad(leanICDeg);
+		sim.SpinRate = spinRate;
+
 		nSimSteps = 1;
 		time = 0.0;
 
@@ -86,8 +104,14 @@ public partial class SpinTopScene : Node3D
 			return;
 		}
 
-		dumAngle += (float)delta;
-		model.SetEulerAnglesYZY(dumAngle,(float)Mathf.DegToRad(leanICDeg), 5.0f*dumAngle);
+		if(adjButtons[0].ButtonPressed){
+            leanICDeg += dAngle;
+            ProcessLeanAngle();
+        }
+        else if(adjButtons[3].ButtonPressed){
+            leanICDeg -= dAngle;
+            ProcessLeanAngle();
+        }
 	}
 
 	//------------------------------------------------------------------------
@@ -106,6 +130,24 @@ public partial class SpinTopScene : Node3D
 			time += subdelta;
 		}
     }
+
+	//------------------------------------------------------------------------
+	// ProcessLeanAngle
+	//------------------------------------------------------------------------
+	private void ProcessLeanAngle()
+	{
+		//GD.Print("Process Lean Angle");
+
+		if(leanICDeg < leanICMin)
+			leanICDeg = leanICMin;
+
+		if(leanICDeg > leanICMax)
+			leanICDeg = leanICMax;
+
+		sim.ResetIC((double)Mathf.DegToRad(leanICDeg), 10.0f);
+		model.SetEulerAnglesYZY(0.0f,Mathf.DegToRad(leanICDeg), 0.0f);
+		datDisplay.SetValue(0, leanICDeg);
+	}
 
 	//------------------------------------------------------------------------
 	// SetupUI
@@ -139,6 +181,20 @@ public partial class SpinTopScene : Node3D
 		//--- Sim Button
 		simButton = vbox.GetNode<Button>("SimButton");
 		simButton.Pressed += OnSimButtonPressed;
+
+		//--- Adjustment buttons
+		adjButtons = new Button[4];
+		adjButtons[0] = 
+			GetNode<Button>("UINode/MgContainTL/VBox/HBoxAdjust/LLeftButton");
+		adjButtons[1] = 
+			GetNode<Button>("UINode/MgContainTL/VBox/HBoxAdjust/LeftButton");
+		adjButtons[1].Pressed += OnAdjButtonSlow;
+		adjButtons[2] = 
+			GetNode<Button>("UINode/MgContainTL/VBox/HBoxAdjust/RightButton");
+		adjButtons[2].Pressed += OnAdjButtonSlow;
+		adjButtons[3] = 
+			GetNode<Button>("UINode/MgContainTL/VBox/HBoxAdjust/RRightButton");
+		
 	}
 
 	//------------------------------------------------------------------------
@@ -156,4 +212,19 @@ public partial class SpinTopScene : Node3D
 			opMode = OpMode.Configure;
 		}
 	}
+
+	//------------------------------------------------------------------------
+    // OnAdjButtonSlow
+    //------------------------------------------------------------------------
+    private void OnAdjButtonSlow()
+    {
+        if(adjButtons[1].ButtonPressed){
+            leanICDeg += dAngle;
+            ProcessLeanAngle();
+        }
+        else if(adjButtons[2].ButtonPressed){
+            leanICDeg -= dAngle;
+            ProcessLeanAngle();
+        }
+    }
 }
