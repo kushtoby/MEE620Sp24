@@ -16,6 +16,12 @@ public partial class SpinTopScene : Node3D
 	double time;
 	int nSimSteps;         // number of sim steps per _PhysicsProcess
 
+	float leanICDeg;       // initial lean angle in degrees
+	float dumAngle;
+
+	// Model
+	TopDiskModel model;    // model
+
 	// Camera Stuff
 	CamRig cam;
 	float longitudeDeg;
@@ -41,6 +47,13 @@ public partial class SpinTopScene : Node3D
 		
 		opMode = OpMode.Configure;
 
+		// set up the model
+		model = GetNode<TopDiskModel>("TopDiskModel");
+		leanICDeg = 30.0f;
+		dumAngle = 0.0f;
+		model.SetEulerAnglesYZY(0.0f, Mathf.DegToRad(leanICDeg), 0.0f);
+
+		// Set up the simulation
 		sim = new SpinTopSim();
 		nSimSteps = 1;
 		time = 0.0;
@@ -70,7 +83,11 @@ public partial class SpinTopScene : Node3D
 	{
 		if(opMode == OpMode.Simulate){
 			
+			return;
 		}
+
+		dumAngle += (float)delta;
+		model.SetEulerAnglesYZY(dumAngle,(float)Mathf.DegToRad(leanICDeg), 5.0f*dumAngle);
 	}
 
 	//------------------------------------------------------------------------
@@ -113,7 +130,7 @@ public partial class SpinTopScene : Node3D
 		datDisplay.SetLabel(3,"Total");
 		datDisplay.SetLabel(4,"Ang.Mo.Vert");
 
-		datDisplay.SetValue(0,30.0f);
+		datDisplay.SetValue(0,leanICDeg);
 		datDisplay.SetValue(1,0.0f);
 		datDisplay.SetValue(2,0.0f);
 		datDisplay.SetValue(3,0.0f);
