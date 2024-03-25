@@ -6,6 +6,13 @@ using Godot;
 
 public class SpinTopSim : Simulator
 {
+    enum SimMode
+    {
+        BodyFixed,
+        LeanFrame,
+    }
+    SimMode simMode;
+
     // physical parameters
     double h;    // distance of CG from contact rotation point
     double m;   // mass of top
@@ -65,6 +72,43 @@ public class SpinTopSim : Simulator
         ff[5] = ((ICp-IGa)*omegaX*omegaY + m*g*h*sinPhi*cosTheta)/ICp;   // time deriv os state omegaZ
     }
 
+    //------------------------------------------------------------------------
+    // CalcKineticEnergyBody
+    //------------------------------------------------------------------------
+    private double CalcKineticEnergyBody()
+    {
+        //******* Students write this function ********
+
+        return 0.0;
+    }
+
+    //------------------------------------------------------------------------
+    // CalcPotentialEnergyBody
+    //------------------------------------------------------------------------
+    private double CalcPotentialEnergyBody()
+    {
+        //******* Students write this function ********
+
+        return 0.0;
+    }
+
+    //------------------------------------------------------------------------
+    // CalcAngMoVertBody
+    //------------------------------------------------------------------------
+    private double CalcAngMoVertBody()
+    {
+        //******* Students write this function ********
+        
+        return 0.0;
+    }
+
+    //------------------------------------------------------------------------
+    // RHSFuncSpinTopLean:  Evaluates the right sides of the differential
+    //                 equations for the spinning top (lean frame)
+    //------------------------------------------------------------------------
+    private void RHSFuncSpinTopLean(double[] xx, double t, double[] ff)
+    {
+    }
 
     //------------------------------------------------------------------------
     // ResetIC
@@ -134,52 +178,21 @@ public class SpinTopSim : Simulator
     public double KineticEnergy
     {
         get{
-            double omegaX = x[3];
-            double omegaY = x[4];
-            double omegaZ = x[5];
-
-            return 0.5*(IGa*omegaY*omegaY + 
-                ICp*(omegaX*omegaX+omegaZ*omegaZ));
+            return CalcKineticEnergyBody();
         }
     }
 
     public double PotentialEnergy
     {
         get{
-            double psi = x[0];
-            double phi = x[1];
-            double theta = x[2];
-
-            double sinPhi = Math.Sin(phi);
-            double cosPhi = Math.Cos(phi);
-            double tanPhi = Math.Tan(phi);
-            double cosTheta = Math.Cos(theta);
-            double sinTheta = Math.Sin(theta);
-
-            return m*g*h*cosPhi;
+            return CalcPotentialEnergyBody();
         }
     }
 
     public double AngMoY
     {
         get{
-            double psi = x[0];
-            double phi = x[1];
-            double theta = x[2];
-            double omegaX = x[3];
-            double omegaY = x[4];
-            double omegaZ = x[5];
-
-            double sinPhi = Math.Sin(phi);
-            double cosPhi = Math.Cos(phi);
-            double tanPhi = Math.Tan(phi);
-            double cosTheta = Math.Cos(theta);
-            double sinTheta = Math.Sin(theta);
-
-            double angMoY = IGa*omegaY*cosPhi + ICp*omegaX*sinPhi*cosTheta +
-                ICp*omegaZ*sinPhi*sinTheta;
-
-            return angMoY;
+            return CalcAngMoVertBody();
         }
     }
 }

@@ -224,10 +224,10 @@ public partial class SpinTopScene : Node3D
 
 		//--- Option Button Spin Rate
 		optionSpinRate = vbox.GetNode<OptionButton>("OptionSpinRate");
-		optionSpinRate.AddItem("SpinRate: 10", 0);
-		optionSpinRate.AddItem("SpinRate: 20", 1);
-		optionSpinRate.AddItem("SpinRate: 40", 2);
-		optionSpinRate.AddItem("SpinRate: 60", 3);
+		optionSpinRate.AddItem("SpinRate: 10 rad/s", 0);
+		optionSpinRate.AddItem("SpinRate: 20 rad/s", 1);
+		optionSpinRate.AddItem("SpinRate: 40 rad/s", 2);
+		optionSpinRate.AddItem("SpinRate: 60 rad/s", 3);
 		optionSpinRate.Selected = 3;
 		optionSpinRate.ItemSelected += OnOptionSpinRate;
 
@@ -302,7 +302,17 @@ public partial class SpinTopScene : Node3D
     //------------------------------------------------------------------------
     private void OnOptionSimSubsteps(long ii)
     {
-		GD.Print("Substeps: " + ii);
+		//GD.Print("Substeps: " + ii);
+		if(ii == 0)
+			nSimSteps = 1;
+		if(ii == 1)
+			nSimSteps = 2;
+		if(ii == 2)
+			nSimSteps = 4;
+		if(ii == 3)
+			nSimSteps = 8;
+		if(ii == 4)
+			nSimSteps = 16;
 	}
 
 	//------------------------------------------------------------------------
@@ -310,6 +320,10 @@ public partial class SpinTopScene : Node3D
     //------------------------------------------------------------------------
     private void OnOptionSpinRate(long ii)
     {
-		GD.Print("SpinRate: " + ii);
+		spinRateIdx = (int)ii;
+		spinRate = spinRateOptions[spinRateIdx];
+		ProcessLeanAngle();
+
+		//GD.Print("SpinRate: " + spinRate);
 	}
 }
