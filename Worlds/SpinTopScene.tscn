@@ -102,6 +102,15 @@ text = ">>"
 [node name="DatDisplay" parent="UINode/MgContainTL/VBox" instance=ExtResource("5_8xdfn")]
 layout_mode = 2
 
+[node name="OptionSpinRate" type="OptionButton" parent="UINode/MgContainTL/VBox"]
+layout_mode = 2
+
+[node name="OptionSim" type="OptionButton" parent="UINode/MgContainTL/VBox"]
+layout_mode = 2
+
+[node name="OptionSimSubSteps" type="OptionButton" parent="UINode/MgContainTL/VBox"]
+layout_mode = 2
+
 [node name="SimButton" type="Button" parent="UINode/MgContainTL/VBox"]
 layout_mode = 2
 text = "Simulate"

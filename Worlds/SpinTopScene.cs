@@ -23,6 +23,13 @@ public partial class SpinTopScene : Node3D
 	float leanICMax;
 	float dAngle;
 
+	OptionButton optionSimSubsteps;
+	OptionButton optionSim;
+	OptionButton optionSpinRate;
+
+	double[] spinRateOptions;
+	int spinRateIdx;
+
 	double spinRate;       // initial spinRate;
 	float dumAngle;
 
@@ -59,7 +66,13 @@ public partial class SpinTopScene : Node3D
 		leanICMin = 5.0f;
 		leanICMax = 170.0f;
 		dAngle = 1.0f;
-		
+
+		spinRateOptions = new double[4];
+		spinRateOptions[0] = 10.0;
+		spinRateOptions[1] = 20.0;
+		spinRateOptions[2] = 40.0;
+		spinRateOptions[3] = 60.0;
+		spinRateIdx = 3;
 
 		// set up the model
 		model = GetNode<TopDiskModel>("TopDiskModel");
@@ -68,7 +81,7 @@ public partial class SpinTopScene : Node3D
 
 		// Set up the simulation
 		sim = new SpinTopSim();
-		spinRate = 60.0;
+		spinRate = spinRateOptions[spinRateIdx];
 		sim.LeanAngle = Mathf.DegToRad(leanICDeg);
 		sim.SpinRate = spinRate;
 
@@ -199,6 +212,30 @@ public partial class SpinTopScene : Node3D
 		uiRefreshCtr = 0;
 		uiRefreshTHold = 3;
 
+		//--- Option Button, Sim Substeps
+		optionSimSubsteps = vbox.GetNode<OptionButton>("OptionSimSubSteps");
+		optionSimSubsteps.AddItem("Substeps: 1",0);
+		optionSimSubsteps.AddItem("Substeps: 2",1);
+		optionSimSubsteps.AddItem("Substeps: 4",2);
+		optionSimSubsteps.AddItem("Substeps: 8",3);
+		optionSimSubsteps.AddItem("Substeps: 16",4);
+		optionSimSubsteps.Selected = 4;
+		optionSimSubsteps.ItemSelected += OnOptionSimSubsteps;
+
+		//--- Option Button Spin Rate
+		optionSpinRate = vbox.GetNode<OptionButton>("OptionSpinRate");
+		optionSpinRate.AddItem("SpinRate: 10", 0);
+		optionSpinRate.AddItem("SpinRate: 20", 1);
+		optionSpinRate.AddItem("SpinRate: 40", 2);
+		optionSpinRate.AddItem("SpinRate: 60", 3);
+		optionSpinRate.Selected = 3;
+		optionSpinRate.ItemSelected += OnOptionSpinRate;
+
+		//--- Option Button, Sim choice
+		optionSim = vbox.GetNode<OptionButton>("OptionSim");
+		optionSim.AddItem("Sim: Fixed Body",0);
+		optionSim.Selected = 0;
+
 		//--- Sim Button
 		simButton = vbox.GetNode<Button>("SimButton");
 		simButton.Pressed += OnSimButtonPressed;
@@ -228,12 +265,18 @@ public partial class SpinTopScene : Node3D
 		if(opMode == OpMode.Configure){
 			simButton.Text = "Stop Sim";
 			opMode = OpMode.Simulate;
+			optionSim.Disabled = true;
+			optionSimSubsteps.Disabled = true;
+			optionSpinRate.Disabled = true;
 			for(i=0;i<4;++i)
 				adjButtons[i].Disabled = true;
 		}
 		else{
 			simButton.Text = "Simulate";
 			opMode = OpMode.Configure;
+			optionSim.Disabled = false;
+			optionSimSubsteps.Disabled = false;
+			optionSpinRate.Disabled = false;
 			for(i=0;i<4;++i)
 				adjButtons[i].Disabled = false;
 		}
@@ -253,4 +296,20 @@ public partial class SpinTopScene : Node3D
             ProcessLeanAngle();
         }
     }
+
+	//------------------------------------------------------------------------
+    // OnOptionSimSubsteps
+    //------------------------------------------------------------------------
+    private void OnOptionSimSubsteps(long ii)
+    {
+		GD.Print("Substeps: " + ii);
+	}
+
+	//------------------------------------------------------------------------
+    // OnOptionSpinRate
+    //------------------------------------------------------------------------
+    private void OnOptionSpinRate(long ii)
+    {
+		GD.Print("SpinRate: " + ii);
+	}
 }
