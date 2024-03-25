@@ -59,7 +59,6 @@ public partial class SpinTopScene : Node3D
 		leanICMin = 5.0f;
 		leanICMax = 170.0f;
 		dAngle = 1.0f;
-
 		
 
 		// set up the model
@@ -69,11 +68,11 @@ public partial class SpinTopScene : Node3D
 
 		// Set up the simulation
 		sim = new SpinTopSim();
-		spinRate = 15.0;
+		spinRate = 60.0;
 		sim.LeanAngle = Mathf.DegToRad(leanICDeg);
 		sim.SpinRate = spinRate;
 
-		nSimSteps = 1;
+		nSimSteps = 16;
 		time = 0.0;
 
 		// Set up the camera rig
@@ -101,6 +100,25 @@ public partial class SpinTopScene : Node3D
 	{
 		if(opMode == OpMode.Simulate){
 			
+			model.SetEulerAnglesYZY((float)sim.PrecessionAngle,
+				(float)sim.LeanAngle, (float)sim.SpinAngle);
+
+			if(uiRefreshCtr > uiRefreshTHold){
+				double ke = sim.KineticEnergy;
+				double pe = sim.PotentialEnergy;
+				double totErg = ke + pe;
+
+				double angMoY = sim.AngMoY;
+
+				datDisplay.SetValue(1,(float)ke);
+				datDisplay.SetValue(2,(float)pe);
+				datDisplay.SetValue(3,(float)totErg);
+				datDisplay.SetValue(4,(float)angMoY);
+
+				uiRefreshCtr = 0;
+			}
+			++uiRefreshCtr;
+
 			return;
 		}
 
@@ -144,7 +162,7 @@ public partial class SpinTopScene : Node3D
 		if(leanICDeg > leanICMax)
 			leanICDeg = leanICMax;
 
-		sim.ResetIC((double)Mathf.DegToRad(leanICDeg), 10.0f);
+		sim.ResetIC((double)Mathf.DegToRad(leanICDeg), spinRate);
 		model.SetEulerAnglesYZY(0.0f,Mathf.DegToRad(leanICDeg), 0.0f);
 		datDisplay.SetValue(0, leanICDeg);
 	}
@@ -178,6 +196,9 @@ public partial class SpinTopScene : Node3D
 		datDisplay.SetValue(3,0.0f);
 		datDisplay.SetValue(4,0.0f);
 
+		uiRefreshCtr = 0;
+		uiRefreshTHold = 3;
+
 		//--- Sim Button
 		simButton = vbox.GetNode<Button>("SimButton");
 		simButton.Pressed += OnSimButtonPressed;
@@ -202,14 +223,19 @@ public partial class SpinTopScene : Node3D
 	//------------------------------------------------------------------------
 	private void OnSimButtonPressed()
 	{
+		int i;
 		//GD.Print("OnSimButtonPressed");
 		if(opMode == OpMode.Configure){
 			simButton.Text = "Stop Sim";
 			opMode = OpMode.Simulate;
+			for(i=0;i<4;++i)
+				adjButtons[i].Disabled = true;
 		}
 		else{
 			simButton.Text = "Simulate";
 			opMode = OpMode.Configure;
+			for(i=0;i<4;++i)
+				adjButtons[i].Disabled = false;
 		}
 	}
 

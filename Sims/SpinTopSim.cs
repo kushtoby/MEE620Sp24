@@ -11,7 +11,7 @@ public class SpinTopSim : Simulator
     double m;   // mass of top
     double IGa;  // moment of inertia about its spin axis
     double IGp;  // moment of inertia about its CG, perpendicular to spin axis
-
+    double ICp; // moment of inertia about contact point, perp to spin axis
 
     //------------------------------------------------------------------------
     // Constructor      [STUDENTS: DO NOT CHANGE THIS FUNCTION]
@@ -23,6 +23,7 @@ public class SpinTopSim : Simulator
         double r = 0.5;
         IGa = 0.5*m*r*r;
         IGp = 0.5*IGa;
+        ICp = IGp + m*h*h;
 
         // Default initial conditions
         x[0] = 0.0;    // generalized coord: precession angle psi
@@ -48,18 +49,20 @@ public class SpinTopSim : Simulator
         double omegaY = xx[4];
         double omegaZ = xx[5];
 
+        //double cosPhi = Math.Cos(phi);
         double sinPhi = Math.Sin(phi);
+        double tanPhi = Math.Tan(phi);
         double cosTheta = Math.Cos(theta);
         double sinTheta = Math.Sin(theta);
 
         // Evaluate right sides of differential equations of motion
         // ##### You will need to provide these ###### //
-        ff[0] = 0.0;   // time deriv of state psi
-        ff[1] = 0.0;   // time deriv os state phi
-        ff[2] = 0.0;   // time deriv os state theta
-        ff[3] = 0.0;   // time deriv os state omegaX
+        ff[0] = cosTheta*omegaX/sinPhi + sinTheta*omegaZ/sinPhi;   // time deriv of state psi
+        ff[1] = -sinTheta*omegaX + cosTheta*omegaZ;   // time deriv os state phi
+        ff[2] = -cosTheta/tanPhi*omegaX + omegaY - sinTheta*omegaZ/tanPhi;   // time deriv os state theta
+        ff[3] = ((IGa-ICp)*omegaY*omegaZ - m*g*h*sinPhi*sinTheta)/ICp;   // time deriv os state omegaX
         ff[4] = 0.0;   // time deriv os state omegaY
-        ff[5] = 0.0;   // time deriv os state omegaZ
+        ff[5] = ((ICp-IGa)*omegaX*omegaY + m*g*h*sinPhi*cosTheta)/ICp;   // time deriv os state omegaZ
     }
 
 
@@ -125,6 +128,58 @@ public class SpinTopSim : Simulator
 
         set{
             x[4] = value;
+        }
+    }
+
+    public double KineticEnergy
+    {
+        get{
+            double omegaX = x[3];
+            double omegaY = x[4];
+            double omegaZ = x[5];
+
+            return 0.5*(IGa*omegaY*omegaY + 
+                ICp*(omegaX*omegaX+omegaZ*omegaZ));
+        }
+    }
+
+    public double PotentialEnergy
+    {
+        get{
+            double psi = x[0];
+            double phi = x[1];
+            double theta = x[2];
+
+            double sinPhi = Math.Sin(phi);
+            double cosPhi = Math.Cos(phi);
+            double tanPhi = Math.Tan(phi);
+            double cosTheta = Math.Cos(theta);
+            double sinTheta = Math.Sin(theta);
+
+            return m*g*h*cosPhi;
+        }
+    }
+
+    public double AngMoY
+    {
+        get{
+            double psi = x[0];
+            double phi = x[1];
+            double theta = x[2];
+            double omegaX = x[3];
+            double omegaY = x[4];
+            double omegaZ = x[5];
+
+            double sinPhi = Math.Sin(phi);
+            double cosPhi = Math.Cos(phi);
+            double tanPhi = Math.Tan(phi);
+            double cosTheta = Math.Cos(theta);
+            double sinTheta = Math.Sin(theta);
+
+            double angMoY = IGa*omegaY*cosPhi + ICp*omegaX*sinPhi*cosTheta +
+                ICp*omegaZ*sinPhi*sinTheta;
+
+            return angMoY;
         }
     }
 }
