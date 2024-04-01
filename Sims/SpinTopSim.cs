@@ -23,6 +23,11 @@ public class SpinTopSim : Simulator
     double ke;   // kinetic energy to be calculated by auxFunc
     double pe;   // potential energy to be calculated by auxFunc
     double angMoY; //vertical component of angular momentum calc by auxFun 
+
+    double cPx;  // component of support force in P frame
+    double cPy;
+    double cPz;
+
     private Action AuxFunc;  // delegate for aux
 
     //------------------------------------------------------------------------
@@ -155,9 +160,32 @@ public class SpinTopSim : Simulator
     //------------------------------------------------------------------------
     private void AuxFuncLean()
     {
-        ke = 1.1;
-        pe = 1.2;
-        angMoY = 1.3;
+        //********* Students write your expressions for kinetic energy,
+        //          potential energy, vertical component of angular momentum,
+        //          and (soon) support forces
+
+        ke = 0.0;
+        pe = 0.0;
+        angMoY = 0.0;
+
+        // Components of support force in P (precession) frame
+        cPx = 0.0;
+        cPy = 0.0;
+        cPz = 0.0;
+    }
+
+    //------------------------------------------------------------------------
+    // CalcSimplePrecession: Given the initial lean angle phi, and rotation
+    //       rate thetaDot, calculate the initial precession rate psiDot so
+    //       that the spinning top exhibits simple precession without 
+    //       nutation. For some inputs, there is no simple precession 
+    //       solution. In that case return 0.0.
+    //------------------------------------------------------------------------
+    private double CalcSimplePrecession(double phi, double thetaDot)
+    {
+        // ****** Students write your code here *******
+
+        return 0.0;
     }
 
     //------------------------------------------------------------------------
@@ -181,6 +209,20 @@ public class SpinTopSim : Simulator
             x[4] = 0.0;    // generalized speed: phiDot
             x[5] = sr;     // generalized speed: thetaDot
         }
+    }
+
+    //------------------------------------------------------------------------
+    // SimplePrecessionIC: Set the initial condition so that it executes
+    //       simple precession without nutation (if possible). Only works for
+    //       simulation in the lean frame.
+    //------------------------------------------------------------------------
+    public void SimplePrecessionIC()
+    {
+        if(simMode != SimMode.LeanFrame)
+            return;
+
+        double psiDot = CalcSimplePrecession(x[1], x[5]);
+        x[3] = psiDot;
     }
 
     //------------------------------------------------------------------------
