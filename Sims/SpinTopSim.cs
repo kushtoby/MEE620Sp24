@@ -164,6 +164,20 @@ public class SpinTopSim : Simulator
         //          potential energy, vertical component of angular momentum,
         //          and (soon) support forces
 
+        double psi = x[0];
+        double phi = x[1];
+        double theta = x[2];
+        double psiDot = x[3];
+        double phiDot = x[4];
+        double thetaDot = x[5];
+
+        double cosPsi = Math.Cos(psi);
+        double sinPsi = Math.Sin(psi);
+        double cosPhi = Math.Cos(phi);
+        double sinPhi = Math.Sin(phi);
+        double tanPhi = Math.Tan(phi);
+
+
         ke = 0.0;
         pe = 0.0;
         angMoY = 0.0;
