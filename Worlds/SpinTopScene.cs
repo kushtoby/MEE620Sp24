@@ -28,6 +28,7 @@ public partial class SpinTopScene : Node3D
 	OptionButton optionSpinRate;
 
 	double[] spinRateOptions;
+	string[,] spinRateLabelOptions; 
 	int spinRateIdx;
 
 	double spinRate;       // initial spinRate;
@@ -72,6 +73,17 @@ public partial class SpinTopScene : Node3D
 		spinRateOptions[1] = 20.0;
 		spinRateOptions[2] = 40.0;
 		spinRateOptions[3] = 60.0;
+
+		spinRateLabelOptions = new string[2,4];
+		spinRateLabelOptions[0,0] = "OmegaY: 10 rad/s";
+		spinRateLabelOptions[0,1] = "OmegaY: 20 rad/s";
+		spinRateLabelOptions[0,2] = "OmegaY: 40 rad/s";
+		spinRateLabelOptions[0,3] = "OmegaY: 60 rad/s";
+		spinRateLabelOptions[1,0] = "thetaDot: 10 rad/s";
+		spinRateLabelOptions[1,1] = "thetaDot: 20 rad/s";
+		spinRateLabelOptions[1,2] = "thetaDot: 40 rad/s";
+		spinRateLabelOptions[1,3] = "thetaDot: 60 rad/s";
+
 		spinRateIdx = 3;
 
 		// set up the model
@@ -224,17 +236,19 @@ public partial class SpinTopScene : Node3D
 
 		//--- Option Button Spin Rate
 		optionSpinRate = vbox.GetNode<OptionButton>("OptionSpinRate");
-		optionSpinRate.AddItem("SpinRate: 10 rad/s", 0);
-		optionSpinRate.AddItem("SpinRate: 20 rad/s", 1);
-		optionSpinRate.AddItem("SpinRate: 40 rad/s", 2);
-		optionSpinRate.AddItem("SpinRate: 60 rad/s", 3);
+		optionSpinRate.AddItem(spinRateLabelOptions[0,0], 0);
+		optionSpinRate.AddItem(spinRateLabelOptions[0,1], 1);
+		optionSpinRate.AddItem(spinRateLabelOptions[0,2], 2);
+		optionSpinRate.AddItem(spinRateLabelOptions[0,3], 3);
 		optionSpinRate.Selected = 3;
 		optionSpinRate.ItemSelected += OnOptionSpinRate;
 
 		//--- Option Button, Sim choice
 		optionSim = vbox.GetNode<OptionButton>("OptionSim");
 		optionSim.AddItem("Sim: Fixed Body",0);
+		optionSim.AddItem("Sim: Lean Frame",1);
 		optionSim.Selected = 0;
+		optionSim.ItemSelected += OnOptionSim;
 
 		//--- Sim Button
 		simButton = vbox.GetNode<Button>("SimButton");
@@ -325,5 +339,31 @@ public partial class SpinTopScene : Node3D
 		ProcessLeanAngle();
 
 		//GD.Print("SpinRate: " + spinRate);
+	}
+
+	//------------------------------------------------------------------------
+    // OnOptionSim
+    //------------------------------------------------------------------------
+    private void OnOptionSim(long ii)
+    {
+		int idx = (int)ii;
+		if(idx == 0){
+			GD.Print("Body Fixed");
+			sim.SwitchModelBody();
+			optionSpinRate.SetItemText(0,spinRateLabelOptions[0,0]);
+			optionSpinRate.SetItemText(1,spinRateLabelOptions[0,1]);
+			optionSpinRate.SetItemText(2,spinRateLabelOptions[0,2]);
+			optionSpinRate.SetItemText(3,spinRateLabelOptions[0,3]);
+			ProcessLeanAngle();
+		}
+		else if(idx == 1){
+			GD.Print("Lean Frame");
+			sim.SwitchModelLean();
+			optionSpinRate.SetItemText(0,spinRateLabelOptions[1,0]);
+			optionSpinRate.SetItemText(1,spinRateLabelOptions[1,1]);
+			optionSpinRate.SetItemText(2,spinRateLabelOptions[1,2]);
+			optionSpinRate.SetItemText(3,spinRateLabelOptions[1,3]);
+			ProcessLeanAngle();
+		}
 	}
 }

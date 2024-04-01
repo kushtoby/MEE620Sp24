@@ -127,6 +127,26 @@ public class SpinTopSim : Simulator
     //------------------------------------------------------------------------
     private void RHSFuncSpinTopLean(double[] xx, double t, double[] ff)
     {
+        double psi = xx[0];
+        double phi = xx[1];
+        double theta = xx[2];
+        double psiDot = xx[3];
+        double phiDot = xx[4];
+        double thetaDot = xx[5];
+
+        double cosPhi = Math.Cos(phi);
+        double sinPhi = Math.Sin(phi);
+        double tanPhi = Math.Tan(phi);
+
+        // Evaluate right sides of differential equations of motion
+        // ##### You will need to provide these ###### //
+        ff[0] = 0.0;   // time deriv of state psi
+        ff[1] = 0.0;   // time deriv of state phi
+        ff[2] = 0.0;   // time deriv of state theta
+        ff[3] = 0.0;   // time deriv of state psiDot
+        ff[4] = 0.0;   // time deriv of state phiDot
+        ff[5] = 0.0;   // time deriv of state thetaDot
+
     }
 
     //------------------------------------------------------------------------
@@ -145,12 +165,22 @@ public class SpinTopSim : Simulator
     //------------------------------------------------------------------------
     public void ResetIC(double ln, double sr)
     {
-        x[0] = 0.0;    // generalized coord: precession angle psi
-        x[1] = ln;     // generalized coord: lean angle phi
-        x[2] = 0.0;    // generalized coord: spin angle theta
-        x[3] = 0.0;    // generalized speed: omegaX
-        x[4] = sr;     // generalized speed: omegaY (spin rate)
-        x[5] = 0.0;    // generalized speed: omegaZ
+        if(simMode == SimMode.BodyFixed){
+            x[0] = 0.0;    // generalized coord: precession angle psi
+            x[1] = ln;     // generalized coord: lean angle phi
+            x[2] = 0.0;    // generalized coord: spin angle theta
+            x[3] = 0.0;    // generalized speed: omegaX
+            x[4] = sr;     // generalized speed: omegaY (spin rate)
+            x[5] = 0.0;    // generalized speed: omegaZ
+        }
+        if(simMode == SimMode.LeanFrame){
+            x[0] = 0.0;    // generalized coord: precession angle psi
+            x[1] = ln;     // generalized coord: lean angle phi
+            x[2] = 0.0;    // generalized coord: spin angle theta
+            x[3] = 0.0;    // generalized speed: psiDot
+            x[4] = 0.0;    // generalized speed: phiDot
+            x[5] = sr;     // generalized speed: thetaDot
+        }
     }
 
     //------------------------------------------------------------------------
