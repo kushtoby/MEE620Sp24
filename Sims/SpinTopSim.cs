@@ -20,6 +20,11 @@ public class SpinTopSim : Simulator
     double IGp;  // moment of inertia about its CG, perpendicular to spin axis
     double ICp; // moment of inertia about contact point, perp to spin axis
 
+    double ke;   // kinetic energy to be calculated by auxFunc
+    double pe;   // potential energy to be calculated by auxFunc
+    double angMoY; //vertical component of angular momentum calc by auxFun 
+    private Action AuxFunc;  // delegate for aux
+
     //------------------------------------------------------------------------
     // Constructor      [STUDENTS: DO NOT CHANGE THIS FUNCTION]
     //------------------------------------------------------------------------
@@ -32,15 +37,18 @@ public class SpinTopSim : Simulator
         IGp = 0.5*IGa;
         ICp = IGp + m*h*h;
 
+        ke = pe = angMoY = 0.0;
+
         // Default initial conditions
         x[0] = 0.0;    // generalized coord: precession angle psi
         x[1] = Math.PI/6.0;    // generalized coord: lean angle phi
         x[2] = 0.0;    // generalized coord: spin angle theta
-        x[3] = 0.0;    // generalized speed: omegaX
-        x[4] = 5.0;    // generalized speed: omegaY (spin rate)
-        x[5] = 0.0;    // generalized speed: omegaZ
+        x[3] = 0.0;    // gen speed: omegaX or psiDot, depending on sim type
+        x[4] = 5.0;    // gen speed: omegaY or phiDot, depending on sim type
+        x[5] = 0.0;    // gen speed: omegaZ or thetadot, dep on sim type
 
         SetRHSFunc(RHSFuncSpinTopBody);
+        AuxFunc = AuxFuncBody;
     }
 
     //------------------------------------------------------------------------
@@ -103,11 +111,33 @@ public class SpinTopSim : Simulator
     }
 
     //------------------------------------------------------------------------
+    // AuxFuncBody: This function is used to calculate angular velocity, 
+    //     angular momentum, and other quantities of interest
+    //------------------------------------------------------------------------
+    private void AuxFuncBody()
+    {
+        ke = CalcKineticEnergyBody();
+        pe = CalcPotentialEnergyBody();
+        angMoY = CalcAngMoVertBody();
+    }
+
+    //------------------------------------------------------------------------
     // RHSFuncSpinTopLean:  Evaluates the right sides of the differential
     //                 equations for the spinning top (lean frame)
     //------------------------------------------------------------------------
     private void RHSFuncSpinTopLean(double[] xx, double t, double[] ff)
     {
+    }
+
+    //------------------------------------------------------------------------
+    // AuxFuncLean: This function is used to calculate angular velocity, 
+    //     angular momentum, and other quantities of interest
+    //------------------------------------------------------------------------
+    private void AuxFuncLean()
+    {
+        ke = 1.1;
+        pe = 1.2;
+        angMoY = 1.3;
     }
 
     //------------------------------------------------------------------------
@@ -121,6 +151,28 @@ public class SpinTopSim : Simulator
         x[3] = 0.0;    // generalized speed: omegaX
         x[4] = sr;     // generalized speed: omegaY (spin rate)
         x[5] = 0.0;    // generalized speed: omegaZ
+    }
+
+    //------------------------------------------------------------------------
+    // SwitchModelBody: Use the body fixed model to perform calculations
+    // [STUDENTS: DO NOT MODIFY THIS FUNCTION]
+    //------------------------------------------------------------------------
+    public void SwitchModelBody()
+    {
+        simMode = SimMode.BodyFixed;
+        SetRHSFunc(RHSFuncSpinTopBody);
+        AuxFunc = AuxFuncBody;
+    }
+
+    //------------------------------------------------------------------------
+    // SwitchModelLean: Use the lean frame model to perform calculations
+    // [STUDENTS: DO NOT MODIFY THIS FUNCTION]
+    //------------------------------------------------------------------------
+    public void SwitchModelLean()
+    {
+        simMode = SimMode.LeanFrame;
+        SetRHSFunc(RHSFuncSpinTopLean);
+        AuxFunc = AuxFuncLean;
     }
 
     //------------------------------------------------------------------------
@@ -178,21 +230,21 @@ public class SpinTopSim : Simulator
     public double KineticEnergy
     {
         get{
-            return CalcKineticEnergyBody();
+            return ke;
         }
     }
 
     public double PotentialEnergy
     {
         get{
-            return CalcPotentialEnergyBody();
+            return pe;
         }
     }
 
     public double AngMoY
     {
         get{
-            return CalcAngMoVertBody();
+            return angMoY;
         }
     }
 }
