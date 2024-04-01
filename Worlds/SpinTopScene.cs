@@ -129,6 +129,8 @@ public partial class SpinTopScene : Node3D
 				(float)sim.LeanAngle, (float)sim.SpinAngle);
 
 			if(uiRefreshCtr > uiRefreshTHold){
+				sim.PostProcess();
+
 				double ke = sim.KineticEnergy;
 				double pe = sim.PotentialEnergy;
 				double totErg = ke + pe;
