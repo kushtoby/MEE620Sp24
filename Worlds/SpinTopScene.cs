@@ -295,6 +295,7 @@ public partial class SpinTopScene : Node3D
 			optionSim.Disabled = true;
 			optionSimSubsteps.Disabled = true;
 			optionSpinRate.Disabled = true;
+			checkPrecess.Disabled = true;
 			for(i=0;i<4;++i)
 				adjButtons[i].Disabled = true;
 		}
@@ -304,6 +305,7 @@ public partial class SpinTopScene : Node3D
 			optionSim.Disabled = false;
 			optionSimSubsteps.Disabled = false;
 			optionSpinRate.Disabled = false;
+			checkPrecess.Disabled = false;
 			for(i=0;i<4;++i)
 				adjButtons[i].Disabled = false;
 		}

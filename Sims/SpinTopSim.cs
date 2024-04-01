@@ -197,6 +197,9 @@ public class SpinTopSim : Simulator
     //------------------------------------------------------------------------
     private double CalcSimplePrecession(double phi, double thetaDot)
     {
+        double cosPhi = Math.Cos(phi);
+        double sinPhi = Math.Sin(phi);
+
         // ****** Students write your code here *******
 
 
