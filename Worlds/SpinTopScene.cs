@@ -11,6 +11,8 @@ public partial class SpinTopScene : Node3D
 	}
 	OpMode opMode;         // operation mode
 
+	bool toPrecess;        // whether to choose IC for simple precession
+
 	// Simulation
 	SpinTopSim sim;
 	double time;
@@ -26,6 +28,7 @@ public partial class SpinTopScene : Node3D
 	OptionButton optionSimSubsteps;
 	OptionButton optionSim;
 	OptionButton optionSpinRate;
+	CheckBox checkPrecess;
 
 	double[] spinRateOptions;
 	string[,] spinRateLabelOptions; 
@@ -61,6 +64,7 @@ public partial class SpinTopScene : Node3D
 	{
 		
 		opMode = OpMode.Configure;
+		toPrecess = false;
 
 		// ui
 		leanICDeg = 30.0f;
@@ -189,7 +193,8 @@ public partial class SpinTopScene : Node3D
 		if(leanICDeg > leanICMax)
 			leanICDeg = leanICMax;
 
-		sim.ResetIC((double)Mathf.DegToRad(leanICDeg), spinRate);
+		sim.ResetIC((double)Mathf.DegToRad(leanICDeg), spinRate, 
+			checkPrecess.ButtonPressed);
 		model.SetEulerAnglesYZY(0.0f,Mathf.DegToRad(leanICDeg), 0.0f);
 		datDisplay.SetValue(0, leanICDeg);
 	}
@@ -244,6 +249,12 @@ public partial class SpinTopScene : Node3D
 		optionSpinRate.AddItem(spinRateLabelOptions[0,3], 3);
 		optionSpinRate.Selected = 3;
 		optionSpinRate.ItemSelected += OnOptionSpinRate;
+
+		//--- CheckBox, Precession IC
+		checkPrecess = vbox.GetNode<CheckBox>("CheckPrecess");
+		checkPrecess.ButtonPressed = false;
+		checkPrecess.Disabled = true;
+		checkPrecess.Pressed += OnCheckPrecess;
 
 		//--- Option Button, Sim choice
 		optionSim = vbox.GetNode<OptionButton>("OptionSim");
@@ -344,27 +355,39 @@ public partial class SpinTopScene : Node3D
 	}
 
 	//------------------------------------------------------------------------
+	// OnCheckPrecess
+	//------------------------------------------------------------------------
+	private void OnCheckPrecess()
+	{
+		GD.Print("OnCheckPrecess");
+		ProcessLeanAngle();
+	}
+
+	//------------------------------------------------------------------------
     // OnOptionSim
     //------------------------------------------------------------------------
     private void OnOptionSim(long ii)
     {
 		int idx = (int)ii;
 		if(idx == 0){
-			GD.Print("Body Fixed");
+			//GD.Print("Body Fixed");
 			sim.SwitchModelBody();
 			optionSpinRate.SetItemText(0,spinRateLabelOptions[0,0]);
 			optionSpinRate.SetItemText(1,spinRateLabelOptions[0,1]);
 			optionSpinRate.SetItemText(2,spinRateLabelOptions[0,2]);
 			optionSpinRate.SetItemText(3,spinRateLabelOptions[0,3]);
+			checkPrecess.ButtonPressed = false;
+			checkPrecess.Disabled = true;
 			ProcessLeanAngle();
 		}
 		else if(idx == 1){
-			GD.Print("Lean Frame");
+			//GD.Print("Lean Frame");
 			sim.SwitchModelLean();
 			optionSpinRate.SetItemText(0,spinRateLabelOptions[1,0]);
 			optionSpinRate.SetItemText(1,spinRateLabelOptions[1,1]);
 			optionSpinRate.SetItemText(2,spinRateLabelOptions[1,2]);
 			optionSpinRate.SetItemText(3,spinRateLabelOptions[1,3]);
+			checkPrecess.Disabled = false;
 			ProcessLeanAngle();
 		}
 	}

@@ -105,6 +105,10 @@ layout_mode = 2
 [node name="OptionSpinRate" type="OptionButton" parent="UINode/MgContainTL/VBox"]
 layout_mode = 2
 
+[node name="CheckPrecess" type="CheckBox" parent="UINode/MgContainTL/VBox"]
+layout_mode = 2
+text = "Precession IC"
+
 [node name="OptionSim" type="OptionButton" parent="UINode/MgContainTL/VBox"]
 layout_mode = 2
 

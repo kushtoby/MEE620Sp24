@@ -199,13 +199,14 @@ public class SpinTopSim : Simulator
     {
         // ****** Students write your code here *******
 
+
         return 0.0;
     }
 
     //------------------------------------------------------------------------
     // ResetIC
     //------------------------------------------------------------------------
-    public void ResetIC(double ln, double sr)
+    public void ResetIC(double ln, double sr, bool prc = false)
     {
         if(simMode == SimMode.BodyFixed){
             x[0] = 0.0;    // generalized coord: precession angle psi
@@ -216,10 +217,15 @@ public class SpinTopSim : Simulator
             x[5] = 0.0;    // generalized speed: omegaZ
         }
         if(simMode == SimMode.LeanFrame){
+            double psiDot = 0.0;
+            if(prc){
+                psiDot = CalcSimplePrecession(ln, sr);
+            }
+
             x[0] = 0.0;    // generalized coord: precession angle psi
             x[1] = ln;     // generalized coord: lean angle phi
             x[2] = 0.0;    // generalized coord: spin angle theta
-            x[3] = 0.0;    // generalized speed: psiDot
+            x[3] = psiDot; // generalized speed: psiDot
             x[4] = 0.0;    // generalized speed: phiDot
             x[5] = sr;     // generalized speed: thetaDot
         }
@@ -230,14 +236,14 @@ public class SpinTopSim : Simulator
     //       simple precession without nutation (if possible). Only works for
     //       simulation in the lean frame.
     //------------------------------------------------------------------------
-    public void SimplePrecessionIC()
-    {
-        if(simMode != SimMode.LeanFrame)
-            return;
+    // public void SimplePrecessionIC()
+    // {
+    //     if(simMode != SimMode.LeanFrame)
+    //         return;
 
-        double psiDot = CalcSimplePrecession(x[1], x[5]);
-        x[3] = psiDot;
-    }
+    //     double psiDot = CalcSimplePrecession(x[1], x[5]);
+    //     x[3] = psiDot;
+    // }
 
     //------------------------------------------------------------------------
     // SwitchModelBody: Use the body fixed model to perform calculations
