@@ -24,6 +24,8 @@ public class SpinTopSim : Simulator
     double pe;   // potential energy to be calculated by auxFunc
     double angMoY; //vertical component of angular momentum calc by auxFun 
 
+    bool precessICFound;  // whether ic for pure precession has been found
+
     double cPx;  // component of support force in P frame
     double cPy;
     double cPz;
@@ -43,6 +45,7 @@ public class SpinTopSim : Simulator
         ICp = IGp + m*h*h;
 
         ke = pe = angMoY = 0.0;
+        precessICFound = false;
 
         // Default initial conditions
         x[0] = 0.0;    // generalized coord: precession angle psi
@@ -193,7 +196,8 @@ public class SpinTopSim : Simulator
     //       rate thetaDot, calculate the initial precession rate psiDot so
     //       that the spinning top exhibits simple precession without 
     //       nutation. For some inputs, there is no simple precession 
-    //       solution. In that case return 0.0.
+    //       solution. In that case return the value "closest" to simple 
+    //       precession.
     //------------------------------------------------------------------------
     private double CalcSimplePrecession(double phi, double thetaDot)
     {
@@ -202,12 +206,13 @@ public class SpinTopSim : Simulator
 
         // ****** Students write your code here *******
 
-
+        precessICFound = false;  // change to true if found
         return 0.0;
     }
 
     //------------------------------------------------------------------------
     // ResetIC
+    // [STUDENTS: DO NOT MODIFY THIS FUNCTION]
     //------------------------------------------------------------------------
     public void ResetIC(double ln, double sr, bool prc = false)
     {
@@ -235,20 +240,6 @@ public class SpinTopSim : Simulator
     }
 
     //------------------------------------------------------------------------
-    // SimplePrecessionIC: Set the initial condition so that it executes
-    //       simple precession without nutation (if possible). Only works for
-    //       simulation in the lean frame.
-    //------------------------------------------------------------------------
-    // public void SimplePrecessionIC()
-    // {
-    //     if(simMode != SimMode.LeanFrame)
-    //         return;
-
-    //     double psiDot = CalcSimplePrecession(x[1], x[5]);
-    //     x[3] = psiDot;
-    // }
-
-    //------------------------------------------------------------------------
     // SwitchModelBody: Use the body fixed model to perform calculations
     // [STUDENTS: DO NOT MODIFY THIS FUNCTION]
     //------------------------------------------------------------------------
@@ -271,7 +262,7 @@ public class SpinTopSim : Simulator
     }
 
     //------------------------------------------------------------------------
-    // PostProcess
+    // PostProcess      ****** Students do not modify
     //------------------------------------------------------------------------
     public void PostProcess()
     {
@@ -282,7 +273,7 @@ public class SpinTopSim : Simulator
     // getters & setters
     //------------------------------------------------------------------------
 
-    // PrecessionAngle, psi
+    // PrecessionAngle, psi      ****** Students do not modify
     public double PrecessionAngle
     {
         get{
@@ -294,7 +285,7 @@ public class SpinTopSim : Simulator
         }
     }
 
-    // LeanAngle, phi
+    // LeanAngle, phi      ****** Students do not modify
     public double LeanAngle
     {
         get{
@@ -306,7 +297,7 @@ public class SpinTopSim : Simulator
         }
     }
 
-    // SpinAngle, theta
+    // SpinAngle, theta    ****** Students do not modify
     public double SpinAngle
     {
         get{
@@ -318,7 +309,7 @@ public class SpinTopSim : Simulator
         }
     }
 
-    // SpinRate, omegaY
+    // SpinRate, omegaY   ****** Students do not modify
     public double SpinRate
     {
         get{
@@ -330,6 +321,9 @@ public class SpinTopSim : Simulator
         }
     }
 
+
+
+    // Kinetic Energy  **** Students do NOT write your kinetic energy here.
     public double KineticEnergy
     {
         get{
@@ -337,6 +331,7 @@ public class SpinTopSim : Simulator
         }
     }
 
+    // Potential Energy  ****Students do NOT write your potential energy here.
     public double PotentialEnergy
     {
         get{
@@ -344,10 +339,19 @@ public class SpinTopSim : Simulator
         }
     }
 
+    // Vertical Angular Moment ***** Students do NOT modify
     public double AngMoY
     {
         get{
             return angMoY;
+        }
+    }
+
+    // PrecessICFound   ****** Students do not modify
+    public bool PrecessICFound
+    {
+        get{
+            return precessICFound;
         }
     }
 }
