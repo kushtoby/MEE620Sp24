@@ -1,3 +1,6 @@
+//============================================================================
+// SpinTopScene.cs  
+//============================================================================
 using Godot;
 using System;
 
@@ -17,6 +20,8 @@ public partial class SpinTopScene : Node3D
 	SpinTopSim sim;
 	double time;
 	int nSimSteps;         // number of sim steps per _PhysicsProcess
+	int simOpt;            // integer corresponding to simulation type
+						   // 0=body fixed;  1=lean rame
 
 	// UI
 	Button[] adjButtons;
@@ -72,23 +77,26 @@ public partial class SpinTopScene : Node3D
 		leanICMax = 170.0f;
 		dAngle = 1.0f;
 
-		spinRateOptions = new double[4];
+		spinRateOptions = new double[5];
 		spinRateOptions[0] = 10.0;
 		spinRateOptions[1] = 20.0;
-		spinRateOptions[2] = 40.0;
-		spinRateOptions[3] = 60.0;
+		spinRateOptions[2] = 30.0;
+		spinRateOptions[3] = 40.0;
+		spinRateOptions[4] = 60.0;
 
-		spinRateLabelOptions = new string[2,4];
+		spinRateLabelOptions = new string[2,5];
 		spinRateLabelOptions[0,0] = "OmegaY: 10 rad/s";
 		spinRateLabelOptions[0,1] = "OmegaY: 20 rad/s";
-		spinRateLabelOptions[0,2] = "OmegaY: 40 rad/s";
-		spinRateLabelOptions[0,3] = "OmegaY: 60 rad/s";
+		spinRateLabelOptions[0,2] = "OmegaY: 30 rad/s";
+		spinRateLabelOptions[0,3] = "OmegaY: 40 rad/s";
+		spinRateLabelOptions[0,4] = "OmegaY: 60 rad/s";
 		spinRateLabelOptions[1,0] = "thetaDot: 10 rad/s";
 		spinRateLabelOptions[1,1] = "thetaDot: 20 rad/s";
-		spinRateLabelOptions[1,2] = "thetaDot: 40 rad/s";
-		spinRateLabelOptions[1,3] = "thetaDot: 60 rad/s";
+		spinRateLabelOptions[1,2] = "thetaDot: 30 rad/s";
+		spinRateLabelOptions[1,3] = "thetaDot: 40 rad/s";
+		spinRateLabelOptions[1,4] = "thetaDot: 60 rad/s";
 
-		spinRateIdx = 3;
+		spinRateIdx = 4;
 
 		// set up the model
 		model = GetNode<TopDiskModel>("TopDiskModel");
@@ -97,6 +105,7 @@ public partial class SpinTopScene : Node3D
 
 		// Set up the simulation
 		sim = new SpinTopSim();
+		simOpt = 0;
 		spinRate = spinRateOptions[spinRateIdx];
 		sim.LeanAngle = Mathf.DegToRad(leanICDeg);
 		sim.SpinRate = spinRate;
@@ -135,16 +144,18 @@ public partial class SpinTopScene : Node3D
 			if(uiRefreshCtr > uiRefreshTHold){
 				sim.PostProcess();
 
+				float leanDeg = Mathf.RadToDeg((float)sim.LeanAngle);
 				double ke = sim.KineticEnergy;
 				double pe = sim.PotentialEnergy;
 				double totErg = ke + pe;
 
 				double angMoY = sim.AngMoY;
 
-				datDisplay.SetValue(1,(float)ke);
-				datDisplay.SetValue(2,(float)pe);
-				datDisplay.SetValue(3,(float)totErg);
-				datDisplay.SetValue(4,(float)angMoY);
+				datDisplay.SetValue(1,leanDeg);
+				datDisplay.SetValue(2,(float)ke);
+				datDisplay.SetValue(3,(float)pe);
+				datDisplay.SetValue(4,(float)totErg);
+				datDisplay.SetValue(5,(float)angMoY);
 
 				uiRefreshCtr = 0;
 			}
@@ -208,25 +219,28 @@ public partial class SpinTopScene : Node3D
 
 		// Set up data display
 		datDisplay = vbox.GetNode<UIPanelDisplay>("DatDisplay");
-		datDisplay.SetNDisplay(5);
+		datDisplay.SetNDisplay(6);
 
 		datDisplay.SetDigitsAfterDecimal(0,1);
-		datDisplay.SetDigitsAfterDecimal(1,4);
+		datDisplay.SetDigitsAfterDecimal(1,1);
 		datDisplay.SetDigitsAfterDecimal(2,4);
 		datDisplay.SetDigitsAfterDecimal(3,4);
 		datDisplay.SetDigitsAfterDecimal(4,4);
+		datDisplay.SetDigitsAfterDecimal(5,4);
 
 		datDisplay.SetLabel(0,"Lean IC");
-		datDisplay.SetLabel(1,"Kinetic");
-		datDisplay.SetLabel(2,"Potential");
-		datDisplay.SetLabel(3,"Total");
-		datDisplay.SetLabel(4,"Ang.Mo.Vert");
+		datDisplay.SetLabel(1,"Lean deg");
+		datDisplay.SetLabel(2,"Kinetic");
+		datDisplay.SetLabel(3,"Potential");
+		datDisplay.SetLabel(4,"Total");
+		datDisplay.SetLabel(5,"Ang.Mo.Vert");
 
 		datDisplay.SetValue(0,leanICDeg);
-		datDisplay.SetValue(1,0.0f);
+		datDisplay.SetValue(1,leanICDeg);
 		datDisplay.SetValue(2,0.0f);
 		datDisplay.SetValue(3,0.0f);
 		datDisplay.SetValue(4,0.0f);
+		datDisplay.SetValue(5,0.0f);
 
 		uiRefreshCtr = 0;
 		uiRefreshTHold = 3;
@@ -247,7 +261,8 @@ public partial class SpinTopScene : Node3D
 		optionSpinRate.AddItem(spinRateLabelOptions[0,1], 1);
 		optionSpinRate.AddItem(spinRateLabelOptions[0,2], 2);
 		optionSpinRate.AddItem(spinRateLabelOptions[0,3], 3);
-		optionSpinRate.Selected = 3;
+		optionSpinRate.AddItem(spinRateLabelOptions[0,4], 4);
+		optionSpinRate.Selected = spinRateIdx;
 		optionSpinRate.ItemSelected += OnOptionSpinRate;
 
 		//--- CheckBox, Precession IC
@@ -260,7 +275,7 @@ public partial class SpinTopScene : Node3D
 		optionSim = vbox.GetNode<OptionButton>("OptionSim");
 		optionSim.AddItem("Sim: Fixed Body",0);
 		optionSim.AddItem("Sim: Lean Frame",1);
-		optionSim.Selected = 0;
+		optionSim.Selected = simOpt;
 		optionSim.ItemSelected += OnOptionSim;
 
 		//--- Sim Button
@@ -280,6 +295,7 @@ public partial class SpinTopScene : Node3D
 		adjButtons[3] = 
 			GetNode<Button>("UINode/MgContainTL/VBox/HBoxAdjust/RRightButton");
 		
+		OnOptionSim((long)simOpt);
 	}
 
 	//------------------------------------------------------------------------
@@ -305,7 +321,8 @@ public partial class SpinTopScene : Node3D
 			optionSim.Disabled = false;
 			optionSimSubsteps.Disabled = false;
 			optionSpinRate.Disabled = false;
-			checkPrecess.Disabled = false;
+			if(simOpt == 1)
+				checkPrecess.Disabled = false;
 			for(i=0;i<4;++i)
 				adjButtons[i].Disabled = false;
 		}
@@ -392,5 +409,6 @@ public partial class SpinTopScene : Node3D
 			checkPrecess.Disabled = false;
 			ProcessLeanAngle();
 		}
+		simOpt = idx;
 	}
 }
