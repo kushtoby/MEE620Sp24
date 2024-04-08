@@ -206,6 +206,26 @@ public partial class SpinTopScene : Node3D
 
 		sim.ResetIC((double)Mathf.DegToRad(leanICDeg), spinRate, 
 			checkPrecess.ButtonPressed);
+		if(simOpt == 1 && checkPrecess.ButtonPressed){
+			if(sim.PrecessICFound){
+				checkPrecess.Set("theme_override_colors/font_pressed_color",
+					new Color(0.45f,1.0f,0.45f));
+				checkPrecess.Set("theme_override_colors/font_hover_pressed_color",
+					new Color(0.45f,1.0f,0.45f));
+				checkPrecess.Set("theme_override_colors/font_disabled_color",
+					new Color(0.45f,1.0f,0.45f, 0.5f));
+				GD.Print("Ding");
+			}
+			else{
+				checkPrecess.Set("theme_override_colors/font_pressed_color",
+					new Color(1.0f,0.45f,0.45f));
+				checkPrecess.Set("theme_override_colors/font_hover_pressed_color",
+					new Color(1.0f,0.45f,0.45f));
+				checkPrecess.Set("theme_override_colors/font_disabled_color",
+					new Color(1.0f,0.45f,0.45f, 0.5f));
+				//GD.Print("Dong");
+			}
+		}
 		model.SetEulerAnglesYZY(0.0f,Mathf.DegToRad(leanICDeg), 0.0f);
 		datDisplay.SetValue(0, leanICDeg);
 	}
@@ -269,6 +289,7 @@ public partial class SpinTopScene : Node3D
 		checkPrecess = vbox.GetNode<CheckBox>("CheckPrecess");
 		checkPrecess.ButtonPressed = false;
 		checkPrecess.Disabled = true;
+		//checkPrecess.Set("theme_override_colors/font_color",new Color(1,0,0));
 		checkPrecess.Pressed += OnCheckPrecess;
 
 		//--- Option Button, Sim choice
@@ -378,8 +399,12 @@ public partial class SpinTopScene : Node3D
 	//------------------------------------------------------------------------
 	private void OnCheckPrecess()
 	{
-		GD.Print("OnCheckPrecess");
+		//GD.Print("OnCheckPrecess");
 		ProcessLeanAngle();
+		if(checkPrecess.ButtonPressed == false){
+			checkPrecess.Set("theme_override_colors/font_disabled_color",
+					new Color(0.875f,0.875f,0.875f, 0.5f));
+		}
 	}
 
 	//------------------------------------------------------------------------
@@ -397,6 +422,8 @@ public partial class SpinTopScene : Node3D
 			optionSpinRate.SetItemText(3,spinRateLabelOptions[0,3]);
 			checkPrecess.ButtonPressed = false;
 			checkPrecess.Disabled = true;
+			checkPrecess.Set("theme_override_colors/font_disabled_color",
+				new Color(0.875f,0.875f,0.875f, 0.5f));
 			ProcessLeanAngle();
 		}
 		else if(idx == 1){
