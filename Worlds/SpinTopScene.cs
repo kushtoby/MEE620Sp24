@@ -214,7 +214,7 @@ public partial class SpinTopScene : Node3D
 					new Color(0.45f,1.0f,0.45f));
 				checkPrecess.Set("theme_override_colors/font_disabled_color",
 					new Color(0.45f,1.0f,0.45f, 0.5f));
-				GD.Print("Ding");
+				//GD.Print("Ding");
 			}
 			else{
 				checkPrecess.Set("theme_override_colors/font_pressed_color",
@@ -228,6 +228,7 @@ public partial class SpinTopScene : Node3D
 		}
 		model.SetEulerAnglesYZY(0.0f,Mathf.DegToRad(leanICDeg), 0.0f);
 		datDisplay.SetValue(0, leanICDeg);
+		datDisplay.SetValue(1, leanICDeg);
 	}
 
 	//------------------------------------------------------------------------
