@@ -1,0 +1,16 @@
+[gd_scene load_steps=2 format=3 uid="uid://bauytodqq671i"]
+
+[ext_resource type="Script" path="res://Models/WobbleStoneModel.cs" id="1_5wtm4"]
+
+[node name="WobbleStoneModel" type="Node3D"]
+script = ExtResource("1_5wtm4")
+
+[node name="CSGTorus3D" type="CSGTorus3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
+sides = 64
+ring_sides = 16
+
+[node name="CSGBox3D" type="CSGBox3D" parent="CSGTorus3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.2)
+operation = 2
+size = Vector3(2.2, 0.6, 2)
