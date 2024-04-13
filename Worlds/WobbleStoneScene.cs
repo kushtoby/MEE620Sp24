@@ -1,5 +1,5 @@
 //============================================================================
-// WobbleStoneModel.cs
+// WobbleStoneScene.cs     Scene in which we simulate the wobble stone
 //============================================================================
 using Godot;
 using System;
@@ -41,7 +41,7 @@ public partial class WobbleStoneScene : Node3D
 	}
 
 	//------------------------------------------------------------------------
-	// _Ready: called once
+	// 
 	//------------------------------------------------------------------------
 	public override void _Process(double delta)
 	{
