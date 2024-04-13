@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://bfg7vlbl7dkrc"]
+
+[node name="WeeblePlain" type="Node3D"]
+
+[node name="CSGSphere3D" type="CSGSphere3D" parent="."]
+radial_segments = 32
+rings = 32
+
+[node name="CSGBox3D" type="CSGBox3D" parent="CSGSphere3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0)
+operation = 2
