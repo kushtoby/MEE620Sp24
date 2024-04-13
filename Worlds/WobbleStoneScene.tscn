@@ -1,8 +1,9 @@
-[gd_scene load_steps=9 format=3 uid="uid://dhq5017gy1wtu"]
+[gd_scene load_steps=10 format=3 uid="uid://dhq5017gy1wtu"]
 
 [ext_resource type="Texture2D" uid="uid://j5d15pfgqxyw" path="res://Textures/kennyDK4.png" id="1_3yc8a"]
 [ext_resource type="Script" path="res://Worlds/WobbleStoneScene.cs" id="1_34vob"]
 [ext_resource type="PackedScene" uid="uid://blxgponho1qji" path="res://Utils/CamRig.tscn" id="2_omqbv"]
+[ext_resource type="PackedScene" uid="uid://bauytodqq671i" path="res://Models/WobbleStoneModel.tscn" id="4_q8pmd"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_6vkpk"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -23,6 +24,7 @@ uv1_triplanar = true
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_ls3ar"]
 material = SubResource("StandardMaterial3D_8vvct")
+size = Vector2(3, 3)
 
 [node name="WobbleStoneScene" type="Node3D"]
 script = ExtResource("1_34vob")
@@ -38,3 +40,6 @@ shadow_enabled = true
 mesh = SubResource("PlaneMesh_ls3ar")
 
 [node name="CamRig" parent="." instance=ExtResource("2_omqbv")]
+
+[node name="WobbleStoneModel" parent="." instance=ExtResource("4_q8pmd")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)

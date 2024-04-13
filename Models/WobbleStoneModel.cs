@@ -21,6 +21,9 @@ public partial class WobbleStoneModel : Node3D
 		float rHoop = 0.75f;
 		float rRim = 0.25f;
 
+		GetNode<CsgTorus3D>("CSGTorus3D");
+		GetNode<CsgBox3D>("CSGBox3D");
+
 		SetSize(rHoop, rRim);
 	}
 

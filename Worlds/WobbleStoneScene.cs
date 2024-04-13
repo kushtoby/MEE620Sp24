@@ -6,7 +6,8 @@ using System;
 
 public partial class WobbleStoneScene : Node3D
 {
-	
+	// Model
+	WobbleStoneModel model;
 
 	// Camera Stuff
 	CamRig cam;
@@ -22,6 +23,7 @@ public partial class WobbleStoneScene : Node3D
 	//------------------------------------------------------------------------
 	public override void _Ready()
 	{
+		model = GetNode<WobbleStoneModel>("WobblestoneModel");
 
 		// Set up the camera rig
 		longitudeDeg = 20.0f;
