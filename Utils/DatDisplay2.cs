@@ -27,7 +27,7 @@ public class DatDisplay2{
 
     public DatDisplay2(Container pContainer)
     {
-        GD.Print("DatDisplay2 constructor");
+        //GD.Print("DatDisplay2 constructor");
         parent = pContainer;
 
         vbox = new VBoxContainer();
@@ -43,6 +43,7 @@ public class DatDisplay2{
 
     public void SetNDisplay(int sz, bool _hasTitle = false, bool _hasButtons = false)
     {
+        //GD.Print("Inside SetNDisplay");
         if(initialized)
             return;
 
@@ -85,9 +86,10 @@ public class DatDisplay2{
             //vBoxValues.AddChild(values[i]);
             grid.AddChild(labels[i]);
             grid.AddChild(values[i]);
-            if(hasButtons)
+            if(hasButtons){
                 checkBoxes[i] = new CheckBox();
                 grid.AddChild(checkBoxes[i]);
+            }
 
             fStrings[i] = "0.00";
             decStrings[i] = "0.00";
