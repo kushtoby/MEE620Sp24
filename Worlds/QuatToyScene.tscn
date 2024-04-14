@@ -1,0 +1,71 @@
+[gd_scene load_steps=10 format=3 uid="uid://b0np7drg08ah8"]
+
+[ext_resource type="Script" path="res://Worlds/QuatToyScene.cs" id="1_iwqwj"]
+[ext_resource type="Texture2D" uid="uid://j5d15pfgqxyw" path="res://Textures/kennyDK4.png" id="1_pkg3k"]
+[ext_resource type="PackedScene" uid="uid://blxgponho1qji" path="res://Utils/CamRig.tscn" id="2_yinv0"]
+[ext_resource type="PackedScene" uid="uid://bfg7vlbl7dkrc" path="res://Models/WeeblePlain.tscn" id="4_2cnhi"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_3djbk"]
+sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+
+[sub_resource type="Sky" id="Sky_bfg42"]
+sky_material = SubResource("ProceduralSkyMaterial_3djbk")
+
+[sub_resource type="Environment" id="Environment_tnbdq"]
+background_mode = 2
+sky = SubResource("Sky_bfg42")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pvjpc"]
+albedo_texture = ExtResource("1_pkg3k")
+uv1_triplanar = true
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_s8ufm"]
+material = SubResource("StandardMaterial3D_pvjpc")
+size = Vector2(4, 4)
+
+[node name="QuatToyScene" type="Node3D"]
+script = ExtResource("1_iwqwj")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_tnbdq")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 16.6002, 0)
+shadow_enabled = true
+
+[node name="Floor" type="MeshInstance3D" parent="."]
+mesh = SubResource("PlaneMesh_s8ufm")
+
+[node name="CamRig" parent="." instance=ExtResource("2_yinv0")]
+
+[node name="WeeblePlain" parent="." instance=ExtResource("4_2cnhi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+
+[node name="UINode" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MargTL" type="MarginContainer" parent="UINode"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+
+[node name="MargBL" type="MarginContainer" parent="UINode"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -40.0
+offset_right = 40.0
+grow_vertical = 0
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_bottom = 10
