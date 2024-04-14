@@ -1,5 +1,5 @@
 //============================================================================
-// WobbleStoneScene.cs     Scene in which we simulate the wobble stone
+// WeeblePlainScene.cs     Scene in which we simulate the unactuated weeble
 //============================================================================
 using Godot;
 using System;
