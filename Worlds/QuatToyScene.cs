@@ -3,6 +3,7 @@
 //============================================================================
 using Godot;
 using System;
+using System.ComponentModel.Design;
 
 public partial class QuatToyScene : Node3D
 {
@@ -30,9 +31,11 @@ public partial class QuatToyScene : Node3D
 	float ny;	       //                         y component
 	float nz;          //                         z component
 	Vector3 newAxisRotation;
+	Vector3 totalAxisRotation;
 	Quaternion quatNew;
 	Quaternion quatPrev;
 	Quaternion quatProduct;
+	Vector3 dvec;   // used for performing calcs
 
 	
 	// operational stuff
@@ -78,10 +81,12 @@ public partial class QuatToyScene : Node3D
 
 		dAngle = 1.0f;
 		newAxisRotation = new Vector3();
+		totalAxisRotation = new Vector3();
 		axisAdjustMode = true;
 		quatNew = new Quaternion();
 		quatPrev = new Quaternion();
 		quatProduct = new Quaternion();
+		dvec = new Vector3();
 
 		SetupUI();
 
@@ -118,9 +123,9 @@ public partial class QuatToyScene : Node3D
 			CalcAxisAngles();
 		}
 
-		if(buttonsAxisAngle[4].ButtonPressed){  //
-			GD.Print("Not Working Yet");
-		}
+		// if(buttonsAxisAngle[4].ButtonPressed){  //
+		// 	GD.Print("Not Working Yet");
+		// }
 
 		//------- Angle Buttons ---------
 		if(buttonsAxisAngle[5].ButtonPressed){  // left angle
@@ -155,6 +160,7 @@ public partial class QuatToyScene : Node3D
 		rotDeg = 0.0f;
 
 		newAxisRotation = Vector3.Zero;
+		totalAxisRotation = Vector3.Zero;
 		quatNew = Quaternion.Identity;
 		quatPrev = Quaternion.Identity;
 		quatProduct = Quaternion.Identity;
@@ -167,6 +173,8 @@ public partial class QuatToyScene : Node3D
 		qGrid.SetValue(1,1, quatPrev.X);
 		qGrid.SetValue(1,2, quatPrev.Y);
 		qGrid.SetValue(1,3, quatPrev.Z);
+
+		totalAxis.Rotation = totalAxisRotation;
 	}
 
 	//------------------------------------------------------------------------
@@ -181,13 +189,36 @@ public partial class QuatToyScene : Node3D
 		float cosTerm = Mathf.Cos(0.5f * rotRad);
 		float sinTerm = Mathf.Sin(0.5f * rotRad);
 
+		// calculate new quaternion based on axis and angle
 		quatNew.W = cosTerm;
 		quatNew.X = sinTerm * nx;
 		quatNew.Y = sinTerm * ny;
 		quatNew.Z = sinTerm * nz;
 
+		// update the product (and normalize)
 		quatProduct = quatNew * quatPrev;
 		quatProduct =quatProduct.Normalized();
+
+		// calculate axis vector for quatProduct
+		dvec.X = quatProduct.X;
+		dvec.Y = quatProduct.Y;
+		dvec.Z = quatProduct.Z;
+		float mag = dvec.Length();
+		if(mag > 0.0001f){
+			dvec = dvec/mag;
+			float phi = Mathf.Asin(dvec.Y);
+			float psi;
+			if(Mathf.Abs(dvec.Y) > 0.9999f){
+				psi = 0.0f;
+			}
+			else{
+				psi = Mathf.Atan2(-dvec.Z, dvec.X);
+			}
+
+			totalAxisRotation.Y = psi;
+			totalAxisRotation.Z = phi;
+			totalAxis.Rotation = totalAxisRotation;
+		}
 
 		qGrid.SetValue(0,0, quatNew.W);
 		qGrid.SetValue(0,1, quatNew.X);
@@ -305,6 +336,8 @@ public partial class QuatToyScene : Node3D
 		buttonsAxisAngle[6].Icon = rightArrowIcon;
 		buttonsAxisAngle[7].Text = "0";
 
+		buttonsAxisAngle[4].Pressed += OnAlignVectors;
+
 		GridContainer grid = new GridContainer();
 		grid.Columns = 3;
 
@@ -357,10 +390,10 @@ public partial class QuatToyScene : Node3D
 		qGrid.SetCornerLabel("Quaternions");
 
 		for(i=0;i<3;++i){
-			qGrid.SetDigitsAfterDecimal(i,0,3);
+			qGrid.SetDigitsAfterDecimal(i,0,4);
 			qGrid.SetValue(i,0, 1.0f);
 			for(j=1;j<4;++j){
-				qGrid.SetDigitsAfterDecimal(i,j,3);
+				qGrid.SetDigitsAfterDecimal(i,j,4);
 				qGrid.SetValue(i,j, 0.0f);
 			}
 		}
@@ -379,6 +412,38 @@ public partial class QuatToyScene : Node3D
 		// hBoxAfterQuat.AddChild(cBoxShowAxis);
 		// hBoxAfterQuat.AddChild(buttonReset);
 		// vBoxQ.AddChild(hBoxAfterQuat);
+	}
+
+	//------------------------------------------------------------------------
+	// OnAlignVectors
+	//------------------------------------------------------------------------
+	private void OnAlignVectors()
+	{
+		GD.Print("OnAlignVector");
+
+		dvec.X = quatProduct.X;
+		dvec.Y = quatProduct.Y;
+		dvec.Z = quatProduct.Z;
+		float mag = dvec.Length();
+		if(mag > 0.0001f){
+			dvec = dvec/mag;
+			float phi = Mathf.Asin(dvec.Y);
+			float psi;
+			if(Mathf.Abs(dvec.Y) > 0.9999f){
+				psi = 0.0f;
+			}
+			else{
+				psi = Mathf.Atan2(-dvec.Z, dvec.X);
+			}
+
+			longitDeg = Mathf.RadToDeg(psi);
+			latitDeg = Mathf.RadToDeg(phi);
+			CalcAxisAngles();
+
+			// totalAxisRotation.Y = psi;
+			// totalAxisRotation.Z = phi;
+			// totalAxis.Rotation = totalAxisRotation;
+		}
 	}
 
 	//------------------------------------------------------------------------
@@ -421,13 +486,12 @@ public partial class QuatToyScene : Node3D
 	//------------------------------------------------------------------------
 	private void OnCBoxShowAxis()
 	{
-		GD.Print("CBoxShowAxis");
 
 		if(cBoxShowAxis.ButtonPressed){
-			GD.Print("    Checked");
+			totalAxis.Show();
 		}
 		else{
-			GD.Print("    Unchecked");
+			totalAxis.Hide();
 		}
 	}
 

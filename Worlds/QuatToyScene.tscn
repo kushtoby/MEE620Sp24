@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://b0np7drg08ah8"]
+[gd_scene load_steps=18 format=3 uid="uid://b0np7drg08ah8"]
 
 [ext_resource type="Script" path="res://Worlds/QuatToyScene.cs" id="1_iwqwj"]
 [ext_resource type="Texture2D" uid="uid://j5d15pfgqxyw" path="res://Textures/kennyDK4.png" id="1_pkg3k"]
@@ -26,17 +26,25 @@ uv1_triplanar = true
 material = SubResource("StandardMaterial3D_pvjpc")
 size = Vector2(4, 4)
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5vj0f"]
+albedo_color = Color(0.756863, 0.34902, 0.992157, 1)
+
 [sub_resource type="CylinderMesh" id="CylinderMesh_ttaio"]
+material = SubResource("StandardMaterial3D_5vj0f")
 top_radius = 0.04
 bottom_radius = 0.04
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_r08o4"]
+albedo_color = Color(0.756863, 0.34902, 0.992157, 1)
+
 [sub_resource type="CylinderMesh" id="CylinderMesh_u3kc1"]
+material = SubResource("StandardMaterial3D_r08o4")
 top_radius = 0.0
 bottom_radius = 0.1
 height = 0.2
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_epom1"]
-albedo_color = Color(1, 0.921569, 0.501961, 1)
+albedo_color = Color(0.996078, 0.666667, 0.227451, 1)
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_yp3c4"]
 material = SubResource("StandardMaterial3D_epom1")
@@ -44,7 +52,11 @@ top_radius = 0.03
 bottom_radius = 0.03
 height = 2.5
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_thood"]
+albedo_color = Color(0.996078, 0.666667, 0.227451, 1)
+
 [sub_resource type="CylinderMesh" id="CylinderMesh_6rc2t"]
+material = SubResource("StandardMaterial3D_thood")
 top_radius = 0.0
 bottom_radius = 0.1
 height = 0.2
@@ -68,10 +80,11 @@ mesh = SubResource("PlaneMesh_s8ufm")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
 
 [node name="TotalAxis" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
 visible = false
 
 [node name="Cylinder" type="MeshInstance3D" parent="TotalAxis"]
-transform = Transform3D(-4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0, 1, 0, 1.5, 0)
+transform = Transform3D(-4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0)
 mesh = SubResource("CylinderMesh_ttaio")
 
 [node name="Cone" type="MeshInstance3D" parent="TotalAxis/Cylinder"]
