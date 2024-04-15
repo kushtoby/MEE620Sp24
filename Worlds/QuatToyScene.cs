@@ -10,6 +10,9 @@ public partial class QuatToyScene : Node3D
 	// Model
 	WeeblePlain model;
 
+	Node3D newAxis;
+	Node3D totalAxis;
+
 	// Camera Stuff
 	CamRig cam;
 	float longitudeDeg;
@@ -26,6 +29,10 @@ public partial class QuatToyScene : Node3D
 	float nx;          // normalized axis vector, x component
 	float ny;	       //                         y component
 	float nz;          //                         z component
+	Vector3 newAxisRotation;
+	Quaternion quatNew;
+	Quaternion quatPrev;
+	Quaternion quatProduct;
 
 	
 	// operational stuff
@@ -51,7 +58,9 @@ public partial class QuatToyScene : Node3D
 	//------------------------------------------------------------------------
 	public override void _Ready()
 	{
-		//model = GetNode<WeeblePlain>("WeeblePlain");
+		model = GetNode<WeeblePlain>("WeeblePlain");
+		newAxis = GetNode<Node3D>("NewAxis");
+		totalAxis = GetNode<Node3D>("TotalAxis");
 
 		// Set up the camera rig
 		longitudeDeg = 30.0f;
@@ -59,7 +68,7 @@ public partial class QuatToyScene : Node3D
 		camDist = 5.0f;
 		camFOV = 35.0f;
 
-		camTg = new Vector3(0.0f, 1.0f, 0.0f);
+		camTg = new Vector3(0.0f, 1.5f, 0.0f);
 		cam = GetNode<CamRig>("CamRig");
 		cam.LongitudeDeg = longitudeDeg;
 		cam.LatitudeDeg = latitudeDeg;
@@ -68,7 +77,11 @@ public partial class QuatToyScene : Node3D
 		cam.Target = camTg;
 
 		dAngle = 1.0f;
+		newAxisRotation = new Vector3();
 		axisAdjustMode = true;
+		quatNew = new Quaternion();
+		quatPrev = new Quaternion();
+		quatProduct = new Quaternion();
 
 		SetupUI();
 
@@ -110,6 +123,26 @@ public partial class QuatToyScene : Node3D
 		}
 
 		//------- Angle Buttons ---------
+		if(buttonsAxisAngle[5].ButtonPressed){  // left angle
+			rotDeg -= dAngle;
+			if(axisAdjustMode)
+				DeactivateAxis();
+			CalcRotation();
+		}
+
+		if(buttonsAxisAngle[6].ButtonPressed){  // right angle
+			rotDeg += dAngle;
+			if(axisAdjustMode)
+				DeactivateAxis();
+			CalcRotation();
+		}
+
+		if(buttonsAxisAngle[7].ButtonPressed){  // zero angle
+			rotDeg = 0.0f;
+			if(axisAdjustMode)
+				DeactivateAxis();
+			CalcRotation();
+		}
 	}
 
 	//------------------------------------------------------------------------
@@ -121,7 +154,35 @@ public partial class QuatToyScene : Node3D
 		latitDeg = 0.0f;
 		rotDeg = 0.0f;
 
+		newAxisRotation = Vector3.Zero;
+		ActivateAxis();
+
 		CalcAxisAngles();
+	}
+
+	//------------------------------------------------------------------------
+	// CalcRotation
+	//------------------------------------------------------------------------
+	private void CalcRotation()
+	{
+		
+		daa.SetValue(3, rotDeg);
+
+		float rotRad = Mathf.DegToRad(rotDeg);
+		float cosTerm = Mathf.Cos(0.5f * rotRad);
+		float sinTerm = Mathf.Sin(0.5f * rotRad);
+
+		quatNew.W = cosTerm;
+		quatNew.X = sinTerm * nx;
+		quatNew.Y = sinTerm * ny;
+		quatNew.Z = sinTerm * nz;
+
+		qGrid.SetValue(0,0, quatNew.W);
+		qGrid.SetValue(0,1, quatNew.X);
+		qGrid.SetValue(0,2, quatNew.Y);
+		qGrid.SetValue(0,3, quatNew.Z);
+
+		model.Quaternion = quatNew;
 	}
 
 	//------------------------------------------------------------------------
@@ -139,6 +200,34 @@ public partial class QuatToyScene : Node3D
 		daa.SetValue(0, nx);
 		daa.SetValue(1, ny);
 		daa.SetValue(2, nz);
+
+		newAxisRotation.Y = longitRad;
+		newAxisRotation.Z = latitRad;
+		newAxis.Rotation = newAxisRotation;
+	}
+
+	//------------------------------------------------------------------------
+	// Deactivate Axis
+	//------------------------------------------------------------------------
+	private void DeactivateAxis()
+	{
+		int i;
+		for(i=0;i<5;++i){
+			buttonsAxisAngle[i].Disabled = true;
+		}
+		axisAdjustMode = false;
+	}
+
+	//------------------------------------------------------------------------
+	// Activate Axis
+	//------------------------------------------------------------------------
+	private void ActivateAxis()
+	{
+		int i;
+		for(i=0;i<5;++i){
+			buttonsAxisAngle[i].Disabled = false;
+		}
+		axisAdjustMode = true;
 	}
 
 	//------------------------------------------------------------------------

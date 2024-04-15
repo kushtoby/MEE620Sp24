@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://b0np7drg08ah8"]
+[gd_scene load_steps=15 format=3 uid="uid://b0np7drg08ah8"]
 
 [ext_resource type="Script" path="res://Worlds/QuatToyScene.cs" id="1_iwqwj"]
 [ext_resource type="Texture2D" uid="uid://j5d15pfgqxyw" path="res://Textures/kennyDK4.png" id="1_pkg3k"]
@@ -26,6 +26,29 @@ uv1_triplanar = true
 material = SubResource("StandardMaterial3D_pvjpc")
 size = Vector2(4, 4)
 
+[sub_resource type="CylinderMesh" id="CylinderMesh_ttaio"]
+top_radius = 0.04
+bottom_radius = 0.04
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_u3kc1"]
+top_radius = 0.0
+bottom_radius = 0.1
+height = 0.2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_epom1"]
+albedo_color = Color(1, 0.921569, 0.501961, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_yp3c4"]
+material = SubResource("StandardMaterial3D_epom1")
+top_radius = 0.03
+bottom_radius = 0.03
+height = 2.5
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_6rc2t"]
+top_radius = 0.0
+bottom_radius = 0.1
+height = 0.2
+
 [node name="QuatToyScene" type="Node3D"]
 script = ExtResource("1_iwqwj")
 
@@ -42,7 +65,29 @@ mesh = SubResource("PlaneMesh_s8ufm")
 [node name="CamRig" parent="." instance=ExtResource("2_yinv0")]
 
 [node name="WeeblePlain" parent="." instance=ExtResource("4_2cnhi")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+
+[node name="TotalAxis" type="Node3D" parent="."]
+visible = false
+
+[node name="Cylinder" type="MeshInstance3D" parent="TotalAxis"]
+transform = Transform3D(-4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0, 1, 0, 1.5, 0)
+mesh = SubResource("CylinderMesh_ttaio")
+
+[node name="Cone" type="MeshInstance3D" parent="TotalAxis/Cylinder"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, 0)
+mesh = SubResource("CylinderMesh_u3kc1")
+
+[node name="NewAxis" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+
+[node name="Cylinder" type="MeshInstance3D" parent="NewAxis"]
+transform = Transform3D(-4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("CylinderMesh_yp3c4")
+
+[node name="Cone" type="MeshInstance3D" parent="NewAxis/Cylinder"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.35, 0)
+mesh = SubResource("CylinderMesh_6rc2t")
 
 [node name="UINode" type="Control" parent="."]
 layout_mode = 3
