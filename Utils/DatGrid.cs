@@ -143,4 +143,61 @@ public class DatGrid{
 
         vals[idxR,idxC].Text = val.ToString(fStrings[idxR,idxC]);
     }
+
+    //------------------------------------------------------------------------
+    // SetDigitsAfterDecimal: Sets number of digits after decimal point
+    //------------------------------------------------------------------------
+    public void SetDigitsAfterDecimal(int idxR, int idxC, int n)
+    {
+        if(idxR < 0 || idxR >= nRow || idxC < 0 || idxC >= nCol || 
+            !initialized)
+        {
+            return;
+        }
+
+        if(n < 0)
+            return;
+
+        if(n > 8)
+            n = 8;
+
+        decStrings[idxR, idxC] = "0.";
+        for(int i=0;i<n;++i)
+            decStrings[idxR, idxC] += "0";
+
+        fStrings[idxR,idxC] = decStrings[idxR,idxC] + sfxStrings[idxR,idxC];
+
+    }
+
+    //------------------------------------------------------------------------
+    // SetSuffix:
+    //------------------------------------------------------------------------
+    public void SetSuffix(int idxR, int idxC, String sfx)
+    {
+        if(idxR < 0 || idxR >= nRow || idxC < 0 || idxC >= nCol || 
+            !initialized)
+        {
+            return;
+        }
+
+        sfxStrings[idxR,idxC] = " " + sfx;
+
+        fStrings[idxR,idxC] = decStrings[idxR,idxC] + sfxStrings[idxR,idxC];
+    }
+
+    //------------------------------------------------------------------------
+    // SetSuffixDegree:
+    //------------------------------------------------------------------------
+    public void SetSuffixDegree(int idxR, int idxC)
+    {
+        if(idxR < 0 || idxR >= nRow || idxC < 0 || idxC >= nCol || 
+            !initialized)
+        {
+            return;
+        }
+
+        sfxStrings[idxR,idxC] = " \u00B0";
+
+        fStrings[idxR,idxC] = decStrings[idxR,idxC] + sfxStrings[idxR,idxC];
+    }
 }
