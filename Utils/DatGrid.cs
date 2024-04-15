@@ -8,12 +8,17 @@ public class DatGrid{
     Container parent;
     GridContainer grid;
 
-    int nDisp;
-    int nCol;
+    int nRow;    // number of rows
+    int nCol;    // number of columns
 
     Label[] rLabels;      // row labels;
     Label[] cLabels;      // column labels;
+    Label cornerLabel;    // label in top left corner
     Label[,] vals;        // values
+
+    String[,] fStrings;    // format strings
+    String[,] decStrings;  // decimal strings
+    String[,] sfxStrings;  // suffix strings
 
     bool initialized;
 
@@ -33,13 +38,16 @@ public class DatGrid{
     //------------------------------------------------------------------------
     // SetGridSize:
     //------------------------------------------------------------------------
-    public void SetGridSize(int nRow, int nCol)
+    public void SetGridSize(int _nRow, int _nCol)
     {
         if(initialized)
             return;
 
-        if(nRow < 1 || nCol < 1)
+        if(_nRow < 1 || _nCol < 1)
             return;
+
+        nRow = _nRow;
+        nCol = _nCol;
 
         grid.Columns = 2*nCol + 1;
 
@@ -54,16 +62,23 @@ public class DatGrid{
             rLabels[i] = new Label();
             rLabels[i].Text = "rLabel";
         }
+        cornerLabel = new Label();
 
         vals = new Label[nRow,nCol];
+        fStrings = new string[nRow,nCol];
+        decStrings = new string[nRow,nCol];
+        sfxStrings = new string[nRow,nCol];
         for(i=0;i<nRow;++i){
             for(j=0;j<nCol;++j){
                 vals[i,j] = new Label();
                 vals[i,j].Text = "val";
+                fStrings[i,j] = "0.00";
+                decStrings[i,j] = "0.00";
+                sfxStrings[i,j] = "";
             }
         }
 
-        grid.AddChild(new Control());
+        grid.AddChild(cornerLabel);
         for(i=0;i<nCol;++i){
             grid.AddChild(new VSeparator());
             grid.AddChild(cLabels[i]);
@@ -77,5 +92,41 @@ public class DatGrid{
         }
 
         parent.AddChild(grid);
+        initialized = true;
+    }
+
+    //------------------------------------------------------------------------
+    // SetColLabel: Sets a column label string
+    //------------------------------------------------------------------------
+    public void SetColLabel(int idx, string str)
+    {
+        if(idx < 0 || idx >= nCol || !initialized)
+        {
+            return;
+        }
+        cLabels[idx].Text = str;
+    }
+
+    //------------------------------------------------------------------------
+    // SetRowLabel: Sets a row label string
+    //------------------------------------------------------------------------
+    public void SetRowLabel(int idx, string str)
+    {
+        if(idx < 0 || idx >= nRow || !initialized)
+        {
+            return;
+        }
+        rLabels[idx].Text = str;
+    }
+
+    //------------------------------------------------------------------------
+    // SetCornerLabel: sets label in top left corner
+    //------------------------------------------------------------------------
+    public void SetCornerLabel(string str)
+    {
+        if(!initialized)
+            return;
+
+        cornerLabel.Text = str;
     }
 }
