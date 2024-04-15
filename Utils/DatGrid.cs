@@ -41,7 +41,7 @@ public class DatGrid{
         if(nRow < 1 || nCol < 1)
             return;
 
-        grid.Columns = nCol + 1;
+        grid.Columns = 2*nCol + 1;
 
         int i,j;
         cLabels = new Label[nCol];
@@ -65,11 +65,13 @@ public class DatGrid{
 
         grid.AddChild(new Control());
         for(i=0;i<nCol;++i){
+            grid.AddChild(new VSeparator());
             grid.AddChild(cLabels[i]);
         }
         for(i=0;i<nRow;++i){
             grid.AddChild(rLabels[i]);
             for(j=0;j<nCol;++j){
+                grid.AddChild(new VSeparator());
                 grid.AddChild(vals[i,j]);
             }
         }
