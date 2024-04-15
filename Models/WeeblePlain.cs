@@ -16,7 +16,7 @@ public partial class WeeblePlain : Node3D
 	public override void _Ready()
 	{
 
-		GD.Print("WeeblePlain");
+		//GD.Print("WeeblePlain");
 		sphere = GetNode<CsgSphere3D>("CSGSphere3D");
 		cutBox = GetNode<CsgBox3D>("CSGSphere3D/CSGBox3D");
 		stubMesh = (CylinderMesh)GetNode<MeshInstance3D>("Stub").Mesh;
