@@ -64,7 +64,7 @@ public partial class QuatToyScene : Node3D
 
 	private void SetupUI()
 	{
-		int i;
+		int i,j;
 
 		Texture2D leftArrowIcon = GD.Load<Texture2D>("res://Textures/ArrowLeft.svg");
 		Texture2D rightArrowIcon = GD.Load<Texture2D>("res://Textures/ArrowRight.svg");
@@ -154,12 +154,26 @@ public partial class QuatToyScene : Node3D
 		vBoxA.AddChild(buttonAbandonRotation);
 
 		//-------- Quaternion UI ------------
-		Label qLabel = new Label();
-		qLabel.Text = "Quaternions";
-		vBoxQ.AddChild(qLabel);
 
 		qGrid = new DatGrid(vBoxQ);
 		qGrid.SetGridSize(3,4);
+		qGrid.SetColLabel(0, "s");
+		qGrid.SetColLabel(1, "x");
+		qGrid.SetColLabel(2, "y");
+		qGrid.SetColLabel(3, "z");
+		qGrid.SetRowLabel(0, "Current");
+		qGrid.SetRowLabel(1, "All Previous");
+		qGrid.SetRowLabel(2, "Product");
+		qGrid.SetCornerLabel("Quaternions");
+
+		for(i=0;i<3;++i){
+			qGrid.SetDigitsAfterDecimal(i,0,3);
+			qGrid.SetValue(i,0, 1.0f);
+			for(j=1;j<4;++j){
+				qGrid.SetDigitsAfterDecimal(i,j,3);
+				qGrid.SetValue(i,j, 0.0f);
+			}
+		}
 	}
 
 
