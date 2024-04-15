@@ -18,6 +18,19 @@ public partial class QuatToyScene : Node3D
 	float camFOV;
 	Vector3 camTg;       // coords of camera target
 
+	// rotational variables
+	float longitDeg;
+	float latitDeg;
+	float rotDeg;
+	float dAngle;
+	float nx;          // normalized axis vector, x component
+	float ny;	       //                         y component
+	float nz;          //                         z component
+
+	
+	// operational stuff
+	bool axisAdjustMode;
+
 	// UI stuff
 	VBoxContainer vBoxA;    // vbox for the adjustment interface
 	VBoxContainer vBoxQ;    // vbox for the quaternion table    
@@ -54,9 +67,83 @@ public partial class QuatToyScene : Node3D
 		cam.FOVDeg = camFOV;
 		cam.Target = camTg;
 
+		dAngle = 1.0f;
+		axisAdjustMode = true;
+
 		SetupUI();
+
+		Reset();
 	}
 
+	//------------------------------------------------------------------------
+	// _Process: Called every frame
+	//------------------------------------------------------------------------
+	public override void _Process(double delta)
+	{
+		//--------- Axis Buttons ----------
+		if(buttonsAxisAngle[0].ButtonPressed){  // left button pressed
+			longitDeg -= dAngle;
+			CalcAxisAngles();
+		}
+
+		if(buttonsAxisAngle[1].ButtonPressed){  // right button pressed
+			longitDeg += dAngle;
+			CalcAxisAngles();
+		}
+
+		if(buttonsAxisAngle[2].ButtonPressed){  // up button pressed
+			latitDeg += dAngle;
+			if(latitDeg > 90.0f)
+				latitDeg = 90.0f;
+			CalcAxisAngles();
+		}
+
+		if(buttonsAxisAngle[3].ButtonPressed){  // down button pressed
+			latitDeg -= dAngle;
+			if(latitDeg < -90.0f)
+				latitDeg = -90.0f;
+			CalcAxisAngles();
+		}
+
+		if(buttonsAxisAngle[4].ButtonPressed){  //
+			GD.Print("Not Working Yet");
+		}
+
+		//------- Angle Buttons ---------
+	}
+
+	//------------------------------------------------------------------------
+	// Reset: resets all variables 
+	//------------------------------------------------------------------------
+	private void Reset()
+	{
+		longitDeg = 0.0f;
+		latitDeg = 0.0f;
+		rotDeg = 0.0f;
+
+		CalcAxisAngles();
+	}
+
+	//------------------------------------------------------------------------
+	// CalcAxisAngles:
+	//------------------------------------------------------------------------
+	private void CalcAxisAngles()
+	{
+		float longitRad = Mathf.DegToRad(longitDeg);
+		float latitRad = Mathf.DegToRad(latitDeg);
+
+		ny = Mathf.Sin(latitRad);
+		nx = Mathf.Cos(latitRad) * Mathf.Cos(longitRad);
+		nz = -Mathf.Cos(latitRad) * Mathf.Sin(longitRad); 
+
+		daa.SetValue(0, nx);
+		daa.SetValue(1, ny);
+		daa.SetValue(2, nz);
+	}
+
+	//------------------------------------------------------------------------
+	// SetupUI
+	//------------------------------------------------------------------------
 	private void SetupUI()
 	{
 		int i,j;
@@ -82,13 +169,13 @@ public partial class QuatToyScene : Node3D
 		daa.SetLabel(2,"Axis Z:");
 		daa.SetLabel(3,"Angle:");
 
-		daa.SetDigitsAfterDecimal(0, 2);
-		daa.SetDigitsAfterDecimal(1, 2);
-		daa.SetDigitsAfterDecimal(2, 2);
+		daa.SetDigitsAfterDecimal(0, 3);
+		daa.SetDigitsAfterDecimal(1, 3);
+		daa.SetDigitsAfterDecimal(2, 3);
 		daa.SetDigitsAfterDecimal(3, 1);
 		daa.SetSuffixDegree(3);
 
-		daa.SetValue(0, 1.0f);
+		daa.SetValue(0, 0.0f);
 		daa.SetValue(1, 0.0f);
 		daa.SetValue(2, 0.0f);
 		daa.SetValue(3, 0.0f);
@@ -129,7 +216,7 @@ public partial class QuatToyScene : Node3D
 		vBoxA.AddChild(new HSeparator());
 
 		Label dumLbl2 = new Label();
-		dumLbl2.Text = "Adjust Angle";
+		dumLbl2.Text = "Rotate Angle";
 		vBoxA.AddChild(dumLbl2);
 
 		HBoxContainer angHbox = new HBoxContainer();
@@ -156,7 +243,7 @@ public partial class QuatToyScene : Node3D
 		qGrid.SetColLabel(1, "x");
 		qGrid.SetColLabel(2, "y");
 		qGrid.SetColLabel(3, "z");
-		qGrid.SetRowLabel(0, "Current");
+		qGrid.SetRowLabel(0, "New Rotation");
 		qGrid.SetRowLabel(1, "All Previous");
 		qGrid.SetRowLabel(2, "Product");
 		qGrid.SetCornerLabel("Quaternions");
@@ -174,7 +261,7 @@ public partial class QuatToyScene : Node3D
 
 		//HBoxContainer hBoxAfterQuat = new HBoxContainer();
 		cBoxShowAxis = new CheckBox();
-		cBoxShowAxis.Text = "Show Axis";
+		cBoxShowAxis.Text = "Show Product Quaternion Axis";
 		buttonReset = new Button();
 		buttonReset.Text = "Reset";
 		vBoxQ.AddChild(cBoxShowAxis);
@@ -185,8 +272,5 @@ public partial class QuatToyScene : Node3D
 	}
 
 
-	// Called every frame. 'delta' is the elapsed time since the previous frame.
-	// public override void _Process(double delta)
-	// {
-	// }
+	
 }
