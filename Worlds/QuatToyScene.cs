@@ -27,6 +27,8 @@ public partial class QuatToyScene : Node3D
 	Button buttonNextRotation;
 	Button buttonAbandonRotation;
 
+	DatGrid qGrid;
+
 
 	enum Qcat{
 		Axle_x,
@@ -73,9 +75,9 @@ public partial class QuatToyScene : Node3D
 		vBoxA = new VBoxContainer();
 		margTL.AddChild(vBoxA);
 
-		MarginContainer margBL = GetNode<MarginContainer>("UINode/MargBL");
+		MarginContainer margTR = GetNode<MarginContainer>("UINode/MargTR");
 		vBoxQ = new VBoxContainer();
-		margBL.AddChild(vBoxQ);
+		margTR.AddChild(vBoxQ);
 
 		daa = new DatDisplay2(vBoxA);
 		daa.SetNDisplay(4,true);
@@ -150,6 +152,14 @@ public partial class QuatToyScene : Node3D
 		buttonAbandonRotation = new Button();
 		buttonAbandonRotation.Text = "Abandon";
 		vBoxA.AddChild(buttonAbandonRotation);
+
+		//-------- Quaternion UI ------------
+		Label qLabel = new Label();
+		qLabel.Text = "Quaternions";
+		vBoxQ.AddChild(qLabel);
+
+		qGrid = new DatGrid(vBoxQ);
+		qGrid.SetGridSize(3,4);
 	}
 
 
