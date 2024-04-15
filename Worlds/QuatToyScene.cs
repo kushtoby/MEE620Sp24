@@ -155,9 +155,18 @@ public partial class QuatToyScene : Node3D
 		rotDeg = 0.0f;
 
 		newAxisRotation = Vector3.Zero;
+		quatNew = Quaternion.Identity;
+		quatPrev = Quaternion.Identity;
+		quatProduct = Quaternion.Identity;
 		ActivateAxis();
 
 		CalcAxisAngles();
+		CalcRotation();
+
+		qGrid.SetValue(1,0, quatPrev.W);
+		qGrid.SetValue(1,1, quatPrev.X);
+		qGrid.SetValue(1,2, quatPrev.Y);
+		qGrid.SetValue(1,3, quatPrev.Z);
 	}
 
 	//------------------------------------------------------------------------
@@ -177,12 +186,20 @@ public partial class QuatToyScene : Node3D
 		quatNew.Y = sinTerm * ny;
 		quatNew.Z = sinTerm * nz;
 
+		quatProduct = quatNew * quatPrev;
+		quatProduct =quatProduct.Normalized();
+
 		qGrid.SetValue(0,0, quatNew.W);
 		qGrid.SetValue(0,1, quatNew.X);
 		qGrid.SetValue(0,2, quatNew.Y);
 		qGrid.SetValue(0,3, quatNew.Z);
 
-		model.Quaternion = quatNew;
+		qGrid.SetValue(2,0, quatProduct.W);
+		qGrid.SetValue(2,1, quatProduct.X);
+		qGrid.SetValue(2,2, quatProduct.Y);
+		qGrid.SetValue(2,3, quatProduct.Z);
+
+		model.Quaternion = quatProduct;
 	}
 
 	//------------------------------------------------------------------------
@@ -318,10 +335,12 @@ public partial class QuatToyScene : Node3D
 
 		buttonNextRotation = new Button();
 		buttonNextRotation.Text = "Next";
+		buttonNextRotation.Pressed += OnButtonNextRot;
 		vBoxA.AddChild(buttonNextRotation);
 
 		buttonAbandonRotation = new Button();
 		buttonAbandonRotation.Text = "Abandon";
+		buttonAbandonRotation.Pressed += OnButtonAbandonRot;
 		vBoxA.AddChild(buttonAbandonRotation);
 
 		//-------- Quaternion UI ------------
@@ -351,8 +370,10 @@ public partial class QuatToyScene : Node3D
 		//HBoxContainer hBoxAfterQuat = new HBoxContainer();
 		cBoxShowAxis = new CheckBox();
 		cBoxShowAxis.Text = "Show Product Quaternion Axis";
+		cBoxShowAxis.Pressed += OnCBoxShowAxis;
 		buttonReset = new Button();
 		buttonReset.Text = "Reset";
+		buttonReset.Pressed += OnButtonReset;
 		vBoxQ.AddChild(cBoxShowAxis);
 		vBoxQ.AddChild(buttonReset);
 		// hBoxAfterQuat.AddChild(cBoxShowAxis);
@@ -360,6 +381,63 @@ public partial class QuatToyScene : Node3D
 		// vBoxQ.AddChild(hBoxAfterQuat);
 	}
 
+	//------------------------------------------------------------------------
+	// OnButtonNextRot
+	//------------------------------------------------------------------------
+	private void OnButtonNextRot()
+	{
+		//GD.Print("ButtonNextRot");
+		quatPrev = quatProduct;
+		quatNew  = Quaternion.Identity;
+		rotDeg = 0.0f;
 
+		qGrid.SetValue(1,0, quatPrev.W);
+		qGrid.SetValue(1,1, quatPrev.X);
+		qGrid.SetValue(1,2, quatPrev.Y);
+		qGrid.SetValue(1,3, quatPrev.Z);
+
+		CalcRotation();
+
+		ActivateAxis();
+	}
+
+	//------------------------------------------------------------------------
+	// OnButtonAbandonRot
+	//------------------------------------------------------------------------
+	private void OnButtonAbandonRot()
+	{
+		//GD.Print("ButtonAbandonRot");
+
+		quatNew = Quaternion.Identity;
+		rotDeg = 0.0f;
+
+		CalcRotation();
+
+		ActivateAxis();
+	}
+
+	//------------------------------------------------------------------------
+	// OnCBoxShowAxis
+	//------------------------------------------------------------------------
+	private void OnCBoxShowAxis()
+	{
+		GD.Print("CBoxShowAxis");
+
+		if(cBoxShowAxis.ButtonPressed){
+			GD.Print("    Checked");
+		}
+		else{
+			GD.Print("    Unchecked");
+		}
+	}
+
+	//------------------------------------------------------------------------
+	// OnButtonReset:
+	//------------------------------------------------------------------------
+	private void OnButtonReset()
+	{
+		//GD.Print("Reset Button Pressed");
+		Reset();
+	}
 	
 }
