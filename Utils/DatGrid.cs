@@ -129,4 +129,18 @@ public class DatGrid{
 
         cornerLabel.Text = str;
     }
+
+    //------------------------------------------------------------------------
+    // SetValue: Sets a value string
+    //------------------------------------------------------------------------
+    public void SetValue(int idxR, int idxC, float val)
+    {
+        if(idxR < 0 || idxR >= nRow || idxC < 0 || idxC >= nCol || 
+            !initialized)
+        {
+            return;
+        }
+
+        vals[idxR,idxC].Text = val.ToString(fStrings[idxR,idxC]);
+    }
 }
