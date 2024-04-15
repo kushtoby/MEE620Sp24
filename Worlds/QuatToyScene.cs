@@ -28,14 +28,9 @@ public partial class QuatToyScene : Node3D
 	Button buttonAbandonRotation;
 
 	DatGrid qGrid;
-
-
-	enum Qcat{
-		Axle_x,
-		Axle_y,
-		Axle_z,
-		Angle,
-	}
+	CheckBox cBoxShowAxis;
+	Button buttonReset;
+	
 
 
 	//------------------------------------------------------------------------
@@ -174,6 +169,19 @@ public partial class QuatToyScene : Node3D
 				qGrid.SetValue(i,j, 0.0f);
 			}
 		}
+
+		vBoxQ.AddChild(new HSeparator());
+
+		//HBoxContainer hBoxAfterQuat = new HBoxContainer();
+		cBoxShowAxis = new CheckBox();
+		cBoxShowAxis.Text = "Show Axis";
+		buttonReset = new Button();
+		buttonReset.Text = "Reset";
+		vBoxQ.AddChild(cBoxShowAxis);
+		vBoxQ.AddChild(buttonReset);
+		// hBoxAfterQuat.AddChild(cBoxShowAxis);
+		// hBoxAfterQuat.AddChild(buttonReset);
+		// vBoxQ.AddChild(hBoxAfterQuat);
 	}
 
 
