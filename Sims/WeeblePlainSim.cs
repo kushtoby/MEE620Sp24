@@ -21,6 +21,9 @@ public class WeeblePlainSim : Simulator
     double IGa;      // moment of inertia about center of mass symmetry axis
     double IGp;      // moment of inertia about cg, perpendicular axis
 
+    double KE;       // kinetic energy
+    double PE;       // potential energy
+
     // useful vectors
     VectorSpl omega;  // angular velocity of weeble in body frame
     VectorSpl vG;     // velocity of center of mass in body frame
@@ -91,5 +94,50 @@ public class WeeblePlainSim : Simulator
         ff[6] = 0.0;
         ff[7] = 0.0;
         ff[8] = 0.0;
+    }
+
+    //------------------------------------------------------------------------
+    // calcEnergy:  Calculates kinetic and potential energies
+    //------------------------------------------------------------------------
+    public void CalcEnergy()
+    {
+
+        KE = 0.0;
+        PE = 0.0;
+    }
+
+    //------------------------------------------------------------------------
+    // GetLocOrient: Gets the location and orientation of the of the weeble
+    // ***** STUDENTS DO NOT MODIFY THIS METHOD *******************
+    //------------------------------------------------------------------------
+    public void GetLocOrient(double[] loc, double[] quat)
+    {
+        loc[0] = x[0];
+        loc[1] = x[1];
+
+        quat[0] = x[2];
+        quat[1] = x[3];
+        quat[2] = x[4];
+        quat[3] = x[5];
+    }
+
+    //------------------------------------------------------------------------
+    // Getters/Setters
+    //------------------------------------------------------------------------
+
+    // Kinetic Energy   ****** Students do not modify
+    double KineticEnergy
+    {
+        get{
+            return KE;
+        }
+    }
+
+    // Potential Energy   ****** Students do not modify
+    double PotentialEnergy
+    {
+        get{
+            return PE;
+        }
     }
 }
