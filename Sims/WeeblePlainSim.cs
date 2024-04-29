@@ -40,6 +40,8 @@ public class WeeblePlainSim : Simulator
     VectorSpl Bz;
     VectorSpl E;
 
+    LinAlgEq sys;
+
     //------------------------------------------------------------------------
     // Constructor      [STUDENTS: DO NOT CHANGE THIS FUNCTION]
     //------------------------------------------------------------------------
@@ -90,6 +92,8 @@ public class WeeblePlainSim : Simulator
         Bx  = new VectorSpl(1.0, 0.0, 0.0);
         By  = new VectorSpl(0.0, 1.0, 0.0);
         Bz  = new VectorSpl(0.0, 0.0, 1.0);
+
+        sys = new LinAlgEq(3);
     }
 
     //------------------------------------------------------------------------
@@ -151,7 +155,7 @@ public class WeeblePlainSim : Simulator
 
         // Construct system of three equations for the three unknowns: 
         //      omegaXdot, omegaYdot, omegaZdot
-        double A00 = 1.0;  // replace the numbers
+        double A00 = 1.0;  // replace the numbers in the coefficient matrix
         double A01 = 0.0;
         double A02 = 0.0;
         double A10 = 0.0;  
@@ -161,9 +165,15 @@ public class WeeblePlainSim : Simulator
         double A21 = 0.0;
         double A22 = 1.0;
 
-        double B0 = 0.0;
+        double B0 = 0.0;  // replace numbers in the RHS vector
         double B1 = 0.0;
         double B2 = 0.0;
+
+        sys.A[0][0] = A00;  sys.A[0][1] = A01;  sys.A[0][2] = A02;
+        sys.A[1][0] = A10;  sys.A[1][1] = A11;  sys.A[1][2] = A12;
+        sys.A[2][0] = A20;  sys.A[2][1] = A21;  sys.A[2][2] = A22;
+        
+        sys.b[0] = B0;  sys.b[1] = B1; sys.b[2] = B2;
 
         // Evaluate right sides of differential equations of motion
         // ##### You will need to provide these ###### //
@@ -173,9 +183,9 @@ public class WeeblePlainSim : Simulator
         ff[3] = 0.0;
         ff[4] = 0.0;
         ff[5] = 0.0;
-        ff[6] = 0.0;
-        ff[7] = 0.0;
-        ff[8] = 0.0;
+        ff[6] = sys.sol[0]; // solutions to linear algebraic equations here
+        ff[7] = sys.sol[1];
+        ff[8] = sys.sol[2];
     }
 
     //------------------------------------------------------------------------
