@@ -14,9 +14,10 @@ public class WeeblePlainSim : Simulator
     double omegaZ_IC = 0.0f;
 
     double mShell;   // mass of the shell
-    double mExtra;   // other mass
+    double m;        // total mass
     double d;        // location of center of mass below center of sphere
     double R;        // sphere radius
+    double thetaE;   // end theta for spherical shell
 
     double IGa;      // moment of inertia about center of mass symmetry axis
     double IGp;      // moment of inertia about cg, perpendicular axis
@@ -42,7 +43,29 @@ public class WeeblePlainSim : Simulator
     {
 
         // initialize mass properties
+        R = 0.5;
+        d = 0.2;
+        mShell = 22.0;
+        thetaE = 110.0 * 3.14159265/180.0;
+        double sinThE = Math.Sin(thetaE);
+        double cosThE = Math.Cos(thetaE);
+        double cosThE3 = cosThE*cosThE*cosThE;
 
+        double mx;
+        double dShell = 0.5*R*sinThE*sinThE/(1.0 - cosThE);
+        if(d >= dShell){
+            mx = mShell*(d-dShell)/(R-d);
+        } 
+        else{
+            mx = mShell*(dShell-d)/(R+d);
+        }
+
+        m = mShell + mx;
+        IGa = m*R*R*(cosThE3/3.0 - cosThE + 2.0/3.0)/(1.0-cosThE);
+        double ICp = 0.5*m*R*R*(-cosThE3/3.0 - cosThE + 4.0/3.0)/(1.0-cosThE);
+        IGp = ICp - m*d*d;
+
+        
 
         // Default initial conditions
         x[0] = 0.0;   // generalized coord: xC , coordinates of center
