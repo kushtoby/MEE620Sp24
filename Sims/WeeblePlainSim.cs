@@ -94,6 +94,8 @@ public class WeeblePlainSim : Simulator
         Bz  = new VectorSpl(0.0, 0.0, 1.0);
 
         sys = new LinAlgEq(3);
+
+        SetRHSFunc(RHSWeeblePlain);
     }
 
     //------------------------------------------------------------------------
