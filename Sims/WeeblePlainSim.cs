@@ -27,14 +27,18 @@ public class WeeblePlainSim : Simulator
 
     // useful vectors
     VectorSpl omega;  // angular velocity of weeble in body frame
+    VectorSpl rCrelP; // position of sphere center relative to contact point
+    VectorSpl rGrelP; // position of center of mass relative to contact point
     VectorSpl vG;     // velocity of center of mass in body frame
     VectorSpl vPx;    // partial velocity in body frame
     VectorSpl vPy;
     VectorSpl vPz;
     VectorSpl Ny;     // N.y vector expressed in B frame
+    VectorSpl NyDot;  // time deriv of N.y in the B frame, expressed in B
     VectorSpl Bx;     // B.x vector expressed in B frame;
     VectorSpl By;
     VectorSpl Bz;
+    VectorSpl E;
 
     //------------------------------------------------------------------------
     // Constructor      [STUDENTS: DO NOT CHANGE THIS FUNCTION]
@@ -65,7 +69,6 @@ public class WeeblePlainSim : Simulator
         double ICp = 0.5*m*R*R*(-cosThE3/3.0 - cosThE + 4.0/3.0)/(1.0-cosThE);
         IGp = ICp - m*d*d;
 
-        
 
         // Default initial conditions
         x[0] = 0.0;   // generalized coord: xC , coordinates of center
@@ -83,6 +86,7 @@ public class WeeblePlainSim : Simulator
         vPy = new VectorSpl();
         vPz = new VectorSpl();
         Ny  = new VectorSpl();
+        NyDot = new VectorSpl();
         Bx  = new VectorSpl(1.0, 0.0, 0.0);
         By  = new VectorSpl(0.0, 1.0, 0.0);
         Bz  = new VectorSpl(0.0, 0.0, 1.0);
@@ -99,12 +103,67 @@ public class WeeblePlainSim : Simulator
         double q2 = xx[4];
         double q3 = xx[5];
 
-        omega.x = xx[6];  omega.y = xx[7]; omega.z = xx[8];
-        Ny.x = 2.0*(q0*q3 + q1*q2);
-        Ny.y = (q0*q0 - q1*q1 + q2*q2 - q3*q3);
-        Ny.z = 2.0*(-q0*q1 + q2*q3);
-        
+        // Define some vectors (and other quantities) that will help with the 
+        // calculations
+        //
 
+        // some extra vectors if you want to use them
+        VectorSpl vec1, vec2, vec3, vec4, vec5;
+
+        // angular velocity vector
+        omega.x = xx[6];  omega.y = xx[7]; omega.z = xx[8];
+
+        // kinematic equations for quaternions
+        double q0Dot = 0.5*(-q1*omega.x - q2*omega.y - q3*omega.z);
+        double q1Dot = 0.5*(0.0); // replace the 0.0 with correct kinematic
+        double q2Dot = 0.5*(0.0); //      equations for the quaternion
+        double q3Dot = 0.5*(0.0);
+
+        // N.y expressed in the B frame
+        Ny.x = 2.0*(q0*q3 + q1*q2);             // bx component
+        Ny.y = (q0*q0 - q1*q1 + q2*q2 - q3*q3); // by component
+        Ny.z = 2.0*(-q0*q1 + q2*q3);            // bz component
+        
+        // time derivative of N.y in the B frame, expressed in B frame
+        NyDot.x = 0.0; // replace the 0.0 with correct terms
+        NyDot.y = 0.0;
+        NyDot.z = 0.0;
+
+        // position vector of sphere Center relative to contact point
+        rCrelP = R*Ny;
+
+        // position vector of center of mass relative to contact point
+        rGrelP = rCrelP - (d*By);
+
+        // partial velocities of center of mass
+        vPx = VectorSpl.Cross(Bx, rGrelP);       // corresp to omega.x
+        //vPy = put appropriate expression here  // corresp to omega.y
+        //vPz = put appropriate expression here  // corresp to omega.z
+
+        // velocity of center of mass
+        // vG = put appropriate expression here
+
+        // velocity of center of sphere
+        // vC = put appropriate expression here
+
+        // Construct E vector here. You might want to extra vectors
+        //      v1, v2, etc
+
+        // Construct system of three equations for the three unknowns: 
+        //      omegaXdot, omegaYdot, omegaZdot
+        double A00 = 1.0;  // replace the numbers
+        double A01 = 0.0;
+        double A02 = 0.0;
+        double A10 = 0.0;  
+        double A11 = 1.0;
+        double A12 = 0.0;
+        double A20 = 0.0;  
+        double A21 = 0.0;
+        double A22 = 1.0;
+
+        double B0 = 0.0;
+        double B1 = 0.0;
+        double B2 = 0.0;
 
         // Evaluate right sides of differential equations of motion
         // ##### You will need to provide these ###### //
