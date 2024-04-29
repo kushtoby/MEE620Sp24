@@ -85,13 +85,15 @@ public partial class WeeblePlainScene : Node3D
 	public override void _Process(double delta)
 	{
 		if(opMode == OpMode.Simulate){
-			double dangle = Math.Sin(time);
-			quat[0] = Math.Cos(0.5*dangle);
-			quat[1] = quat[2] = 0.0;
-			quat[3] = Math.Sin(0.5*dangle);
+			// double dangle = Math.Sin(time);
+			// quat[0] = Math.Cos(0.5*dangle);
+			// quat[1] = quat[2] = 0.0;
+			// quat[3] = Math.Sin(0.5*dangle);
 
-			loc[0] = -R*dangle;
-			loc[1] = 0.0;
+			// loc[0] = -R*dangle;
+			// loc[1] = 0.0;
+
+			sim.GetLocOrient(loc, quat);
 
 			SetModelLoc();
 		}

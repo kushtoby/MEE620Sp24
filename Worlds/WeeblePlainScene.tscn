@@ -43,3 +43,16 @@ mesh = SubResource("PlaneMesh_f3lya")
 
 [node name="WeeblePlain" parent="." instance=ExtResource("4_rulwp")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+
+[node name="UINode" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="MargContainerTL" type="MarginContainer" parent="UINode"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
