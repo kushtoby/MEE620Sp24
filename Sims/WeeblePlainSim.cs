@@ -147,8 +147,11 @@ public class WeeblePlainSim : Simulator
         // velocity of center of mass
         // vG = put appropriate expression here
 
-        // velocity of center of sphere
-        // vC = put appropriate expression here
+        // velocity of center of sphere (want this in N frame)
+        // For this, I'd recommend just copying the expressions for vCx
+        //      and vCz directly from the Python work
+        double vCx = 0.0;   // replace the zeros
+        double vCz = 0.0;
 
         // Construct E vector here. You might want to extra vectors
         //      v1, v2, etc
