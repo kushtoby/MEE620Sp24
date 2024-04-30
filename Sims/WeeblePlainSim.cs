@@ -179,6 +179,7 @@ public class WeeblePlainSim : Simulator
         sys.A[2][0] = A20;  sys.A[2][1] = A21;  sys.A[2][2] = A22;
         
         sys.b[0] = B0;  sys.b[1] = B1; sys.b[2] = B2;
+        sys.SolveGauss();
 
         // Evaluate right sides of differential equations of motion
         // ##### You will need to provide these ###### //
