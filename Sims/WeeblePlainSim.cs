@@ -109,7 +109,7 @@ public class WeeblePlainSim : Simulator
             x[7] = -3.3;
             x[8] = -1.9;
 
-            toDisplay = true;
+            toDisplay = true;   // Don't change this line
         }
     }
 
