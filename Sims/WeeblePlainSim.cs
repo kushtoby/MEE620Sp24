@@ -41,6 +41,8 @@ public class WeeblePlainSim : Simulator
     VectorSpl E;
 
     LinAlgEq sys;
+    bool toDebug;
+    bool toDisplay;
 
     //------------------------------------------------------------------------
     // Constructor      [STUDENTS: DO NOT CHANGE THIS FUNCTION]
@@ -79,8 +81,8 @@ public class WeeblePlainSim : Simulator
         x[3] = 0.0;   // generalized coord: q1
         x[4] = 0.0;   // generalized coord: q2
         x[5] = 0.0;   // generalized coord: q3
-        x[6] = 1.0;   // generalized speed: omegaX
-        x[7] = 0.0;   // generalized speed: omegaY
+        x[6] = 3.0;   // generalized speed: omegaX
+        x[7] = 4.0;   // generalized speed: omegaY
         x[8] = 0.0;   // generalized speed: omegaZ
 
         omega = new VectorSpl();
@@ -96,6 +98,18 @@ public class WeeblePlainSim : Simulator
         sys = new LinAlgEq(3);
 
         SetRHSFunc(RHSWeeblePlain);
+
+        toDebug = false;   // SET TO TRUE IF YOU WANT TO DEBUG  **********
+        toDisplay = false; //      THIS TOO                     **********
+        if(toDebug){
+            x[2] = 0.7;
+            x[3] = 0.4;
+            x[4] = 0.3;
+            x[5] = Math.Sqrt(1.0-x[2]*x[2]-x[3]*x[3]-x[4]*x[4]);
+            x[6] = 2.2;
+            x[7] = -3.3;
+            x[8] = -1.9;
+        }
     }
 
     //------------------------------------------------------------------------
