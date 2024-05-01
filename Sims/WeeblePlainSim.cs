@@ -100,7 +100,6 @@ public class WeeblePlainSim : Simulator
         SetRHSFunc(RHSWeeblePlain);
 
         toDebug = false;   // SET TO TRUE IF YOU WANT TO DEBUG  **********
-        toDisplay = false; //      THIS TOO                     **********
         if(toDebug){
             x[2] = 0.7;
             x[3] = 0.4;
@@ -109,6 +108,8 @@ public class WeeblePlainSim : Simulator
             x[6] = 2.2;
             x[7] = -3.3;
             x[8] = -1.9;
+
+            toDisplay = true;
         }
     }
 
@@ -206,6 +207,26 @@ public class WeeblePlainSim : Simulator
         ff[6] = sys.sol[0]; // solutions to linear algebraic equations here
         ff[7] = sys.sol[1];
         ff[8] = sys.sol[2];
+
+        // If you are debugging and want to print quantities to the Godot console
+        // you can use the GD.Print command as shown in the example.
+        if(toDisplay){   // Displays intermediate quantities on console window
+
+            // Example
+            // GD.Print("m = " + m);
+            // GD.Print("q = " + q0 + ", " + q1 + ", " + q2 + ", " + q3);
+            // GD.Print("omega = " + omega.x + ", " + omega.y + ", " + omega.z);
+            // GD.Print("vPx = " + vPx.ToString());
+
+            toDisplay = false;
+        }
+
+        // ##### Leave this alone ####
+        if(toDebug){
+            for(int i=0;i<9;++i){
+                ff[i] = 0.0;
+            }
+        }
     }
 
     //------------------------------------------------------------------------
