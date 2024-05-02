@@ -231,12 +231,32 @@ public class WeeblePlainSim : Simulator
 
     //------------------------------------------------------------------------
     // calcEnergy:  Calculates kinetic and potential energies
+    //              ***** STUDENTS CALCULATE ENERGIES HERE *****
     //------------------------------------------------------------------------
     public void CalcEnergy()
     {
+        double q0 = x[2];
+        double q1 = x[3];
+        double q2 = x[4];
+        double q3 = x[5];
 
-        KE = 0.0;
-        PE = 0.0;
+        // angular velocity vector
+        omega.x = x[6];  omega.y = x[7];  omega.z = x[8];
+
+        // N.y expressed in the B frame
+        Ny.x = 2.0*(q0*q3 + q1*q2);             // bx component
+        Ny.y = (q0*q0 - q1*q1 + q2*q2 - q3*q3); // by component
+        Ny.z = 2.0*(-q0*q1 + q2*q3);            // bz component
+
+        VectorSpl v1, v2, v3;    // some vectors if you want to use them
+
+        rCrelP = R*Ny;     // position of sphere center rel to contact point
+        rGrelP = rCrelP - (d*By);  // position of CG rel to contact point
+        
+        // do some calculations
+
+        KE = 0.0;   // put kinetic energy here
+        PE = 0.0;   // put potential energy here
     }
 
     //------------------------------------------------------------------------
@@ -259,7 +279,7 @@ public class WeeblePlainSim : Simulator
     //------------------------------------------------------------------------
 
     // Kinetic Energy   ****** Students do not modify
-    double KineticEnergy
+    public double KineticEnergy
     {
         get{
             return KE;
@@ -267,7 +287,7 @@ public class WeeblePlainSim : Simulator
     }
 
     // Potential Energy   ****** Students do not modify
-    double PotentialEnergy
+    public double PotentialEnergy
     {
         get{
             return PE;

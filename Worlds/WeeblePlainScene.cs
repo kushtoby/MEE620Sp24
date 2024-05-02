@@ -38,6 +38,8 @@ public partial class WeeblePlainScene : Node3D
 	float camFOV;
 	Vector3 camTg;       // coords of camera target
 
+	DatDisplay2 ddisp;
+
 
 	//------------------------------------------------------------------------
 	// _Ready: called once
@@ -86,14 +88,16 @@ public partial class WeeblePlainScene : Node3D
 	//------------------------------------------------------------------------
 	public override void _Process(double delta)
 	{
-		if(opMode == OpMode.Simulate){
-			// double dangle = Math.Sin(time);
-			// quat[0] = Math.Cos(0.5*dangle);
-			// quat[1] = quat[2] = 0.0;
-			// quat[3] = Math.Sin(0.5*dangle);
+		if(opMode == OpMode.Simulate)
+		{
+			sim.CalcEnergy();
+			double ke = sim.KineticEnergy;
+			double pe = sim.PotentialEnergy;
+			double tot = ke + pe;
 
-			// loc[0] = -R*dangle;
-			// loc[1] = 0.0;
+			ddisp.SetValue(0, (float)ke);
+			ddisp.SetValue(1, (float)pe);
+			ddisp.SetValue(2, (float)tot);
 
 			sim.GetLocOrient(loc, quat);
 
@@ -143,5 +147,27 @@ public partial class WeeblePlainScene : Node3D
 	{
 		MarginContainer mc = 
 			GetNode<MarginContainer>("UINode/MargContainerTL");
+
+		VBoxContainer vBox = new VBoxContainer();
+		mc.AddChild(vBox);
+
+		ddisp = new DatDisplay2(vBox);
+		ddisp.SetNDisplay(3, true);
+		ddisp.SetTitle("Energy");
+		ddisp.SetLabel(0, "Kinetic: ");
+		ddisp.SetLabel(1, "Potential: ");
+		ddisp.SetLabel(2, "Total: ");
+
+		ddisp.SetSuffix(0, "kg m/s\u00B2");
+		ddisp.SetSuffix(1, "kg m/s\u00B2");
+		ddisp.SetSuffix(2, "kg m/s\u00B2");
+
+		ddisp.SetDigitsAfterDecimal(0, 4);
+		ddisp.SetDigitsAfterDecimal(1, 4);
+		ddisp.SetDigitsAfterDecimal(2, 4);
+
+		ddisp.SetValue(0, 0.0f);
+		ddisp.SetValue(1, 0.0f);
+		ddisp.SetValue(2, 0.0f);
 	}
 }
