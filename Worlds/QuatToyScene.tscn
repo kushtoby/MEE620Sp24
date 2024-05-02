@@ -1,0 +1,140 @@
+[gd_scene load_steps=18 format=3 uid="uid://b0np7drg08ah8"]
+
+[ext_resource type="Script" path="res://Worlds/QuatToyScene.cs" id="1_iwqwj"]
+[ext_resource type="Texture2D" uid="uid://j5d15pfgqxyw" path="res://Textures/kennyDK4.png" id="1_pkg3k"]
+[ext_resource type="PackedScene" uid="uid://blxgponho1qji" path="res://Utils/CamRig.tscn" id="2_yinv0"]
+[ext_resource type="PackedScene" uid="uid://bfg7vlbl7dkrc" path="res://Models/WeeblePlain.tscn" id="4_2cnhi"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_3djbk"]
+sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+
+[sub_resource type="Sky" id="Sky_bfg42"]
+sky_material = SubResource("ProceduralSkyMaterial_3djbk")
+
+[sub_resource type="Environment" id="Environment_tnbdq"]
+background_mode = 2
+sky = SubResource("Sky_bfg42")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pvjpc"]
+albedo_texture = ExtResource("1_pkg3k")
+uv1_triplanar = true
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_s8ufm"]
+material = SubResource("StandardMaterial3D_pvjpc")
+size = Vector2(4, 4)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5vj0f"]
+albedo_color = Color(0.756863, 0.34902, 0.992157, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_ttaio"]
+material = SubResource("StandardMaterial3D_5vj0f")
+top_radius = 0.04
+bottom_radius = 0.04
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_r08o4"]
+albedo_color = Color(0.756863, 0.34902, 0.992157, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_u3kc1"]
+material = SubResource("StandardMaterial3D_r08o4")
+top_radius = 0.0
+bottom_radius = 0.1
+height = 0.2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_epom1"]
+albedo_color = Color(0.996078, 0.666667, 0.227451, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_yp3c4"]
+material = SubResource("StandardMaterial3D_epom1")
+top_radius = 0.03
+bottom_radius = 0.03
+height = 2.5
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_thood"]
+albedo_color = Color(0.996078, 0.666667, 0.227451, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_6rc2t"]
+material = SubResource("StandardMaterial3D_thood")
+top_radius = 0.0
+bottom_radius = 0.1
+height = 0.2
+
+[node name="QuatToyScene" type="Node3D"]
+script = ExtResource("1_iwqwj")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_tnbdq")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 16.6002, 0)
+shadow_enabled = true
+
+[node name="Floor" type="MeshInstance3D" parent="."]
+mesh = SubResource("PlaneMesh_s8ufm")
+
+[node name="CamRig" parent="." instance=ExtResource("2_yinv0")]
+
+[node name="WeeblePlain" parent="." instance=ExtResource("4_2cnhi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+
+[node name="TotalAxis" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+visible = false
+
+[node name="Cylinder" type="MeshInstance3D" parent="TotalAxis"]
+transform = Transform3D(-4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("CylinderMesh_ttaio")
+
+[node name="Cone" type="MeshInstance3D" parent="TotalAxis/Cylinder"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, 0)
+mesh = SubResource("CylinderMesh_u3kc1")
+
+[node name="NewAxis" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+
+[node name="Cylinder" type="MeshInstance3D" parent="NewAxis"]
+transform = Transform3D(-4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("CylinderMesh_yp3c4")
+
+[node name="Cone" type="MeshInstance3D" parent="NewAxis/Cylinder"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.35, 0)
+mesh = SubResource("CylinderMesh_6rc2t")
+
+[node name="UINode" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MargTL" type="MarginContainer" parent="UINode"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+
+[node name="MargBL" type="MarginContainer" parent="UINode"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -40.0
+offset_right = 40.0
+grow_vertical = 0
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="MargTR" type="MarginContainer" parent="UINode"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -40.0
+offset_bottom = 40.0
+grow_horizontal = 0
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10

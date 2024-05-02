@@ -1,0 +1,58 @@
+[gd_scene load_steps=10 format=3 uid="uid://bhln4usl88hc5"]
+
+[ext_resource type="Texture2D" uid="uid://j5d15pfgqxyw" path="res://Textures/kennyDK4.png" id="1_kcnfn"]
+[ext_resource type="Script" path="res://Worlds/WeeblePlainScene.cs" id="1_nyp2s"]
+[ext_resource type="PackedScene" uid="uid://blxgponho1qji" path="res://Utils/CamRig.tscn" id="2_13h87"]
+[ext_resource type="PackedScene" uid="uid://bfg7vlbl7dkrc" path="res://Models/WeeblePlain.tscn" id="4_rulwp"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_4sj3q"]
+sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+
+[sub_resource type="Sky" id="Sky_mk7q1"]
+sky_material = SubResource("ProceduralSkyMaterial_4sj3q")
+
+[sub_resource type="Environment" id="Environment_u2e1o"]
+background_mode = 2
+sky = SubResource("Sky_mk7q1")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bxrtl"]
+albedo_texture = ExtResource("1_kcnfn")
+uv1_triplanar = true
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_f3lya"]
+material = SubResource("StandardMaterial3D_bxrtl")
+size = Vector2(4, 4)
+
+[node name="WeeblePlainScene" type="Node3D"]
+script = ExtResource("1_nyp2s")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_u2e1o")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 20, 0)
+shadow_enabled = true
+
+[node name="Floor" type="MeshInstance3D" parent="."]
+mesh = SubResource("PlaneMesh_f3lya")
+
+[node name="CamRig" parent="." instance=ExtResource("2_13h87")]
+
+[node name="WeeblePlain" parent="." instance=ExtResource("4_rulwp")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+
+[node name="UINode" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="MargContainerTL" type="MarginContainer" parent="UINode"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10

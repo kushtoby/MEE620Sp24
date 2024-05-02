@@ -1,3 +1,6 @@
+//============================================================================
+// SpinTopScene.cs  
+//============================================================================
 using Godot;
 using System;
 
@@ -11,10 +14,14 @@ public partial class SpinTopScene : Node3D
 	}
 	OpMode opMode;         // operation mode
 
+	bool toPrecess;        // whether to choose IC for simple precession
+
 	// Simulation
 	SpinTopSim sim;
 	double time;
 	int nSimSteps;         // number of sim steps per _PhysicsProcess
+	int simOpt;            // integer corresponding to simulation type
+						   // 0=body fixed;  1=lean rame
 
 	// UI
 	Button[] adjButtons;
@@ -26,8 +33,10 @@ public partial class SpinTopScene : Node3D
 	OptionButton optionSimSubsteps;
 	OptionButton optionSim;
 	OptionButton optionSpinRate;
+	CheckBox checkPrecess;
 
 	double[] spinRateOptions;
+	string[,] spinRateLabelOptions; 
 	int spinRateIdx;
 
 	double spinRate;       // initial spinRate;
@@ -60,6 +69,7 @@ public partial class SpinTopScene : Node3D
 	{
 		
 		opMode = OpMode.Configure;
+		toPrecess = false;
 
 		// ui
 		leanICDeg = 30.0f;
@@ -67,12 +77,26 @@ public partial class SpinTopScene : Node3D
 		leanICMax = 170.0f;
 		dAngle = 1.0f;
 
-		spinRateOptions = new double[4];
+		spinRateOptions = new double[5];
 		spinRateOptions[0] = 10.0;
 		spinRateOptions[1] = 20.0;
-		spinRateOptions[2] = 40.0;
-		spinRateOptions[3] = 60.0;
-		spinRateIdx = 3;
+		spinRateOptions[2] = 30.0;
+		spinRateOptions[3] = 40.0;
+		spinRateOptions[4] = 60.0;
+
+		spinRateLabelOptions = new string[2,5];
+		spinRateLabelOptions[0,0] = "OmegaY: 10 rad/s";
+		spinRateLabelOptions[0,1] = "OmegaY: 20 rad/s";
+		spinRateLabelOptions[0,2] = "OmegaY: 30 rad/s";
+		spinRateLabelOptions[0,3] = "OmegaY: 40 rad/s";
+		spinRateLabelOptions[0,4] = "OmegaY: 60 rad/s";
+		spinRateLabelOptions[1,0] = "thetaDot: 10 rad/s";
+		spinRateLabelOptions[1,1] = "thetaDot: 20 rad/s";
+		spinRateLabelOptions[1,2] = "thetaDot: 30 rad/s";
+		spinRateLabelOptions[1,3] = "thetaDot: 40 rad/s";
+		spinRateLabelOptions[1,4] = "thetaDot: 60 rad/s";
+
+		spinRateIdx = 4;
 
 		// set up the model
 		model = GetNode<TopDiskModel>("TopDiskModel");
@@ -81,6 +105,7 @@ public partial class SpinTopScene : Node3D
 
 		// Set up the simulation
 		sim = new SpinTopSim();
+		simOpt = 0;
 		spinRate = spinRateOptions[spinRateIdx];
 		sim.LeanAngle = Mathf.DegToRad(leanICDeg);
 		sim.SpinRate = spinRate;
@@ -117,16 +142,20 @@ public partial class SpinTopScene : Node3D
 				(float)sim.LeanAngle, (float)sim.SpinAngle);
 
 			if(uiRefreshCtr > uiRefreshTHold){
+				sim.PostProcess();
+
+				float leanDeg = Mathf.RadToDeg((float)sim.LeanAngle);
 				double ke = sim.KineticEnergy;
 				double pe = sim.PotentialEnergy;
 				double totErg = ke + pe;
 
 				double angMoY = sim.AngMoY;
 
-				datDisplay.SetValue(1,(float)ke);
-				datDisplay.SetValue(2,(float)pe);
-				datDisplay.SetValue(3,(float)totErg);
-				datDisplay.SetValue(4,(float)angMoY);
+				datDisplay.SetValue(1,leanDeg);
+				datDisplay.SetValue(2,(float)ke);
+				datDisplay.SetValue(3,(float)pe);
+				datDisplay.SetValue(4,(float)totErg);
+				datDisplay.SetValue(5,(float)angMoY);
 
 				uiRefreshCtr = 0;
 			}
@@ -175,9 +204,31 @@ public partial class SpinTopScene : Node3D
 		if(leanICDeg > leanICMax)
 			leanICDeg = leanICMax;
 
-		sim.ResetIC((double)Mathf.DegToRad(leanICDeg), spinRate);
+		sim.ResetIC((double)Mathf.DegToRad(leanICDeg), spinRate, 
+			checkPrecess.ButtonPressed);
+		if(simOpt == 1 && checkPrecess.ButtonPressed){
+			if(sim.PrecessICFound){
+				checkPrecess.Set("theme_override_colors/font_pressed_color",
+					new Color(0.45f,1.0f,0.45f));
+				checkPrecess.Set("theme_override_colors/font_hover_pressed_color",
+					new Color(0.45f,1.0f,0.45f));
+				checkPrecess.Set("theme_override_colors/font_disabled_color",
+					new Color(0.45f,1.0f,0.45f, 0.5f));
+				//GD.Print("Ding");
+			}
+			else{
+				checkPrecess.Set("theme_override_colors/font_pressed_color",
+					new Color(1.0f,0.45f,0.45f));
+				checkPrecess.Set("theme_override_colors/font_hover_pressed_color",
+					new Color(1.0f,0.45f,0.45f));
+				checkPrecess.Set("theme_override_colors/font_disabled_color",
+					new Color(1.0f,0.45f,0.45f, 0.5f));
+				//GD.Print("Dong");
+			}
+		}
 		model.SetEulerAnglesYZY(0.0f,Mathf.DegToRad(leanICDeg), 0.0f);
 		datDisplay.SetValue(0, leanICDeg);
+		datDisplay.SetValue(1, leanICDeg);
 	}
 
 	//------------------------------------------------------------------------
@@ -189,25 +240,28 @@ public partial class SpinTopScene : Node3D
 
 		// Set up data display
 		datDisplay = vbox.GetNode<UIPanelDisplay>("DatDisplay");
-		datDisplay.SetNDisplay(5);
+		datDisplay.SetNDisplay(6);
 
 		datDisplay.SetDigitsAfterDecimal(0,1);
-		datDisplay.SetDigitsAfterDecimal(1,4);
+		datDisplay.SetDigitsAfterDecimal(1,1);
 		datDisplay.SetDigitsAfterDecimal(2,4);
 		datDisplay.SetDigitsAfterDecimal(3,4);
 		datDisplay.SetDigitsAfterDecimal(4,4);
+		datDisplay.SetDigitsAfterDecimal(5,4);
 
 		datDisplay.SetLabel(0,"Lean IC");
-		datDisplay.SetLabel(1,"Kinetic");
-		datDisplay.SetLabel(2,"Potential");
-		datDisplay.SetLabel(3,"Total");
-		datDisplay.SetLabel(4,"Ang.Mo.Vert");
+		datDisplay.SetLabel(1,"Lean deg");
+		datDisplay.SetLabel(2,"Kinetic");
+		datDisplay.SetLabel(3,"Potential");
+		datDisplay.SetLabel(4,"Total");
+		datDisplay.SetLabel(5,"Ang.Mo.Vert");
 
 		datDisplay.SetValue(0,leanICDeg);
-		datDisplay.SetValue(1,0.0f);
+		datDisplay.SetValue(1,leanICDeg);
 		datDisplay.SetValue(2,0.0f);
 		datDisplay.SetValue(3,0.0f);
 		datDisplay.SetValue(4,0.0f);
+		datDisplay.SetValue(5,0.0f);
 
 		uiRefreshCtr = 0;
 		uiRefreshTHold = 3;
@@ -224,17 +278,27 @@ public partial class SpinTopScene : Node3D
 
 		//--- Option Button Spin Rate
 		optionSpinRate = vbox.GetNode<OptionButton>("OptionSpinRate");
-		optionSpinRate.AddItem("SpinRate: 10 rad/s", 0);
-		optionSpinRate.AddItem("SpinRate: 20 rad/s", 1);
-		optionSpinRate.AddItem("SpinRate: 40 rad/s", 2);
-		optionSpinRate.AddItem("SpinRate: 60 rad/s", 3);
-		optionSpinRate.Selected = 3;
+		optionSpinRate.AddItem(spinRateLabelOptions[0,0], 0);
+		optionSpinRate.AddItem(spinRateLabelOptions[0,1], 1);
+		optionSpinRate.AddItem(spinRateLabelOptions[0,2], 2);
+		optionSpinRate.AddItem(spinRateLabelOptions[0,3], 3);
+		optionSpinRate.AddItem(spinRateLabelOptions[0,4], 4);
+		optionSpinRate.Selected = spinRateIdx;
 		optionSpinRate.ItemSelected += OnOptionSpinRate;
+
+		//--- CheckBox, Precession IC
+		checkPrecess = vbox.GetNode<CheckBox>("CheckPrecess");
+		checkPrecess.ButtonPressed = false;
+		checkPrecess.Disabled = true;
+		//checkPrecess.Set("theme_override_colors/font_color",new Color(1,0,0));
+		checkPrecess.Pressed += OnCheckPrecess;
 
 		//--- Option Button, Sim choice
 		optionSim = vbox.GetNode<OptionButton>("OptionSim");
 		optionSim.AddItem("Sim: Fixed Body",0);
-		optionSim.Selected = 0;
+		optionSim.AddItem("Sim: Lean Frame",1);
+		optionSim.Selected = simOpt;
+		optionSim.ItemSelected += OnOptionSim;
 
 		//--- Sim Button
 		simButton = vbox.GetNode<Button>("SimButton");
@@ -253,6 +317,7 @@ public partial class SpinTopScene : Node3D
 		adjButtons[3] = 
 			GetNode<Button>("UINode/MgContainTL/VBox/HBoxAdjust/RRightButton");
 		
+		OnOptionSim((long)simOpt);
 	}
 
 	//------------------------------------------------------------------------
@@ -268,6 +333,7 @@ public partial class SpinTopScene : Node3D
 			optionSim.Disabled = true;
 			optionSimSubsteps.Disabled = true;
 			optionSpinRate.Disabled = true;
+			checkPrecess.Disabled = true;
 			for(i=0;i<4;++i)
 				adjButtons[i].Disabled = true;
 		}
@@ -277,6 +343,8 @@ public partial class SpinTopScene : Node3D
 			optionSim.Disabled = false;
 			optionSimSubsteps.Disabled = false;
 			optionSpinRate.Disabled = false;
+			if(simOpt == 1)
+				checkPrecess.Disabled = false;
 			for(i=0;i<4;++i)
 				adjButtons[i].Disabled = false;
 		}
@@ -325,5 +393,50 @@ public partial class SpinTopScene : Node3D
 		ProcessLeanAngle();
 
 		//GD.Print("SpinRate: " + spinRate);
+	}
+
+	//------------------------------------------------------------------------
+	// OnCheckPrecess
+	//------------------------------------------------------------------------
+	private void OnCheckPrecess()
+	{
+		//GD.Print("OnCheckPrecess");
+		ProcessLeanAngle();
+		if(checkPrecess.ButtonPressed == false){
+			checkPrecess.Set("theme_override_colors/font_disabled_color",
+					new Color(0.875f,0.875f,0.875f, 0.5f));
+		}
+	}
+
+	//------------------------------------------------------------------------
+    // OnOptionSim
+    //------------------------------------------------------------------------
+    private void OnOptionSim(long ii)
+    {
+		int idx = (int)ii;
+		if(idx == 0){
+			//GD.Print("Body Fixed");
+			sim.SwitchModelBody();
+			optionSpinRate.SetItemText(0,spinRateLabelOptions[0,0]);
+			optionSpinRate.SetItemText(1,spinRateLabelOptions[0,1]);
+			optionSpinRate.SetItemText(2,spinRateLabelOptions[0,2]);
+			optionSpinRate.SetItemText(3,spinRateLabelOptions[0,3]);
+			checkPrecess.ButtonPressed = false;
+			checkPrecess.Disabled = true;
+			checkPrecess.Set("theme_override_colors/font_disabled_color",
+				new Color(0.875f,0.875f,0.875f, 0.5f));
+			ProcessLeanAngle();
+		}
+		else if(idx == 1){
+			//GD.Print("Lean Frame");
+			sim.SwitchModelLean();
+			optionSpinRate.SetItemText(0,spinRateLabelOptions[1,0]);
+			optionSpinRate.SetItemText(1,spinRateLabelOptions[1,1]);
+			optionSpinRate.SetItemText(2,spinRateLabelOptions[1,2]);
+			optionSpinRate.SetItemText(3,spinRateLabelOptions[1,3]);
+			checkPrecess.Disabled = false;
+			ProcessLeanAngle();
+		}
+		simOpt = idx;
 	}
 }

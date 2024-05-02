@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b8dvif20jfy4p"
-path.s3tc="res://.godot/imported/kennyPU09.png-310c301363c4d941369aba205d9c01eb.s3tc.ctex"
+uid="uid://cx0cyfknay7ys"
+path.s3tc="res://.godot/imported/boxTex3.png-b040655da4e75b618466d3939258a91a.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://Textures/kennyPU09.png"
-dest_files=["res://.godot/imported/kennyPU09.png-310c301363c4d941369aba205d9c01eb.s3tc.ctex"]
+source_file="res://Textures/boxTex3.png"
+dest_files=["res://.godot/imported/boxTex3.png-b040655da4e75b618466d3939258a91a.s3tc.ctex"]
 
 [params]
 

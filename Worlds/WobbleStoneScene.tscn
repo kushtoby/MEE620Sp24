@@ -1,0 +1,45 @@
+[gd_scene load_steps=10 format=3 uid="uid://dhq5017gy1wtu"]
+
+[ext_resource type="Texture2D" uid="uid://j5d15pfgqxyw" path="res://Textures/kennyDK4.png" id="1_3yc8a"]
+[ext_resource type="Script" path="res://Worlds/WobbleStoneScene.cs" id="1_34vob"]
+[ext_resource type="PackedScene" uid="uid://blxgponho1qji" path="res://Utils/CamRig.tscn" id="2_omqbv"]
+[ext_resource type="PackedScene" uid="uid://bauytodqq671i" path="res://Models/WobbleStoneModel.tscn" id="4_q8pmd"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_6vkpk"]
+sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+
+[sub_resource type="Sky" id="Sky_w1v44"]
+sky_material = SubResource("ProceduralSkyMaterial_6vkpk")
+
+[sub_resource type="Environment" id="Environment_v02vo"]
+background_mode = 2
+sky = SubResource("Sky_w1v44")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8vvct"]
+albedo_texture = ExtResource("1_3yc8a")
+uv1_triplanar = true
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_ls3ar"]
+material = SubResource("StandardMaterial3D_8vvct")
+size = Vector2(3, 3)
+
+[node name="WobbleStoneScene" type="Node3D"]
+script = ExtResource("1_34vob")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_v02vo")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 29, 0)
+shadow_enabled = true
+
+[node name="Floor" type="MeshInstance3D" parent="."]
+mesh = SubResource("PlaneMesh_ls3ar")
+
+[node name="CamRig" parent="." instance=ExtResource("2_omqbv")]
+
+[node name="WobbleStoneModel" parent="." instance=ExtResource("4_q8pmd")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
