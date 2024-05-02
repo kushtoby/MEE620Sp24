@@ -24,7 +24,7 @@ uv1_triplanar = true
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_f3lya"]
 material = SubResource("StandardMaterial3D_bxrtl")
-size = Vector2(3, 3)
+size = Vector2(4, 4)
 
 [node name="WeeblePlainScene" type="Node3D"]
 script = ExtResource("1_nyp2s")

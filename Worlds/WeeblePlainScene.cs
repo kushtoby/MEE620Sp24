@@ -167,9 +167,9 @@ public partial class WeeblePlainScene : Node3D
 		ddisp.SetLabel(1, "Potential: ");
 		ddisp.SetLabel(2, "Total: ");
 
-		ddisp.SetSuffix(0, "kg m/s\u00B2");
-		ddisp.SetSuffix(1, "kg m/s\u00B2");
-		ddisp.SetSuffix(2, "kg m/s\u00B2");
+		ddisp.SetSuffix(0, "kg m\u00B2/s\u00B2");
+		ddisp.SetSuffix(1, "kg m\u00B2/s\u00B2");
+		ddisp.SetSuffix(2, "kg m\u00B2/s\u00B2");
 
 		ddisp.SetDigitsAfterDecimal(0, 4);
 		ddisp.SetDigitsAfterDecimal(1, 4);
