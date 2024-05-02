@@ -21,7 +21,7 @@ public class DatDisplay2{
     String[] sfxStrings;  // suffix strings
     Label title;
 
-    CheckBox[] checkBoxes;
+    public CheckBox[] checkBoxes;
     bool initialized;
 
     //------------------------------------------------------------------------

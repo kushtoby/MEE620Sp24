@@ -75,6 +75,8 @@ public partial class WeeblePlainScene : Node3D
 		cam.Distance = camDist;
 		cam.FOVDeg = camFOV;
 		cam.Target = camTg;
+
+		SetupUI();
 	}
 
 
@@ -132,5 +134,14 @@ public partial class WeeblePlainScene : Node3D
 
 		model.Position = modelPos;
 		model.Quaternion = modelQuat;
+	}
+
+	//------------------------------------------------------------------------
+	// SetupUI
+	//------------------------------------------------------------------------
+	private void SetupUI()
+	{
+		MarginContainer mc = 
+			GetNode<MarginContainer>("UINode/MargContainerTL");
 	}
 }
