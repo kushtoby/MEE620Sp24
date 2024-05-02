@@ -39,6 +39,8 @@ public partial class WeeblePlainScene : Node3D
 	Vector3 camTg;       // coords of camera target
 
 	DatDisplay2 ddisp;
+	int dispCtr;
+	int dispTHold;
 
 
 	//------------------------------------------------------------------------
@@ -79,6 +81,8 @@ public partial class WeeblePlainScene : Node3D
 		cam.Target = camTg;
 
 		SetupUI();
+		dispCtr = 0;
+		dispTHold = 3;
 	}
 
 
@@ -90,14 +94,19 @@ public partial class WeeblePlainScene : Node3D
 	{
 		if(opMode == OpMode.Simulate)
 		{
-			sim.CalcEnergy();
-			double ke = sim.KineticEnergy;
-			double pe = sim.PotentialEnergy;
-			double tot = ke + pe;
+			if(dispCtr > dispTHold){
+				sim.CalcEnergy();
+				double ke = sim.KineticEnergy;
+				double pe = sim.PotentialEnergy;
+				double tot = ke + pe;
 
-			ddisp.SetValue(0, (float)ke);
-			ddisp.SetValue(1, (float)pe);
-			ddisp.SetValue(2, (float)tot);
+				ddisp.SetValue(0, (float)ke);
+				ddisp.SetValue(1, (float)pe);
+				ddisp.SetValue(2, (float)tot);
+
+				dispCtr = 0;
+			}
+			++dispCtr;
 
 			sim.GetLocOrient(loc, quat);
 
